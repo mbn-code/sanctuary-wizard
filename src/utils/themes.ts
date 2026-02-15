@@ -9,7 +9,7 @@ export interface ThemePreset {
     text: string;
     soft: string;
   };
-  icon: string; // 'heart', 'star', 'cake', 'gift', 'moon', 'sun'
+  icon: 'heart' | 'star' | 'cake' | 'gift' | 'moon' | 'sun' | 'bell' | 'sparkles' | 'award';
   font: 'elegant' | 'modern' | 'playful';
 }
 
@@ -70,19 +70,47 @@ export const THEMES: Record<string, ThemePreset> = {
     icon: 'star',
     font: 'modern'
   },
-  monochrome: {
-    id: 'monochrome',
-    name: 'Minimalist Slate',
+  lavender: {
+    id: 'lavender',
+    name: 'Soft Lavender',
+    colors: {
+      primary: '#8B5CF6',
+      secondary: '#EDE9FE',
+      accent: '#7C3AED',
+      bg: '#F5F3FF',
+      text: '#4C1D95',
+      soft: '#5B21B6'
+    },
+    icon: 'heart',
+    font: 'elegant'
+  },
+  minimalist: {
+    id: 'minimalist',
+    name: 'Wedding Slate',
     colors: {
       primary: '#334155',
-      secondary: '#E2E8F0',
-      accent: '#475569',
-      bg: '#F8FAFC',
+      secondary: '#F1F5F9',
+      accent: '#94A3B8',
+      bg: '#FFFFFF',
       text: '#0F172A',
       soft: '#64748B'
     },
-    icon: 'gift',
-    font: 'modern'
+    icon: 'sparkles',
+    font: 'elegant'
+  },
+  advent: {
+    id: 'advent',
+    name: 'Christmas Magic',
+    colors: {
+      primary: '#166534',
+      secondary: '#FEE2E2',
+      accent: '#991B1B',
+      bg: '#FAFAFA',
+      text: '#064E3B',
+      soft: '#450A0A'
+    },
+    icon: 'bell',
+    font: 'elegant'
   }
 };
 

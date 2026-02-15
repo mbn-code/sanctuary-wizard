@@ -33,7 +33,7 @@ export async function POST(req: Request) {
             currency: 'usd',
             product_data: {
               name: selectedPlan.name,
-              description: `Personalized Valentine sanctuary for ${config.names.partner2}`,
+              description: `Personalized digital sanctuary for ${config.names.recipient}`,
             },
             unit_amount: selectedPlan.amount,
           },
@@ -43,8 +43,8 @@ export async function POST(req: Request) {
       mode: 'payment',
       metadata: {
         plan: plan,
-        partner1: config.names.partner1,
-        partner2: config.names.partner2,
+        sender: config.names.sender,
+        recipient: config.names.recipient,
         config_backup: JSON.stringify(config).slice(0, 500)
       },
       success_url: `${req.headers.get('origin')}/wizard?session_id={CHECKOUT_SESSION_ID}&success=true&paid_plan=${plan}`,

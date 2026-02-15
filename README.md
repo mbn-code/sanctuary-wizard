@@ -1,32 +1,37 @@
-# Sanctuary Wizard ✨ (Multi-Event SaaS)
+# Sanctuary ✨ (Pro SaaS Edition)
 
-The ultimate digital sanctuary for all of life's special moments.
+Turn any moment into a digital sanctuary. 
 
 ## The SaaS Model
-This version of the Sanctuary Wizard is built for year-round utility:
+Sanctuary is built for year-round utility, from romantic surprises to team appreciation.
 
 ### 🆓 The Spark ($2.00)
-- **Interactive Invitation:** Customizable themed game.
-- **1 Day Countdown:** Focus on the main event.
-- **5 Secret Notes:** Personalized messages.
-- **10 Photo Uploads:** Share the best memories.
+- **1 Day Sanctuary:** Focus on the big day.
+- **5 Secret Messages:** Personal notes.
+- **10 Photo Uploads:** Direct from PC.
 - **Branding:** "Powered by Sanctuary" watermark.
 
 ### 💖 The Romance ($7.00)
-- **7 Day Countdown:** Build a week-long journey.
-- **30 Photo Uploads:** Full high-res gallery.
+- **7 Day Journey:** Build a week-long experience.
+- **Unlimited Photos:** High-res gallery.
 - **25 Secret Notes:** More space for your words.
-- **Custom Backgrounds:** Personalize the ambiance.
+- **Custom Backgrounds:** Full ambiance control.
 - **No Watermark:** Clean, premium look.
 
 ### 💎 The Sanctuary ($12.00)
-- **14 Day Journey:** The ultimate countdown experience.
+- **14 Day Experience:** The ultimate digital journey.
 - **Secret Cinema:** Custom private video theater.
-- **Unlimited Notes:** Write your heart out.
-- **50 Photo Uploads:** The complete visual story.
-- **Custom Passcodes:** Secure your sanctuary.
+- **Unlimited Notes:** No limits on messages.
+- **Custom Passcodes:** Secure the experience.
+- **Email Delivery:** Send the sanctuary link to your inbox.
+
+## Features
+- **Stateless Architecture:** No database. Data lives in the encrypted URL fragment.
+- **Privacy First:** AES-GCM 256-bit encryption.
+- **Social Media Pack:** Download aesthetic story cards for TikTok/Instagram.
+- **Workspace:** Manage all your created sanctuaries from your local dashboard.
 
 ## Setup
-1. Copy `.env.example` to `.env.local` and add your Stripe and Vercel Blob keys.
+1. Copy `.env.example` to `.env.local` and add your Stripe, Resend, and Vercel Blob keys.
 2. `npm install`
 3. `npm run dev`

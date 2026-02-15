@@ -34,7 +34,7 @@ const Gallery = () => {
   const { config } = useSanctuary();
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-  const theme = THEMES[config?.theme || 'valentine'];
+  const theme = THEMES[config?.theme || 'classic'];
 
   if (!config) return null;
 

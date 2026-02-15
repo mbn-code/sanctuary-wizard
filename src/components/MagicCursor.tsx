@@ -11,7 +11,7 @@ const MagicCursor = () => {
   const [isPointer, setIsPointer] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
-  const theme = THEMES[config?.theme || 'valentine'];
+  const theme = THEMES[config?.theme || 'classic'];
   const Icon = theme?.icon === 'heart' ? Heart : 
                theme?.icon === 'star' ? Star : 
                theme?.icon === 'cake' ? Cake : Gift;

@@ -19,7 +19,7 @@ const Invitation = ({ onComplete }: InvitationProps) => {
   const [phase, setPhase] = useState<'tapping' | 'question' | 'teaser'>('tapping');
   const [noButtonPos, setNoButtonPos] = useState({ x: 0, y: 0 });
 
-  const theme = THEMES[config?.theme || 'valentine'];
+  const theme = THEMES[config?.theme || 'classic'];
   const Icon = theme?.icon === 'heart' ? Heart : 
                theme?.icon === 'star' ? Star : 
                theme?.icon === 'cake' ? Cake : Gift;
@@ -128,7 +128,7 @@ const Invitation = ({ onComplete }: InvitationProps) => {
             exit={{ opacity: 0, scale: 0.9 }}
             className="text-center space-y-12"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-sanctuary-primary leading-tight">
+            <h2 className="text-4xl md:text-5xl font-bold text-sanctuary-primary leading-tight font-serif-display text-gray-800">
               {config?.customQuestion || `${config?.names.recipient}, will you be my Valentine?`}
             </h2>
             

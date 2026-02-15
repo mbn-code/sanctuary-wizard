@@ -12,7 +12,9 @@ export async function POST(request: Request): Promise<NextResponse> {
     const allowedOrigins = process.env.NODE_ENV === 'production' 
       ? [
           'https://valentize.vercel.app',
-          'https://valentine-wizard.vercel.app'
+          'https://valentine-wizard.vercel.app',
+          'https://sanctuary-wizard.vercel.app',
+          'https://magicgift.vercel.app'
         ]
       : [
           'http://localhost:3000',

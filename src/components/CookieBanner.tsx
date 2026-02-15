@@ -30,25 +30,25 @@ export default function CookieBanner() {
           exit={{ y: 100, opacity: 0 }}
           className="fixed bottom-6 left-4 right-4 md:left-auto md:right-6 md:max-w-sm z-[1000]"
         >
-          <div className="bg-white rounded-2xl shadow-2xl border border-valentine-pink/20 p-6 flex flex-col gap-4">
-            <div className="flex items-center gap-3 text-valentine-red">
+          <div className="bg-white rounded-2xl shadow-2xl border border-sanctuary-secondary/20 p-6 flex flex-col gap-4 text-gray-800 text-left">
+            <div className="flex items-center gap-3 text-sanctuary-primary">
               <Cookie size={24} />
               <h3 className="font-bold">Sweeten the experience?</h3>
             </div>
-            <p className="text-xs text-valentine-soft leading-relaxed">
+            <p className="text-xs text-sanctuary-soft leading-relaxed text-gray-800">
               We use essential cookies for payments and to remember your progress. No tracking, just love. By using the site, you agree to our 
-              <Link href="/privacy" className="underline ml-1">Privacy Policy</Link>.
+              <Link href="/privacy" className="underline ml-1 text-gray-800">Privacy Policy</Link>.
             </p>
             <div className="flex gap-2">
               <button
                 onClick={accept}
-                className="flex-grow bg-valentine-red text-white py-2 rounded-xl font-bold text-xs hover:scale-[1.02] transition-all"
+                className="flex-grow bg-sanctuary-primary text-white py-2 rounded-xl font-bold text-xs hover:scale-[1.02] transition-all"
               >
                 Accept
               </button>
               <button
                 onClick={() => setIsVisible(false)}
-                className="px-4 py-2 border border-valentine-pink/20 rounded-xl text-valentine-soft text-xs"
+                className="px-4 py-2 border border-sanctuary-secondary/20 rounded-xl text-sanctuary-soft text-xs"
               >
                 Close
               </button>

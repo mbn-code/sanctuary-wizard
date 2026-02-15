@@ -215,9 +215,11 @@ const Dashboard = () => {
             Our Sanctuary
             {isPremiumVerified && (
                 <div className="group relative">
-                    <Sparkles size={24} className="text-yellow-500 fill-yellow-500 animate-pulse" />
-                    <span className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-32 p-2 bg-gray-800 text-white text-[8px] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 shadow-xl font-sans uppercase tracking-widest font-bold">
-                        Verified Premium
+                    <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center border border-amber-200 shadow-sm animate-in zoom-in duration-700">
+                        <Shield size={16} className="text-amber-600 fill-amber-600/20" />
+                    </div>
+                    <span className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-32 p-2 bg-slate-900 text-white text-[8px] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 shadow-xl font-sans uppercase tracking-[0.2em] font-bold text-center border border-white/10">
+                        Authentic Premium
                     </span>
                 </div>
             )}

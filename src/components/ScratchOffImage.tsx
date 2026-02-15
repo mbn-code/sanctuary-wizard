@@ -166,7 +166,7 @@ const ScratchOffImage = ({ src, alt, id, borderRadius, chromeColor, filter }: Sc
 
       {!isScratched && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <p className="bg-white/80 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold text-valentine-red uppercase tracking-widest shadow-sm">
+          <p className="bg-white/80 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold text-sanctuary-primary uppercase tracking-widest shadow-sm">
             Scratch to reveal
           </p>
         </div>

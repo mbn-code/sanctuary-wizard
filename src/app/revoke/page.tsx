@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Trash2, ArrowLeft, ShieldAlert, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Trash2, ArrowLeft, ShieldAlert, Loader2 as LucideLoader, CheckCircle2, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { importKey, decryptData } from '@/utils/crypto';
 
@@ -94,19 +94,19 @@ export default function RevokePage() {
         </div>
 
         {status === 'idle' || status === 'verifying' || status === 'error' ? (
-          <div className="space-y-6">
-            <div className="space-y-2">
-              <label className="block text-xs font-bold text-sanctuary-soft uppercase tracking-widest">Paste Sanctuary Link</label>
+          <div className="space-y-6 text-left">
+            <div className="space-y-2 text-left">
+              <label className="block text-xs font-bold text-sanctuary-soft uppercase tracking-widest text-left">Paste Sanctuary Link</label>
               <textarea 
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
                 placeholder="https://magicgift.vercel.app/?d=...#key"
-                className="w-full p-4 rounded-xl border-2 border-sanctuary-secondary/20 focus:border-sanctuary-primary outline-none transition-all text-xs font-mono h-32 resize-none bg-white"
+                className="w-full p-4 rounded-xl border-2 border-sanctuary-secondary/20 focus:border-sanctuary-primary outline-none transition-all text-xs font-mono h-32 resize-none bg-white text-gray-800"
               />
             </div>
 
             {status === 'error' && (
-              <div className="p-4 bg-red-50 rounded-xl border border-red-100 flex gap-3 text-red-600 text-xs leading-relaxed">
+              <div className="p-4 bg-red-50 rounded-xl border border-red-100 flex gap-3 text-red-600 text-xs leading-relaxed text-left">
                 <AlertCircle size={16} className="shrink-0" />
                 <p>{errorMsg}</p>
               </div>
@@ -117,12 +117,12 @@ export default function RevokePage() {
               disabled={!url || status === 'verifying'}
               className="w-full py-4 bg-sanctuary-primary text-white rounded-xl font-bold shadow-lg hover:brightness-110 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
             >
-              {status === 'verifying' ? <Loader2 className="animate-spin" size={20} /> : "Verify Link"}
+              {status === 'verifying' ? <LucideLoader className="animate-spin" size={20} /> : "Verify Link"}
             </button>
           </div>
         ) : status === 'confirming' || status === 'deleting' ? (
-          <div className="space-y-6 text-gray-800">
-            <div className="p-6 bg-red-50 rounded-2xl border-2 border-red-100 space-y-4">
+          <div className="space-y-6 text-gray-800 text-left">
+            <div className="p-6 bg-red-50 rounded-2xl border-2 border-red-100 space-y-4 text-left">
               <div className="flex items-center gap-3 text-red-600">
                 <ShieldAlert size={24} />
                 <h3 className="font-bold uppercase tracking-wider text-xs">Irreversible Action</h3>
@@ -140,24 +140,24 @@ export default function RevokePage() {
               disabled={status === 'deleting'}
               className="w-full py-4 bg-red-600 text-white rounded-xl font-bold shadow-lg hover:bg-red-700 transition-all flex items-center justify-center gap-2"
             >
-              {status === 'deleting' ? <Loader2 className="animate-spin" size={20} /> : "Yes, Delete Everything Permanently"}
+              {status === 'deleting' ? <LucideLoader className="animate-spin" size={20} /> : "Yes, Delete Everything Permanently"}
             </button>
             <button
               onClick={() => setPhase('idle')}
               disabled={status === 'deleting'}
-              className="w-full py-2 text-sanctuary-soft text-xs font-bold uppercase tracking-widest hover:text-sanctuary-primary transition-colors"
+              className="w-full py-2 text-sanctuary-soft text-xs font-bold uppercase tracking-widest hover:text-sanctuary-primary transition-colors text-left"
             >
               Cancel
             </button>
           </div>
         ) : (
           <div className="text-center py-8 space-y-6">
-            <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto">
+            <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto text-left">
               <CheckCircle2 size={48} />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 text-center">
               <h2 className="text-2xl font-bold text-gray-800">Assets Wiped</h2>
-              <p className="text-sanctuary-soft text-sm italic leading-relaxed">
+              <p className="text-sanctuary-soft text-sm italic leading-relaxed text-center">
                 All media has been permanently removed. The link is now inactive.
               </p>
             </div>
@@ -172,4 +172,5 @@ export default function RevokePage() {
       </div>
     </main>
   );
+
 }

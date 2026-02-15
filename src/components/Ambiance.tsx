@@ -10,7 +10,7 @@ const Ambiance = () => {
   const { config } = useSanctuary();
   const [particles, setParticles] = useState<{ id: number; x: number; y: number; size: number; duration: number }[]>([]);
 
-  const theme = THEMES[config?.theme || 'valentine'];
+  const theme = THEMES[config?.theme || 'classic'];
   const Icon = theme?.icon === 'heart' ? Heart : 
                theme?.icon === 'star' ? Star : 
                theme?.icon === 'cake' ? Cake : Gift;
