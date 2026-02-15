@@ -2,20 +2,21 @@ export interface ThemePreset {
   id: string;
   name: string;
   colors: {
-    primary: string; // The "Red" replacement
-    secondary: string; // The "Pink" replacement
-    accent: string; // Extra pop
-    bg: string; // The "Cream" replacement
+    primary: string; 
+    secondary: string;
+    accent: string;
+    bg: string;
     text: string;
     soft: string;
   };
-  icon: string; // 'heart', 'star', 'cake', 'gift'
+  icon: string; // 'heart', 'star', 'cake', 'gift', 'moon', 'sun'
+  font: 'elegant' | 'modern' | 'playful';
 }
 
 export const THEMES: Record<string, ThemePreset> = {
-  valentine: {
-    id: 'valentine',
-    name: 'Classic Valentine',
+  classic: {
+    id: 'classic',
+    name: 'Romantic Blush',
     colors: {
       primary: '#D63447',
       secondary: '#F7CAC9',
@@ -24,11 +25,12 @@ export const THEMES: Record<string, ThemePreset> = {
       text: '#1F2937',
       soft: '#6B7280'
     },
-    icon: 'heart'
+    icon: 'heart',
+    font: 'elegant'
   },
   midnight: {
     id: 'midnight',
-    name: 'Midnight Elegance',
+    name: 'Midnight Star',
     colors: {
       primary: '#6366F1',
       secondary: '#1E1B4B',
@@ -37,11 +39,12 @@ export const THEMES: Record<string, ThemePreset> = {
       text: '#F8FAFC',
       soft: '#94A3B8'
     },
-    icon: 'star'
+    icon: 'star',
+    font: 'modern'
   },
-  sunshine: {
-    id: 'sunshine',
-    name: 'Golden Hour',
+  celebration: {
+    id: 'celebration',
+    name: 'Golden Party',
     colors: {
       primary: '#F59E0B',
       secondary: '#FEF3C7',
@@ -50,11 +53,12 @@ export const THEMES: Record<string, ThemePreset> = {
       text: '#451A03',
       soft: '#92400E'
     },
-    icon: 'star'
+    icon: 'cake',
+    font: 'playful'
   },
   forest: {
     id: 'forest',
-    name: 'Deep Forest',
+    name: 'Evergreen',
     colors: {
       primary: '#10B981',
       secondary: '#D1FAE5',
@@ -63,21 +67,23 @@ export const THEMES: Record<string, ThemePreset> = {
       text: '#064E3B',
       soft: '#065F46'
     },
-    icon: 'star'
+    icon: 'star',
+    font: 'modern'
   },
-  lavender: {
-    id: 'lavender',
-    name: 'Soft Lavender',
+  monochrome: {
+    id: 'monochrome',
+    name: 'Minimalist Slate',
     colors: {
-      primary: '#8B5CF6',
-      secondary: '#EDE9FE',
-      accent: '#7C3AED',
-      bg: '#F5F3FF',
-      text: '#4C1D95',
-      soft: '#5B21B6'
+      primary: '#334155',
+      secondary: '#E2E8F0',
+      accent: '#475569',
+      bg: '#F8FAFC',
+      text: '#0F172A',
+      soft: '#64748B'
     },
-    icon: 'heart'
+    icon: 'gift',
+    font: 'modern'
   }
 };
 
-export const DEFAULT_THEME = THEMES.valentine;
+export const DEFAULT_THEME = THEMES.classic;

@@ -30,6 +30,15 @@ export function SanctuaryProvider({ children }: { children: ReactNode }) {
     root.style.setProperty('--color-bg', theme.colors.bg);
     root.style.setProperty('--color-text', theme.colors.text);
     root.style.setProperty('--color-soft', theme.colors.soft);
+    
+    // Apply font family based on theme
+    if (theme.font === 'elegant') {
+      root.style.setProperty('--font-current', 'var(--font-dm-serif)');
+    } else if (theme.font === 'modern') {
+      root.style.setProperty('--font-current', 'var(--font-inter)');
+    } else if (theme.font === 'playful') {
+      root.style.setProperty('--font-current', 'var(--font-sacramento)');
+    }
   };
 
   const setPreviewConfig = (newConfig: SanctuaryConfig | null) => {

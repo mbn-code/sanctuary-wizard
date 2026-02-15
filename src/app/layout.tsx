@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Sacramento } from "next/font/google";
+import { Inter, Sacramento, DM_Serif_Display, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import MagicCursor from "@/components/MagicCursor";
 import CookieBanner from "@/components/CookieBanner";
@@ -12,6 +12,15 @@ const sacramento = Sacramento({
   weight: "400", 
   subsets: ["latin"], 
   variable: "--font-sacramento" 
+});
+const dmSerif = DM_Serif_Display({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-dm-serif"
+});
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair"
 });
 
 export const metadata: Metadata = {
@@ -49,7 +58,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${sacramento.variable} font-sans`}>
+      <body className={`${inter.variable} ${sacramento.variable} ${dmSerif.variable} ${playfair.variable} font-sans`}>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <SanctuaryProvider>
           <MagicCursor />
