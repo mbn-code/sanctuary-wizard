@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #D63447;
+  --color-secondary: #F7CAC9;
+  --color-accent: #FF5E78;
+  --color-bg: #FFF5E1;
+  --color-text: #1F2937;
+  --color-soft: #6B7280;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .no-drag {
+    -webkit-app-region: no-drag;
+  }
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    opacity: 0.5;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--color-accent);
+    border: 1px solid transparent;
+    background-clip: content-box;
+  }
+}
+
+.bg-sanctuary-primary { background-color: var(--color-primary); }
+.bg-sanctuary-secondary { background-color: var(--color-secondary); }
+.bg-sanctuary-accent { background-color: var(--color-accent); }
+.bg-sanctuary-bg { background-color: var(--color-bg); }
+
+.text-sanctuary-primary { color: var(--color-primary); }
+.text-sanctuary-secondary { color: var(--color-secondary); }
+.text-sanctuary-accent { color: var(--color-accent); }
+.text-sanctuary-text { color: var(--color-text); }
+.text-sanctuary-soft { color: var(--color-soft); }
+
+.border-sanctuary-primary { border-color: var(--color-primary); }
+.border-sanctuary-secondary { border-color: var(--color-secondary); }
+.border-sanctuary-accent { border-color: var(--color-accent); }
