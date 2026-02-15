@@ -6,9 +6,9 @@ import Dashboard from '@/components/Dashboard';
 import MySanctuaries from '@/components/MySanctuaries';
 import { useSanctuary } from '@/utils/SanctuaryContext';
 import Link from 'next/link';
-import { 
-  Heart, Check, Sparkles, Star, Zap, Music, ImageIcon, 
-  MessageSquare, X, Shield, Lock, ArrowLeft, Loader2 as LucideLoader, 
+import {
+  Heart, Check, Sparkles, Star, Zap, Music, ImageIcon,
+  MessageSquare, X, Shield, Lock, ArrowLeft, Loader2 as LucideLoader,
   Clock, Gift, Cake, Moon, Sun, Camera, Eye, User
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -29,7 +29,7 @@ export default function Home() {
     }
 
     const isCompleted = localStorage.getItem(`sanctuary_completed_${JSON.stringify(config?.names)}`) === 'true';
-    
+
     if (isCompleted) {
       setPhase('dashboard');
     } else {
@@ -96,7 +96,7 @@ export default function Home() {
                     </motion.div>
                 )}
             </AnimatePresence>
-    
+
             <nav className="fixed top-0 left-0 w-full p-6 flex justify-between items-center z-[100] backdrop-blur-sm bg-white/30 border-b border-black/5">
                 <div className="flex items-center gap-2">
                     <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white font-bold italic">S</div>
@@ -169,7 +169,7 @@ export default function Home() {
                             <p className="text-slate-500 text-sm">Photos hidden behind an interactive scratch-off layer. Reveal the past with your touch.</p>
                         </div>
                         <div className="w-full h-32 bg-slate-100 rounded-2xl relative overflow-hidden">
-                            <div className="absolute inset-0 bg-sanctuary-secondary/40 flex items-center justify-center text-white font-bold uppercase tracking-widest text-[10px]">Scratch Me</div>
+                            <div className="absolute inset-0 bg-sanctuary-secondary/40 flex items-center justify-center text-slate-900 font-bold uppercase tracking-widest text-[10px]">Scratch Me</div>
                             <div className="absolute top-0 left-0 w-1/2 h-full bg-white group-hover:translate-x-full transition-transform duration-1000 shadow-xl" />
                         </div>
                     </div>
