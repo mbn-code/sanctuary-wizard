@@ -24,7 +24,7 @@ export default function RevokePage() {
       const k = parsedUrl.hash.slice(1);
 
       if (!d || !iv || !k) {
-        throw new Error("This doesn't look like a valid sanctuary link. Make sure you included the full URL including the part after the '#'.");
+        throw new Error("Invalid link. Include the part after '#'.");
       }
 
       const masterKey = await importKey(k);
@@ -40,7 +40,7 @@ export default function RevokePage() {
       }
 
       if (urls.length === 0) {
-        throw new Error("We couldn't find any uploaded photos or videos associated with this link.");
+        throw new Error("No uploaded media found for this link.");
       }
 
       setAssets(urls);
@@ -70,7 +70,7 @@ export default function RevokePage() {
       if (data.success) {
         setPhase('success');
       } else {
-        throw new Error(data.error || "Server failed to delete assets.");
+        throw new Error(data.error || "Failed to delete assets.");
       }
     } catch (e: any) {
       setPhase('error');
@@ -79,9 +79,9 @@ export default function RevokePage() {
   };
 
   return (
-    <main className="min-h-screen bg-valentine-cream p-4 md:p-8 flex flex-col items-center justify-center text-gray-800">
+    <main className="min-h-screen bg-sanctuary-bg p-4 md:p-8 flex flex-col items-center justify-center text-gray-800">
       <div className="max-w-xl w-full bg-white rounded-3xl shadow-xl overflow-hidden p-8 md:p-12 space-y-8">
-        <Link href="/" className="flex items-center gap-2 text-valentine-red font-bold hover:underline mb-4 text-sm">
+        <Link href="/" className="flex items-center gap-2 text-sanctuary-primary font-bold hover:underline mb-4 text-sm">
           <ArrowLeft size={16} /> Back to Home
         </Link>
 
@@ -89,19 +89,19 @@ export default function RevokePage() {
           <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto">
             <Trash2 size={32} />
           </div>
-          <h1 className="text-3xl font-bold text-valentine-red font-sacramento text-5xl">Revoke Sanctuary</h1>
-          <p className="text-valentine-soft text-sm italic">Permanently delete all uploaded assets and disable a shared link.</p>
+          <h1 className="text-3xl font-bold text-sanctuary-primary font-sacramento text-5xl">Revoke Sanctuary</h1>
+          <p className="text-sanctuary-soft text-sm italic">Permanently delete all uploaded assets and disable a shared link.</p>
         </div>
 
         {status === 'idle' || status === 'verifying' || status === 'error' ? (
           <div className="space-y-6">
             <div className="space-y-2">
-              <label className="block text-xs font-bold text-valentine-soft uppercase tracking-widest">Paste Sanctuary Link</label>
+              <label className="block text-xs font-bold text-sanctuary-soft uppercase tracking-widest">Paste Sanctuary Link</label>
               <textarea 
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
-                placeholder="https://valentize.vercel.app/?d=...#key"
-                className="w-full p-4 rounded-xl border-2 border-valentine-pink/20 focus:border-valentine-red outline-none transition-all text-xs font-mono h-32 resize-none"
+                placeholder="https://magicgift.vercel.app/?d=...#key"
+                className="w-full p-4 rounded-xl border-2 border-sanctuary-secondary/20 focus:border-sanctuary-primary outline-none transition-all text-xs font-mono h-32 resize-none bg-white"
               />
             </div>
 
@@ -115,23 +115,23 @@ export default function RevokePage() {
             <button
               onClick={handleVerify}
               disabled={!url || status === 'verifying'}
-              className="w-full py-4 bg-valentine-red text-white rounded-xl font-bold shadow-lg hover:scale-[1.02] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+              className="w-full py-4 bg-sanctuary-primary text-white rounded-xl font-bold shadow-lg hover:brightness-110 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {status === 'verifying' ? <Loader2 className="animate-spin" size={20} /> : "Verify Link"}
             </button>
           </div>
         ) : status === 'confirming' || status === 'deleting' ? (
-          <div className="space-y-6">
+          <div className="space-y-6 text-gray-800">
             <div className="p-6 bg-red-50 rounded-2xl border-2 border-red-100 space-y-4">
               <div className="flex items-center gap-3 text-red-600">
                 <ShieldAlert size={24} />
                 <h3 className="font-bold uppercase tracking-wider text-xs">Irreversible Action</h3>
               </div>
-              <p className="text-xs text-red-700 leading-relaxed">
+              <p className="text-xs text-red-700 leading-relaxed text-left">
                 We found <b>{assetsFound.length}</b> assets (photos/videos) linked to this sanctuary. 
                 Deleting them will permanently break the shared link. 
                 <br /><br />
-                <b>This action cannot be undone and no refunds will be issued.</b>
+                <b>This action cannot be undone.</b>
               </p>
             </div>
 
@@ -145,7 +145,7 @@ export default function RevokePage() {
             <button
               onClick={() => setPhase('idle')}
               disabled={status === 'deleting'}
-              className="w-full py-2 text-valentine-soft text-xs font-bold uppercase tracking-widest hover:text-valentine-red transition-colors"
+              className="w-full py-2 text-sanctuary-soft text-xs font-bold uppercase tracking-widest hover:text-sanctuary-primary transition-colors"
             >
               Cancel
             </button>
@@ -157,13 +157,13 @@ export default function RevokePage() {
             </div>
             <div className="space-y-2">
               <h2 className="text-2xl font-bold text-gray-800">Assets Wiped</h2>
-              <p className="text-valentine-soft text-sm italic leading-relaxed">
-                All photos and videos have been permanently removed from our storage. The shared link is now inactive.
+              <p className="text-sanctuary-soft text-sm italic leading-relaxed">
+                All media has been permanently removed. The link is now inactive.
               </p>
             </div>
             <Link 
               href="/"
-              className="inline-block px-8 py-3 bg-valentine-red text-white rounded-full font-bold shadow-md hover:scale-105 transition-all"
+              className="inline-block px-8 py-3 bg-sanctuary-primary text-white rounded-full font-bold shadow-md hover:brightness-110 transition-all"
             >
               Return Home
             </Link>

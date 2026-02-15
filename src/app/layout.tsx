@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Sacramento } from "next/font/google";
 import "./globals.css";
-import HeartCursor from "@/components/HeartCursor";
+import MagicCursor from "@/components/MagicCursor";
 import CookieBanner from "@/components/CookieBanner";
 import { SanctuaryProvider } from "@/utils/SanctuaryContext";
 import { Analytics } from "@vercel/analytics/next";
@@ -52,7 +52,7 @@ export default function RootLayout({
       <body className={`${inter.variable} ${sacramento.variable} font-sans`}>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <SanctuaryProvider>
-          <HeartCursor />
+          <MagicCursor />
           <CookieBanner />
           {children}
           <Analytics />
