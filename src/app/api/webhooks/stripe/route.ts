@@ -2,17 +2,23 @@ import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { headers } from 'next/headers';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-12-18.acacia' as any,
-});
-
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-
 export async function POST(req: Request) {
+  const secretKey = process.env.STRIPE_SECRET_KEY;
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+  if (!secretKey) {
+    console.error('STRIPE_SECRET_KEY is not set');
+    return NextResponse.json({ error: 'Stripe secret not configured' }, { status: 500 });
+  }
+
   if (!webhookSecret) {
     console.error('STRIPE_WEBHOOK_SECRET is not set');
     return NextResponse.json({ error: 'Webhook secret not configured' }, { status: 500 });
   }
+
+  const stripe = new Stripe(secretKey, {
+    apiVersion: '2024-12-18.acacia' as any,
+  });
 
   const body = await req.text();
   const signature = (await headers()).get('stripe-signature');
