@@ -12,6 +12,7 @@ interface SanctuaryContextType {
   decryptWithPasscode: (passcode: string) => Promise<boolean>;
   isLocked: boolean;
   setPreviewConfig: (config: SanctuaryConfig | null) => void;
+  applyTheme: (themeId: string) => void;
 }
 
 const SanctuaryContext = createContext<SanctuaryContextType | undefined>(undefined);
@@ -116,7 +117,7 @@ export function SanctuaryProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <SanctuaryContext.Provider value={{ config, isWizardMode, decryptWithPasscode, isLocked, setPreviewConfig }}>
+    <SanctuaryContext.Provider value={{ config, isWizardMode, decryptWithPasscode, isLocked, setPreviewConfig, applyTheme }}>
       {children}
     </SanctuaryContext.Provider>
   );

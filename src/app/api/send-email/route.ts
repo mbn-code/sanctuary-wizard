@@ -15,8 +15,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing parameters' }, { status: 400 });
     }
 
+    const senderEmail = process.env.SENDER_EMAIL || 'onboarding@resend.dev';
+
     const { data, error } = await resend.emails.send({
-      from: 'Sanctuary <gifts@oursanctuary.app>',
+      from: `Sanctuary <${senderEmail}>`,
       to: [email],
       subject: `Your Sanctuary for ${recipient} is ready!`,
       html: `
