@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, Suspense, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Music, ImageIcon, MessageSquare, Lock, Save, Copy, Check, ArrowRight, ArrowLeft, X, Sparkles, Star, Zap, Info, Loader2 as LucideLoader, Plus, Trash2, FileText, Upload, Shield, Cake, Gift } from 'lucide-react';
 import { SanctuaryConfig, SanctuaryPayload } from '@/utils/config';
@@ -12,6 +12,7 @@ import { useSanctuary } from '@/utils/SanctuaryContext';
 import Dashboard from '@/components/Dashboard';
 import Invitation from '@/components/Invitation';
 import { THEMES } from '@/utils/themes';
+import { toPng } from 'html-to-image';
 
 function WizardContent() {
   const searchParams = useSearchParams();
@@ -29,6 +30,8 @@ function WizardContent() {
   const [isVerifying, setIsVerifying] = useState(success && !!sessionId);
   const [uploading, setUploading] = useState<string | null>(null);
   const [bulkInput, setBulkInput] = useState<{ [key: string]: string }>({});
+  const [isDownloading, setIsDownloading] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
   
   const { setPreviewConfig } = useSanctuary();
   
@@ -42,7 +45,7 @@ function WizardContent() {
     totalDays: initialPlan === 'spark' ? 1 : 3,
     spotifyTracks: { "day0": "" },
     notes: [
-      { id: 'note1', day: 0, content: 'Happy Valentine\'s Day!' }
+      { id: 'note1', day: 0, content: 'A special message for you.' }
     ],
     passcode: '1402',
     videoUrl: '',
@@ -54,6 +57,11 @@ function WizardContent() {
   const [configLength, setConfigLength] = useState(0);
   const [totalNotesLength, setTotalNotesLength] = useState(0);
   const [previewRefreshKey, setPreviewRefreshKey] = useState(0);
+
+  const theme = THEMES[config.theme || 'valentine'];
+  const ThemeIcon = theme?.icon === 'heart' ? Heart : 
+                    theme?.icon === 'star' ? Star : 
+                    theme?.icon === 'cake' ? Cake : Gift;
 
   // Monitor config size for URL limits
   useEffect(() => {
@@ -145,7 +153,7 @@ function WizardContent() {
       if (isGallery && dayKey) {
         const totalImages = Object.values(config.galleryImages || {}).reduce((acc, day) => acc + day.length, 0);
         if (totalImages + files.length > currentLimits.gallery) {
-            alert(`Limit of ${currentLimits.gallery} photos reached.`);
+            alert(`Limit reached.`);
             setUploading(null);
             return;
         }
@@ -270,6 +278,22 @@ function WizardContent() {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const downloadShareCard = async () => {
+    if (!cardRef.current) return;
+    setIsDownloading(true);
+    try {
+        const dataUrl = await toPng(cardRef.current, { quality: 0.95, pixelRatio: 2 });
+        const link = document.createElement('a');
+        link.download = `gift-for-${config.names.recipient.toLowerCase()}.png`;
+        link.href = dataUrl;
+        link.click();
+    } catch (err) {
+        console.error("Failed to generate share card", err);
+    } finally {
+        setIsDownloading(false);
+    }
+  };
+
   const steps = [
     { title: "Select Plan", icon: <Star /> },
     { title: "The Occasion", icon: <Sparkles /> },
@@ -289,6 +313,19 @@ function WizardContent() {
     return days; // 0 is big day, 1 is day before, etc.
   };
 
+  const UpgradeNudge = ({ target }: { target: 'plus' | 'infinite' }) => (
+    <div className="p-4 bg-sanctuary-primary/5 rounded-2xl border border-sanctuary-primary/20 flex items-start gap-3 mt-4 animate-in fade-in slide-in-from-top-2">
+        <Sparkles className="text-sanctuary-primary shrink-0" size={20} />
+        <div>
+            <p className="text-xs font-bold text-sanctuary-primary uppercase tracking-wider mb-1">Upgrade Available</p>
+            <p className="text-[11px] text-sanctuary-soft mb-2">
+                Unlock more days, photos, and the secret cinema.
+            </p>
+            <button onClick={() => setStep(1)} className="text-[10px] bg-sanctuary-primary text-white px-3 py-1 rounded-full font-bold uppercase">View Plans</button>
+        </div>
+    </div>
+  );
+
   if (isVerifying) {
       return (
         <main className="min-h-screen bg-sanctuary-bg flex flex-col items-center justify-center p-8 text-center text-gray-800">
@@ -305,7 +342,7 @@ function WizardContent() {
       <div className="max-w-3xl w-full bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col min-h-[650px]">
         {/* Header */}
         <div className="bg-sanctuary-primary p-6 text-white flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 text-left">
             <div className="p-2 bg-white/20 rounded-lg">
                 {steps[step-1]?.icon}
             </div>
@@ -334,40 +371,23 @@ function WizardContent() {
 
         <div className="h-1 bg-white/20 w-full flex">
           {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
-            <div 
-              key={s} 
-              className={`h-full transition-all duration-500 ${s <= step ? 'bg-white' : ''}`} 
-              style={{ width: '12.5%' }}
-            />
+            <div key={s} className={`h-full transition-all duration-500 ${s <= step ? 'bg-white' : ''}`} style={{ width: '12.5%' }} />
           ))}
         </div>
 
         <div className="flex-grow p-8 overflow-y-auto custom-scrollbar">
           <AnimatePresence mode="wait">
-            <motion.div
-              key={step}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="space-y-6"
-            >
+            <motion.div key={step} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
               {step === 1 && (
-                <div className="space-y-6 text-center text-gray-800">
-                    <div className="text-center">
-                        <h2 className="text-2xl font-bold text-sanctuary-primary font-sacramento text-4xl">Choose your experience</h2>
-                        <p className="text-sanctuary-soft text-sm mt-1">Pick the tier that fits your story.</p>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                <div className="space-y-6 text-center">
+                    <h2 className="text-2xl font-bold text-sanctuary-primary font-sacramento text-4xl">Choose your experience</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         {[
                             { id: 'spark', name: 'Spark', price: '$2.00', desc: 'The Sweet Teaser' },
                             { id: 'plus', name: 'Romance', price: '$7.00', desc: 'A Week of Memories' },
                             { id: 'infinite', name: 'Sanctuary', price: '$12.00', desc: 'The Full Journey' }
                         ].map((p) => (
-                            <div 
-                                key={p.id}
-                                onClick={() => updateConfig('plan', p.id)}
-                                className={`p-4 rounded-2xl border-4 cursor-pointer transition-all flex flex-col text-center ${config.plan === p.id ? 'border-sanctuary-primary bg-sanctuary-primary/5 shadow-inner' : 'border-sanctuary-secondary/10 hover:border-sanctuary-secondary/30'}`}
-                            >
+                            <div key={p.id} onClick={() => updateConfig('plan', p.id)} className={`p-4 rounded-2xl border-4 cursor-pointer transition-all flex flex-col text-center ${config.plan === p.id ? 'border-sanctuary-primary bg-sanctuary-primary/5 shadow-inner' : 'border-sanctuary-secondary/10 hover:border-sanctuary-secondary/30'}`}>
                                 <p className="text-[10px] font-bold text-sanctuary-soft uppercase tracking-tighter mb-1">{p.name}</p>
                                 <p className="text-xl font-bold text-sanctuary-primary">{p.price}</p>
                                 <p className="text-[10px] text-sanctuary-soft mt-2">{p.desc}</p>
@@ -376,20 +396,14 @@ function WizardContent() {
                     </div>
                     <div className="bg-sanctuary-bg/50 p-4 rounded-2xl text-left">
                         <ul className="text-xs text-sanctuary-soft space-y-2">
-                            <li className="flex items-center gap-2">
-                                <Check size={14} className="text-green-500" /> 
-                                {config.plan === 'spark' ? '5 Messages' : config.plan === 'plus' ? '25 Messages' : '500 Messages'}
-                            </li>
-                            <li className="flex items-center gap-2 text-gray-800">
-                                <Check size={14} className="text-green-500 text-gray-800" /> 
-                                {config.plan === 'spark' ? '1 Day Countdown' : config.plan === 'plus' ? '7 Day Countdown' : '14 Day Journey'}
-                            </li>
-                            <li className="flex items-center gap-2">
-                                <Check size={14} className="text-green-500" /> 
-                                {config.plan === 'spark' ? '10 Photos' : config.plan === 'plus' ? '30 Photos' : '50 Photos'}
-                            </li>
+                            <li className="flex items-center gap-2"><Check size={14} className="text-green-500" /> {config.plan === 'spark' ? '5 Messages' : config.plan === 'plus' ? '25 Messages' : '500 Messages'}</li>
+                            <li className="flex items-center gap-2"><Check size={14} className="text-green-500" /> {config.plan === 'spark' ? '1 Day Countdown' : config.plan === 'plus' ? '7 Day Countdown' : '14 Day Journey'}</li>
+                            <li className="flex items-center gap-2"><Check size={14} className="text-green-500" /> {config.plan === 'spark' ? '10 Photos' : config.plan === 'plus' ? '30 Photos' : '50 Photos'}</li>
                         </ul>
                     </div>
+                    <button onClick={() => { setPreviewConfig(config); setIsPreviewing(true); }} className="w-full py-3 border-2 border-sanctuary-primary text-sanctuary-primary rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-sanctuary-primary hover:text-white transition-all flex items-center justify-center gap-2">
+                        <Zap size={14} className="fill-current" /> Preview Experience
+                    </button>
                 </div>
               )}
 
@@ -399,60 +413,35 @@ function WizardContent() {
                     <label className="block text-xs font-bold text-sanctuary-soft uppercase tracking-widest">Choose a Theme</label>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                         {Object.values(THEMES).map(t => (
-                            <button
-                                key={t.id}
-                                onClick={() => updateConfig('theme', t.id)}
-                                className={`p-3 rounded-xl border-2 transition-all flex items-center gap-2 text-xs font-bold ${config.theme === t.id ? 'border-sanctuary-primary bg-sanctuary-primary/5' : 'border-gray-100 hover:border-sanctuary-secondary'}`}
-                            >
-                                <div className="w-4 h-4 rounded-full" style={{ backgroundColor: t.colors.primary }} />
-                                {t.name}
+                            <button key={t.id} onClick={() => updateConfig('theme', t.id)} className={`p-3 rounded-xl border-2 transition-all flex items-center gap-2 text-xs font-bold ${config.theme === t.id ? 'border-sanctuary-primary bg-sanctuary-primary/5' : 'border-gray-100 hover:border-sanctuary-secondary'}`}>
+                                <div className="w-4 h-4 rounded-full" style={{ backgroundColor: t.colors.primary }} /> {t.name}
                             </button>
                         ))}
                     </div>
                   </div>
-
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <label className="block text-xs font-bold text-sanctuary-soft uppercase tracking-widest">Your Name</label>
-                      <input 
-                        type="text" 
-                        value={config.names.sender}
-                        onChange={(e) => updateConfig('names.sender', e.target.value)}
-                        placeholder="Alex"
-                        className="w-full p-3 rounded-xl border-2 border-sanctuary-secondary/20 focus:border-sanctuary-primary outline-none transition-colors bg-white text-gray-800"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="block text-xs font-bold text-sanctuary-soft uppercase tracking-widest">Their Name</label>
-                      <input 
-                        type="text" 
-                        value={config.names.recipient}
-                        onChange={(e) => updateConfig('names.recipient', e.target.value)}
-                        placeholder="Sam"
-                        className="w-full p-3 rounded-xl border-2 border-sanctuary-secondary/20 focus:border-sanctuary-primary outline-none transition-colors bg-white text-gray-800"
-                      />
-                    </div>
+                    <div className="space-y-2"><label className="block text-xs font-bold text-sanctuary-soft uppercase tracking-widest">Your Name</label><input type="text" value={config.names.sender} onChange={(e) => updateConfig('names.sender', e.target.value)} placeholder="Alex" className="w-full p-3 rounded-xl border-2 border-sanctuary-secondary/20 focus:border-sanctuary-primary outline-none transition-colors bg-white text-gray-800" /></div>
+                    <div className="space-y-2"><label className="block text-xs font-bold text-sanctuary-soft uppercase tracking-widest">Their Name</label><input type="text" value={config.names.recipient} onChange={(e) => updateConfig('names.recipient', e.target.value)} placeholder="Sam" className="w-full p-3 rounded-xl border-2 border-sanctuary-secondary/20 focus:border-sanctuary-primary outline-none transition-colors bg-white text-gray-800" /></div>
                   </div>
-
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2 text-left">
-                        <label className="block text-xs font-bold text-sanctuary-soft uppercase tracking-widest">Target Date</label>
-                        <input 
-                        type="date" 
-                        value={config.targetDate.split('T')[0]}
-                        onChange={(e) => updateConfig('targetDate', new Date(e.target.value).toISOString())}
-                        className="w-full p-3 rounded-xl border-2 border-sanctuary-secondary/20 focus:border-sanctuary-primary outline-none transition-colors bg-white text-gray-800"
-                        />
-                    </div>
-                    <div className="space-y-2 text-left">
-                        <label className="block text-xs font-bold text-sanctuary-soft uppercase tracking-widest">Question</label>
-                        <input 
-                        type="text" 
-                        value={config.customQuestion || ""}
-                        onChange={(e) => updateConfig('customQuestion', e.target.value)}
-                        placeholder="Will you be my Valentine?"
-                        className="w-full p-3 rounded-xl border-2 border-sanctuary-secondary/20 focus:border-sanctuary-primary outline-none transition-colors bg-white text-gray-800"
-                        />
+                    <div className="space-y-2 text-left"><label className="block text-xs font-bold text-sanctuary-soft uppercase tracking-widest">Target Date</label><input type="date" value={config.targetDate.split('T')[0]} onChange={(e) => updateConfig('targetDate', new Date(e.target.value).toISOString())} className="w-full p-3 rounded-xl border-2 border-sanctuary-secondary/20 focus:border-sanctuary-primary outline-none transition-colors bg-white text-gray-800" /></div>
+                    <div className="space-y-2 text-left"><label className="block text-xs font-bold text-sanctuary-soft uppercase tracking-widest">Question</label><input type="text" value={config.customQuestion || ""} onChange={(e) => updateConfig('customQuestion', e.target.value)} placeholder="Will you be my Valentine?" className="w-full p-3 rounded-xl border-2 border-sanctuary-secondary/20 focus:border-sanctuary-primary outline-none transition-colors bg-white text-gray-800" /></div>
+                  </div>
+                  <div className="grid grid-cols-1 gap-4 pt-4 border-t border-sanctuary-secondary/10">
+                    <label className="block text-xs font-bold text-sanctuary-soft uppercase tracking-widest">Custom Background Image</label>
+                    <div className={`relative rounded-xl border-2 border-dashed p-6 transition-all border-sanctuary-secondary/30 bg-white hover:border-sanctuary-primary cursor-pointer`}>
+                        {config.backgroundUrl ? (
+                            <div className="flex items-center gap-4">
+                                <div className="w-16 h-16 rounded-lg overflow-hidden border-2 border-sanctuary-secondary/20 shadow-sm bg-gray-50"><img src={config.backgroundUrl} alt="" className="w-full h-full object-cover" /></div>
+                                <div className="flex-grow"><p className="text-xs font-bold text-sanctuary-primary">Background Set</p><button onClick={() => { const url = config.backgroundUrl; updateConfig('backgroundUrl', ''); if (url) deleteAsset(url); }} className="text-[10px] text-sanctuary-soft underline uppercase font-bold hover:text-sanctuary-primary transition-colors">Remove</button></div>
+                            </div>
+                        ) : (
+                            <label className={`flex flex-col items-center justify-center gap-2 cursor-pointer`}>
+                                {uploading === 'backgroundUrl' ? <LucideLoader className="animate-spin text-sanctuary-primary" size={24} /> : <Upload className="text-sanctuary-secondary" size={24} />}
+                                <span className="text-xs font-bold text-sanctuary-soft uppercase tracking-wider">{uploading === 'backgroundUrl' ? 'Uploading...' : 'Upload Image'}</span>
+                                <input type="file" accept="image/*" className="hidden" disabled={!!uploading} onChange={(e) => handleFileUpload(e, 'backgroundUrl')} />
+                            </label>
+                        )}
                     </div>
                   </div>
                 </div>
@@ -464,16 +453,8 @@ function WizardContent() {
                   <div className="max-h-[350px] overflow-y-auto pr-2 custom-scrollbar space-y-4">
                     {getDaysArray().map((offset) => (
                         <div key={offset} className="space-y-2 p-4 bg-sanctuary-bg/30 rounded-xl">
-                        <label className="block text-[10px] font-bold text-sanctuary-soft uppercase tracking-wider">
-                            {offset === 0 ? "The Big Day" : `${offset} Days Before`}
-                        </label>
-                        <input 
-                            type="text" 
-                            value={config.spotifyTracks[`day${offset}`] || ""}
-                            onChange={(e) => updateConfig(`spotifyTracks.day${offset}`, e.target.value.split('/').pop()?.split('?')[0])}
-                            placeholder="Paste Spotify Link or ID"
-                            className="w-full p-3 rounded-lg border-2 border-sanctuary-secondary/20 focus:border-sanctuary-primary outline-none transition-colors text-sm bg-white"
-                        />
+                        <label className="block text-[10px] font-bold text-sanctuary-soft uppercase tracking-wider">{offset === 0 ? "The Big Day" : `${offset} Days Before`}</label>
+                        <input type="text" value={config.spotifyTracks[`day${offset}`] || ""} onChange={(e) => updateConfig(`spotifyTracks.day${offset}`, e.target.value.split('/').pop()?.split('?')[0])} placeholder="Paste Spotify Link or ID" className="w-full p-3 rounded-lg border-2 border-sanctuary-secondary/20 focus:border-sanctuary-primary outline-none transition-colors text-sm bg-white" />
                         </div>
                     ))}
                   </div>
@@ -481,7 +462,7 @@ function WizardContent() {
               )}
 
               {step === 4 && (
-                <div className="space-y-4 text-left">
+                <div className="space-y-4 text-left text-gray-800">
                     <p className="text-sm text-sanctuary-soft">Upload images for each stage of the journey.</p>
                     <div className="max-h-[450px] overflow-y-auto pr-2 custom-scrollbar space-y-8">
                         {getDaysArray().map((offset) => {
@@ -489,47 +470,22 @@ function WizardContent() {
                           const images = config.galleryImages?.[dayKey] || [];
                           return (
                             <div key={offset} className="p-5 bg-sanctuary-bg/30 rounded-2xl space-y-4 border border-sanctuary-secondary/10">
-                              <div className="flex justify-between items-center">
-                                <label className="block text-[10px] font-bold text-sanctuary-primary uppercase tracking-[0.2em]">
-                                  {offset === 0 ? "Grand Finale" : `${offset} Days Left`}
-                                </label>
-                                <span className="text-[10px] bg-white px-2 py-1 rounded-full font-bold text-sanctuary-soft shadow-sm">
-                                    {images.length} Photos
-                                </span>
+                              <div className="flex justify-between items-center text-left text-gray-800">
+                                <label className="block text-[10px] font-bold text-sanctuary-primary uppercase tracking-[0.2em]">{offset === 0 ? "Grand Finale" : `${offset} Days Left`}</label>
+                                <span className="text-[10px] bg-white px-2 py-1 rounded-full font-bold text-sanctuary-soft shadow-sm">{images.length} / {currentLimits.gallery}</span>
                               </div>
-                              <div className="space-y-4">
+                              <div className="space-y-4 text-left">
                                 <label className={`flex flex-col items-center justify-center gap-2 border-2 border-dashed border-sanctuary-secondary/30 rounded-xl p-6 transition-all hover:border-sanctuary-primary cursor-pointer bg-white/50 group ${uploading ? 'pointer-events-none' : ''}`}>
-                                    {uploading === `gallery_${dayKey}` ? (
-                                        <LucideLoader className="animate-spin text-sanctuary-primary" size={24} />
-                                    ) : (
-                                        <Plus className="text-sanctuary-secondary group-hover:scale-110 transition-transform" size={24} />
-                                    )}
-                                    <span className="text-xs font-bold text-sanctuary-soft uppercase tracking-wider">
-                                        {uploading === `gallery_${dayKey}` ? 'Uploading...' : 'Select Photos'}
-                                    </span>
-                                    <input 
-                                        type="file" 
-                                        multiple 
-                                        accept="image/*"
-                                        className="hidden" 
-                                        onChange={(e) => handleFileUpload(e, `gallery_${dayKey}`, true, dayKey)}
-                                    />
+                                    {uploading === `gallery_${dayKey}` ? <LucideLoader className="animate-spin text-sanctuary-primary" size={24} /> : <Plus className="text-sanctuary-secondary group-hover:scale-110 transition-transform" size={24} />}
+                                    <span className="text-xs font-bold text-sanctuary-soft uppercase tracking-wider">{uploading === `gallery_${dayKey}` ? 'Uploading...' : 'Select Photos'}</span>
+                                    <input type="file" multiple accept="image/*" className="hidden" onChange={(e) => handleFileUpload(e, `gallery_${dayKey}`, true, dayKey)} />
                                 </label>
                                 {images.length > 0 && (
-                                    <div className="grid grid-cols-3 gap-2 mt-4">
+                                    <div className="grid grid-cols-3 gap-2 mt-4 text-left">
                                         {images.map((url, idx) => (
-                                            <div key={idx} className="relative group rounded-lg overflow-hidden border-2 border-sanctuary-secondary/20 aspect-square bg-white shadow-sm">
+                                            <div key={idx} className="relative group rounded-lg overflow-hidden border-2 border-sanctuary-secondary/20 aspect-square bg-white shadow-sm text-left">
                                                 <img src={url} className="w-full h-full object-cover" alt="" />
-                                                <button 
-                                                    onClick={() => {
-                                                        const newImages = images.filter((_, i) => i !== idx);
-                                                        updateConfig(`galleryImages.${dayKey}`, newImages);
-                                                        if (url) deleteAsset(url);
-                                                    }}
-                                                    className="absolute top-1 right-1 bg-black/50 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                                                >
-                                                    <Trash2 size={10} />
-                                                </button>
+                                                <button onClick={() => { const newImages = images.filter((_, i) => i !== idx); updateConfig(`galleryImages.${dayKey}`, newImages); if (url) deleteAsset(url); }} className="absolute top-1 right-1 bg-black/50 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"><Trash2 size={10} /></button>
                                             </div>
                                         ))}
                                     </div>
@@ -545,112 +501,36 @@ function WizardContent() {
               {step === 5 && (
                 <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar text-left text-gray-800">
                   <div className="flex flex-col gap-1">
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between text-left">
                       <p className="text-sm text-sanctuary-soft font-bold uppercase tracking-wider">Secret Messages</p>
-                      <span className={`text-[10px] font-bold px-2 py-1 rounded ${totalNotesLength > 7500 ? 'bg-red-100 text-red-600' : 'bg-sanctuary-bg text-sanctuary-soft'}`}>
-                        {totalNotesLength.toLocaleString()} / 8,000
-                      </span>
+                      <span className={`text-[10px] font-bold px-2 py-1 rounded ${totalNotesLength > 7500 ? 'bg-red-100 text-red-600' : 'bg-sanctuary-bg text-sanctuary-soft'}`}>{totalNotesLength.toLocaleString()} / 8,000</span>
                     </div>
                   </div>
-                  
                   {config.notes.map((note, idx) => (
-                    <div key={note.id} className="p-4 bg-sanctuary-bg/50 rounded-2xl space-y-3 relative group border border-sanctuary-secondary/10 shadow-sm">
-                      <div className="flex gap-4">
-                        <select 
-                          value={note.day}
-                          onChange={(e) => {
-                            const newNotes = [...config.notes];
-                            newNotes[idx].day = parseInt(e.target.value);
-                            updateConfig('notes', newNotes);
-                          }}
-                          className="p-2 rounded-lg border-2 border-sanctuary-secondary/20 outline-none text-xs bg-white focus:border-sanctuary-primary"
-                        >
-                          {getDaysArray().map(offset => (
-                              <option key={offset} value={offset}>{offset === 0 ? "The Big Day" : `${offset} Days Left`}</option>
-                          ))}
-                        </select>
-                        <input 
-                          type="text" 
-                          value={note.content}
-                          onChange={(e) => {
-                            const newContent = e.target.value;
-                            const otherLen = config.notes.reduce((acc, n, i) => i === idx ? acc : acc + (n.content?.length || 0), 0);
-                            if (otherLen + newContent.length <= 8000) {
-                                const newNotes = [...config.notes];
-                                newNotes[idx].content = newContent;
-                                updateConfig('notes', newNotes);
-                            }
-                          }}
-                          placeholder="My message..."
-                          className="flex-grow p-2 rounded-lg border-2 border-sanctuary-secondary/20 outline-none text-sm bg-white focus:border-sanctuary-primary"
-                        />
+                    <div key={note.id} className="p-4 bg-sanctuary-bg/50 rounded-2xl space-y-3 relative group border border-sanctuary-secondary/10 shadow-sm text-left">
+                      <div className="flex gap-4 text-left">
+                        <select value={note.day} onChange={(e) => { const newNotes = [...config.notes]; newNotes[idx].day = parseInt(e.target.value); updateConfig('notes', newNotes); }} className="p-2 rounded-lg border-2 border-sanctuary-secondary/20 outline-none text-xs bg-white focus:border-sanctuary-primary text-gray-800">{getDaysArray().map(offset => ( <option key={offset} value={offset}>{offset === 0 ? "The Big Day" : `${offset} Days Left`}</option> ))}</select>
+                        <input type="text" value={note.content} onChange={(e) => { const newContent = e.target.value; const otherLen = config.notes.reduce((acc, n, i) => i === idx ? acc : acc + (n.content?.length || 0), 0); if (otherLen + newContent.length <= 8000) { const newNotes = [...config.notes]; newNotes[idx].content = newContent; updateConfig('notes', newNotes); } }} placeholder="My message..." className="flex-grow p-2 rounded-lg border-2 border-sanctuary-secondary/20 outline-none text-sm bg-white focus:border-sanctuary-primary text-gray-800" />
                       </div>
-                      {config.notes.length > 1 && (
-                        <button 
-                          onClick={() => {
-                              const newNotes = config.notes.filter((_, i) => i !== idx);
-                              updateConfig('notes', newNotes);
-                          }}
-                          className="absolute -top-2 -right-2 bg-sanctuary-primary text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                        >
-                          <X size={14} />
-                        </button>
-                      )}
+                      {config.notes.length > 1 && ( <button onClick={() => { const newNotes = config.notes.filter((_, i) => i !== idx); updateConfig('notes', newNotes); }} className="absolute -top-2 -right-2 bg-sanctuary-primary text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"><X size={14} /></button> )}
                     </div>
                   ))}
-                  <button 
-                    onClick={() => {
-                        const newNotes = [...config.notes, { id: `note${Date.now()}`, day: 0, content: '' }];
-                        updateConfig('notes', newNotes);
-                    }}
-                    className="w-full py-3 border-2 border-dashed border-sanctuary-primary text-sanctuary-primary rounded-2xl font-bold hover:bg-sanctuary-primary/5 transition-colors text-sm"
-                  >
-                    + Add Another Message
-                  </button>
+                  <button onClick={() => { const newNotes = [...config.notes, { id: `note${Date.now()}`, day: 0, content: '' }]; updateConfig('notes', newNotes); }} className="w-full py-3 border-2 border-dashed border-sanctuary-primary text-sanctuary-primary rounded-2xl font-bold hover:bg-sanctuary-primary/5 transition-all text-sm">+ Add Another Message</button>
                 </div>
               )}
 
               {step === 6 && (
-                <div className="space-y-4 text-left">
+                <div className="space-y-4 text-left text-gray-800">
                   {!currentLimits.video ? (
-                    <div className="p-8 text-center bg-sanctuary-primary/5 rounded-3xl border-2 border-dashed border-sanctuary-secondary/30">
-                      <ImageIcon size={48} className="mx-auto text-sanctuary-secondary mb-4" />
-                      <h3 className="text-xl font-bold text-sanctuary-primary mb-2">Secret Cinema is Premium</h3>
-                      <p className="text-sm text-sanctuary-soft mb-6">Upgrade to <b>The Sanctuary</b> plan to upload your own video.</p>
-                      <button onClick={() => setStep(1)} className="px-6 py-2 bg-sanctuary-primary text-white rounded-full font-bold shadow-lg block mx-auto">View Plans</button>
-                    </div>
+                    <div className="p-8 text-center bg-sanctuary-primary/5 rounded-3xl border-2 border-dashed border-sanctuary-secondary/30"><ImageIcon size={48} className="mx-auto text-sanctuary-secondary mb-4" /><h3 className="text-xl font-bold text-sanctuary-primary mb-2">Secret Cinema is Premium</h3><p className="text-sm text-sanctuary-soft mb-6 text-center">Upgrade to <b>The Sanctuary</b> plan to upload your own video.</p><button onClick={() => setStep(1)} className="px-6 py-2 bg-sanctuary-primary text-white rounded-full font-bold shadow-lg block mx-auto">View Plans</button></div>
                   ) : (
                     <div className="space-y-4">
                       <label className="block text-xs font-bold text-sanctuary-soft uppercase tracking-widest">Secret Cinema Video</label>
                       <div className={`relative rounded-xl border-2 border-dashed p-8 transition-all ${uploading === 'videoUrl' ? 'bg-sanctuary-bg/30 border-sanctuary-primary' : 'border-sanctuary-secondary/30 bg-white hover:border-sanctuary-primary'}`}>
                         {config.videoUrl ? (
-                            <div className="space-y-4 text-left">
-                                <div className="aspect-video w-full rounded-lg overflow-hidden border-2 border-sanctuary-secondary/20 bg-black">
-                                    <video src={config.videoUrl} className="w-full h-full object-cover" controls />
-                                </div>
-                                <div className="flex justify-between items-center text-left">
-                                    <p className="text-[10px] font-bold text-sanctuary-primary uppercase">Video Uploaded</p>
-                                    <button onClick={() => {
-                                        const url = config.videoUrl;
-                                        updateConfig('videoUrl', '');
-                                        if (url) deleteAsset(url);
-                                    }} className="text-[10px] text-sanctuary-soft underline uppercase font-bold hover:text-sanctuary-primary">Change</button>
-                                </div>
-                            </div>
+                            <div className="space-y-4"><div className="aspect-video w-full rounded-lg overflow-hidden border-2 border-sanctuary-secondary/20 bg-black"><video src={config.videoUrl} className="w-full h-full object-cover" controls /></div><div className="flex justify-between items-center"><p className="text-[10px] font-bold text-sanctuary-primary uppercase">Video Uploaded</p><button onClick={() => { const url = config.videoUrl; updateConfig('videoUrl', ''); if (url) deleteAsset(url); }} className="text-[10px] text-sanctuary-soft underline uppercase font-bold hover:text-sanctuary-primary">Change</button></div></div>
                         ) : (
-                            <label className="flex flex-col items-center justify-center gap-4 cursor-pointer">
-                                {uploading === 'videoUrl' ? (
-                                    <LucideLoader className="animate-spin text-sanctuary-primary" size={32} />
-                                ) : (
-                                    <div className="p-4 bg-sanctuary-primary/5 rounded-full">
-                                        <Upload className="text-sanctuary-primary" size={32} />
-                                    </div>
-                                )}
-                                <div className="text-center">
-                                    <p className="text-sm font-bold text-sanctuary-primary uppercase tracking-wider">Upload Video</p>
-                                </div>
-                                <input type="file" accept="video/*" className="hidden" disabled={!!uploading} onChange={(e) => handleFileUpload(e, 'videoUrl')} />
-                            </label>
+                            <label className="flex flex-col items-center justify-center gap-4 cursor-pointer text-left">{uploading === 'videoUrl' ? <LucideLoader className="animate-spin text-sanctuary-primary" size={32} /> : <div className="p-4 bg-sanctuary-primary/5 rounded-full"><Upload className="text-sanctuary-primary" size={32} /></div>}<div className="text-center"><p className="text-sm font-bold text-sanctuary-primary uppercase tracking-wider">Upload Video</p></div><input type="file" accept="video/*" className="hidden" disabled={!!uploading} onChange={(e) => handleFileUpload(e, 'videoUrl')} /></label>
                         )}
                       </div>
                     </div>
@@ -662,13 +542,7 @@ function WizardContent() {
                 <div className="space-y-4 text-center">
                    <div className="space-y-2 text-left">
                     <label className="block text-sm font-bold text-sanctuary-soft uppercase tracking-wider">Passcode</label>
-                    <input 
-                      type="text" 
-                      maxLength={4}
-                      value={config.passcode}
-                      onChange={(e) => updateConfig('passcode', e.target.value.replace(/\D/g, ''))}
-                      className={`w-full p-4 text-center text-4xl tracking-widest font-bold rounded-xl border-2 transition-all outline-none border-sanctuary-secondary/20 focus:border-sanctuary-primary focus:bg-white bg-gray-50`}
-                    />
+                    <input type="text" maxLength={4} value={config.passcode} onChange={(e) => updateConfig('passcode', e.target.value.replace(/\D/g, ''))} className={`w-full p-4 text-center text-4xl tracking-widest font-bold rounded-xl border-2 transition-all outline-none border-sanctuary-secondary/20 focus:border-sanctuary-primary focus:bg-white bg-gray-50 text-gray-800`} />
                     <p className="text-[10px] text-sanctuary-soft text-center font-bold uppercase tracking-widest">Choose 4 numbers to lock your gift.</p>
                   </div>
                 </div>
@@ -676,20 +550,36 @@ function WizardContent() {
 
               {step === 8 && (
                 <div className="space-y-8 text-center py-10">
-                  <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
-                    <Check size={40} />
-                  </div>
+                  <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce"><Check size={40} /></div>
                   <h2 className="text-3xl font-bold text-sanctuary-primary font-sacramento text-5xl">Gift Ready</h2>
                   <div className="space-y-4 text-left">
-                    <div className="p-4 bg-sanctuary-bg rounded-xl border-2 border-sanctuary-secondary/20 break-all text-xs font-mono bg-gray-50 overflow-hidden shadow-inner">
-                      {generatedLink}
-                    </div>
+                    <div className="p-4 bg-sanctuary-bg rounded-xl border-2 border-sanctuary-secondary/20 break-all text-xs font-mono bg-gray-50 overflow-hidden shadow-inner">{generatedLink}</div>
                     <div className="flex flex-col gap-3">
-                      <button onClick={copyToClipboard} className="w-full flex items-center justify-center gap-2 py-4 bg-sanctuary-primary text-white rounded-xl font-bold shadow-lg hover:scale-[1.02] transition-all">
-                        {copied ? <Check size={20} /> : <Copy size={20} />} {copied ? 'Copied!' : 'Copy Gift Link'}
-                      </button>
-                      <button onClick={() => setStep(2)} className="w-full py-2 text-center text-[10px] text-sanctuary-soft uppercase tracking-widest font-bold hover:text-sanctuary-primary">Edit Sanctuary</button>
-                      <button onClick={handleDelete} className="w-full py-2 text-center text-[10px] text-red-400 uppercase tracking-widest font-bold hover:text-red-600">Destroy Sanctuary</button>
+                      <button onClick={copyToClipboard} className="w-full flex items-center justify-center gap-3 py-4 bg-sanctuary-primary text-white rounded-xl font-bold shadow-lg hover:scale-[1.02] transition-all">{copied ? <Check size={20} /> : <Copy size={20} />} {copied ? 'Copied!' : 'Copy Gift Link'}</button>
+                      
+                      <div className="p-6 bg-sanctuary-primary/5 rounded-2xl border-2 border-dashed border-sanctuary-primary/20 space-y-4">
+                        <div className="flex items-center gap-2 text-sanctuary-primary"><Sparkles size={20} /><h3 className="font-bold uppercase text-xs tracking-widest">Social Media Pack</h3></div>
+                        <p className="text-[11px] text-sanctuary-soft leading-relaxed">Download a story card to announce your gift on TikTok or Instagram.</p>
+                        <button onClick={downloadShareCard} disabled={isDownloading} className="w-full py-3 bg-white border-2 border-sanctuary-primary text-sanctuary-primary rounded-xl font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-sanctuary-primary hover:text-white transition-all shadow-sm disabled:opacity-50 text-gray-800">
+                            {isDownloading ? <LucideLoader className="animate-spin" size={16} /> : <ImageIcon size={16} />} {isDownloading ? 'Generating...' : 'Download Card'}
+                        </button>
+                      </div>
+
+                      <button onClick={() => setStep(2)} className="w-full py-2 text-center text-[10px] text-sanctuary-soft uppercase tracking-widest font-bold hover:text-sanctuary-primary transition-colors text-gray-800">Edit Details</button>
+                      <button onClick={handleDelete} className="w-full py-2 text-center text-[10px] text-red-400 uppercase tracking-widest font-bold hover:text-red-600 transition-colors">Destroy Sanctuary</button>
+                    </div>
+                  </div>
+                  {/* Hidden Card for Image Generation */}
+                  <div className="fixed left-[-9999px] top-0">
+                    <div ref={cardRef} className="w-[1080px] h-[1920px] bg-white flex flex-col items-center justify-center p-20 text-center relative overflow-hidden" style={{ backgroundColor: theme.colors.bg }}>
+                        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: `radial-gradient(${theme.colors.primary} 2px, transparent 2px)`, backgroundSize: '40px 40px' }} />
+                        <div className="relative z-10 space-y-12">
+                            <ThemeIcon size={240} fill={theme.colors.primary} stroke={theme.colors.primary} className="mx-auto" />
+                            <h1 className="text-[120px] font-bold text-sanctuary-primary font-sacramento leading-tight">A Sanctuary for {config.names.recipient}</h1>
+                            <p className="text-[48px] text-sanctuary-soft font-bold uppercase tracking-[0.2em]">Created by {config.names.sender}</p>
+                            <div className="pt-24"><div className="px-12 py-6 bg-sanctuary-primary text-white rounded-full text-[40px] font-bold shadow-2xl">Link in Bio ✨</div></div>
+                        </div>
+                        <p className="absolute bottom-20 text-[32px] font-bold text-sanctuary-soft/50 uppercase tracking-widest">MagicGift.vercel.app</p>
                     </div>
                   </div>
                 </div>
@@ -724,17 +614,11 @@ function WizardContent() {
       <AnimatePresence>
         {isPreviewing && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[2000] bg-sanctuary-bg overflow-y-auto">
-                <div className="fixed top-4 left-4 right-4 p-2 bg-white/95 backdrop-blur-md border-2 border-sanctuary-primary rounded-2xl flex justify-between items-center z-[3000] shadow-2xl">
-                    <div className="flex items-center gap-2 pl-2"><Sparkles className="text-sanctuary-primary" size={18} /> <span className="text-xs font-bold text-sanctuary-primary uppercase tracking-widest">Live Preview</span></div>
-                    <div className="flex items-center gap-3">
-                        <button onClick={() => { setIsPreviewing(false); setPreviewConfig(null); }} className="px-6 py-2 bg-sanctuary-primary text-white rounded-xl font-bold shadow-lg text-[10px] uppercase tracking-widest flex items-center gap-2">
-                            <ArrowLeft size={14} /> Exit Preview
-                        </button>
-                    </div>
+                <div className="fixed top-4 left-4 right-4 p-2 bg-white/95 backdrop-blur-md border-2 border-sanctuary-primary rounded-2xl flex justify-between items-center z-[3000] shadow-2xl text-gray-800">
+                    <div className="flex items-center gap-2 pl-2"><Sparkles className="text-sanctuary-primary" size={18} /><span className="text-xs font-bold text-sanctuary-primary uppercase tracking-widest">Live Preview</span></div>
+                    <button onClick={() => { setIsPreviewing(false); setPreviewConfig(null); }} className="px-6 py-2 bg-sanctuary-primary text-white rounded-xl font-bold shadow-lg text-[10px] uppercase tracking-widest flex items-center gap-2 transition-all hover:scale-105"><ArrowLeft size={14} /> Exit Preview</button>
                 </div>
-                <div className="relative pt-16">
-                    <PreviewApp forceUpdateKey={previewRefreshKey} />
-                </div>
+                <div className="relative pt-16 text-gray-800 text-left"><PreviewApp forceUpdateKey={previewRefreshKey} /></div>
             </motion.div>
         )}
       </AnimatePresence>
