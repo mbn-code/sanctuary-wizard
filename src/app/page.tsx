@@ -23,19 +23,19 @@ export default function Home() {
 
   const [currentActivity, setCurrentActivity] = useState(0);
   const activities = [
-    { type: 'Birthday Sanctuary', location: 'Copenhagen', time: 'Just now' },
-    { type: 'Anniversary Gift', location: 'London', time: '2m ago' },
-    { type: 'Wedding Sanctuary', location: 'New York', time: '5m ago' },
-    { type: 'Graduation Gift', location: 'Berlin', time: '8m ago' },
-    { type: 'Digital Sanctuary', location: 'Paris', time: '12m ago' },
-    { type: 'Birthday Sanctuary', location: 'Tokyo', time: '15m ago' },
+    { type: 'Birthday Sanctuary', location: 'Copenhagen', time: '12m ago' },
+    { type: 'Anniversary Gift', location: 'London', time: '45m ago' },
+    { type: 'Wedding Sanctuary', location: 'New York', time: '2h ago' },
+    { type: 'Graduation Gift', location: 'Berlin', time: '5h ago' },
+    { type: 'Digital Sanctuary', location: 'Paris', time: '1d ago' },
+    { type: 'Birthday Sanctuary', location: 'Tokyo', time: '2d ago' },
   ];
 
   useEffect(() => {
     setIsClient(true);
     const aTimer = setInterval(() => {
       setCurrentActivity((prev) => (prev + 1) % activities.length);
-    }, 12000);
+    }, 45000);
 
     return () => {
       clearInterval(aTimer);
