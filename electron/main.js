@@ -16,7 +16,7 @@ function createWindow() {
   });
 
   // Load the Vercel URL
-  win.loadURL('https://valentine-flax-alpha.vercel.app');
+  win.loadURL('https://sanctuary-wizard.vercel.app');
 
   // win.webContents.openDevTools(); // For debugging
 }

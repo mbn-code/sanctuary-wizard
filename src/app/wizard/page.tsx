@@ -845,7 +845,7 @@ function WizardContent() {
                             <div className="pt-24">
                                 <div className="px-16 py-8 bg-slate-900 text-white rounded-[40px] text-[48px] font-bold shadow-2xl flex flex-col gap-2">
                                     <span>Open the Gift</span>
-                                    <span className="text-[24px] opacity-60 font-normal lowercase tracking-widest">sanctuary-wiz.com</span>
+                                    <span className="text-[24px] opacity-60 font-normal lowercase tracking-widest">sanctuary-wizard.vercel.app</span>
                                 </div>
                             </div>
                         </div>
