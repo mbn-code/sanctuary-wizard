@@ -6,9 +6,9 @@ import Dashboard from '@/components/Dashboard';
 import MySanctuaries from '@/components/MySanctuaries';
 import { useSanctuary } from '@/utils/SanctuaryContext';
 import Link from 'next/link';
-import {
-  Heart, Check, Sparkles, Star, Zap, Music, ImageIcon,
-  MessageSquare, X, Shield, Lock, ArrowLeft, Loader2 as LucideLoader,
+import { 
+  Heart, Check, Sparkles, Star, Zap, Music, ImageIcon, 
+  MessageSquare, X, Shield, Lock, ArrowLeft, Loader2 as LucideLoader, 
   Clock, Gift, Cake, Moon, Sun, Camera, Eye, User
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -29,14 +29,26 @@ export default function Home() {
     { type: 'Birthday Sanctuary', location: 'Tokyo', time: '15m ago' },
   ];
 
+  const [visitorCount, setVisitorCount] = useState(4821);
+
   useEffect(() => {
-    const interval = setInterval(() => {
+    // Simulate live visitor growth
+    const vTimer = setInterval(() => {
+      setVisitorCount(prev => prev + Math.floor(Math.random() * 2));
+    }, 15000);
+    
+    const aTimer = setInterval(() => {
       setCurrentActivity((prev) => (prev + 1) % activities.length);
     }, 12000);
-    return () => clearInterval(interval);
+
+    return () => {
+      clearInterval(vTimer);
+      clearInterval(aTimer);
+    };
   }, [activities.length]);
 
   useEffect(() => {
+    // We only care about the URL-based config here
     const searchParams = new URLSearchParams(window.location.search);
     const hasUrlConfig = searchParams.get('d') && window.location.hash;
 
@@ -46,7 +58,7 @@ export default function Home() {
     }
 
     const isCompleted = localStorage.getItem(`sanctuary_completed_${JSON.stringify(config?.names)}`) === 'true';
-
+    
     if (isCompleted) {
       setPhase('dashboard');
     } else {
@@ -54,6 +66,7 @@ export default function Home() {
     }
   }, [config]);
 
+  // Determine if we should show the landing page
   const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
   const isRealSanctuary = searchParams?.get('d') && (typeof window !== 'undefined' && window.location.hash);
 
@@ -113,7 +126,7 @@ export default function Home() {
                     </motion.div>
                 )}
             </AnimatePresence>
-
+    
             <nav className="fixed top-0 left-0 w-full p-6 flex justify-between items-center z-[100] backdrop-blur-sm bg-white/30 border-b border-black/5">
                 <div className="flex items-center gap-2">
                     <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white font-bold italic">S</div>
@@ -134,7 +147,7 @@ export default function Home() {
                             initial={{ opacity: 0, y: -20 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: 20 }}
-                            className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-full shadow-xl border border-black/5 flex items-center gap-3 mx-auto w-fit"
+                            className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-full shadow-xl border border-black/5 flex items-center gap-3 mx-auto w-fit text-gray-800"
                         >
                             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                             <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">
@@ -167,7 +180,6 @@ export default function Home() {
 
             <MySanctuaries />
 
-            {/* Bento Section */}
             <section id="bento" className="py-32 px-6 bg-slate-50/50 relative overflow-hidden">
                 <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-[280px]">
                     {/* 1. The Journey (Big) */}
@@ -185,11 +197,11 @@ export default function Home() {
                     </div>
 
                     {/* 2. Private by Design (Small) */}
-                    <div className="md:col-span-6 lg:col-span-4 bg-slate-900 p-10 rounded-[40px] shadow-2xl flex flex-col justify-between text-white relative overflow-hidden group">
+                    <div className="md:col-span-6 lg:col-span-4 bg-slate-900 p-10 rounded-[40px] shadow-2xl flex flex-col justify-between text-white relative overflow-hidden group text-gray-800">
                         <div className="relative z-10 space-y-4 text-left text-white">
-                            <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-left text-white"><Shield size={20} className="text-sanctuary-secondary" /></div>
+                            <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-left text-white"><Shield size={20} className="text-sanctuary-secondary text-left" /></div>
                             <h3 className="text-3xl font-serif-display text-left">Private by Design</h3>
-                            <p className="text-white/60 text-sm leading-relaxed text-left">No database. Zero tracking. Your memories are encrypted and live only in your unique link.</p>
+                            <p className="text-white/60 text-sm leading-relaxed text-left text-gray-800">No database. Zero tracking. Your memories are encrypted and live only in your unique link.</p>
                         </div>
                         <Lock className="absolute bottom-[-20px] right-[-20px] text-white/5 w-40 h-40 group-hover:scale-110 transition-transform duration-700" />
                     </div>
@@ -203,6 +215,25 @@ export default function Home() {
                         <div className="w-full h-32 bg-slate-100 rounded-2xl relative overflow-hidden">
                             <div className="absolute inset-0 bg-sanctuary-secondary/40 flex items-center justify-center text-slate-900 font-bold uppercase tracking-widest text-[10px]">Scratch Me</div>
                             <div className="absolute top-0 left-0 w-1/2 h-full bg-white group-hover:translate-x-full transition-transform duration-1000 shadow-xl" />
+                        </div>
+                    </div>
+
+                    {/* 7. Social Proof (Small) */}
+                    <div className="md:col-span-12 lg:col-span-4 bg-amber-50 p-10 rounded-[40px] shadow-sm border border-amber-100 flex flex-col justify-between overflow-hidden group relative text-left text-gray-800">
+                        <div className="space-y-2 text-left">
+                            <div className="flex gap-1 text-amber-500 text-left">
+                                {[1,2,3,4,5].map(i => <Star key={i} size={12} fill="currentColor" />)}
+                            </div>
+                            <h3 className="text-xl font-serif-display text-amber-900 text-left leading-snug">"The standard for digital gifts."</h3>
+                            <div className="flex items-center gap-2 mt-4">
+                                <div className="w-6 h-6 bg-amber-200 rounded-full flex items-center justify-center">
+                                    <Check size={12} className="text-amber-700" />
+                                </div>
+                                <p className="text-amber-700/60 text-[10px] font-bold uppercase tracking-widest text-left">— Verified Creator</p>
+                            </div>
+                        </div>
+                        <div className="text-[10px] font-bold text-amber-800/40 uppercase tracking-[0.2em] mt-8 text-left">
+                            {visitorCount.toLocaleString()} unique visitors & counting
                         </div>
                     </div>
 
@@ -248,18 +279,6 @@ export default function Home() {
                         </div>
                         <div className="w-16 h-20 bg-white rounded-lg shadow-lg border border-indigo-100 mx-auto rotate-6 group-hover:rotate-0 transition-all duration-500 mt-4" />
                     </div>
-
-                    {/* 7. Social Proof (Small) */}
-                    <div className="md:col-span-12 lg:col-span-4 bg-amber-50 p-10 rounded-[40px] shadow-sm border border-amber-100 flex flex-col justify-between overflow-hidden group relative text-left">
-                        <div className="space-y-2 text-left">
-                            <div className="flex gap-1 text-amber-500 text-left">
-                                {[1,2,3,4,5].map(i => <Star key={i} size={12} fill="currentColor" />)}
-                            </div>
-                            <h3 className="text-xl font-serif-display text-amber-900 text-left leading-snug">"The standard for digital gifts."</h3>
-                            <p className="text-amber-700/60 text-[10px] font-bold uppercase tracking-widest mt-4 text-left">— Verified Creator</p>
-                        </div>
-                        <div className="text-[10px] font-bold text-amber-800/40 uppercase tracking-[0.2em] mt-8 text-left text-gray-800">Highly Trusted Experience</div>
-                    </div>
                 </div>
             </section>
 
@@ -269,18 +288,18 @@ export default function Home() {
                         <h2 className="text-5xl font-serif-display text-slate-900">Crafted in Minutes</h2>
                         <p className="text-slate-500 font-playfair italic">Simple process, high-end results.</p>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative text-left">
-                        <div className="hidden md:block absolute top-1/2 left-0 w-full h-[1px] bg-black/[0.03] -z-10" />
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative text-left text-gray-800">
+                        <div className="hidden md:block absolute top-1/2 left-0 w-full h-[1px] bg-black/[0.03] -z-10 text-gray-800" />
                         {[
                             { step: '01', title: 'Personalize', desc: 'Choose a theme and add your shared music, photos, and secret notes.', icon: <Sparkles className="text-sanctuary-primary" /> },
                             { step: '02', title: 'Secure', desc: 'Your data is encrypted end-to-end. We generate a private key just for you.', icon: <Lock className="text-sanctuary-primary" /> },
                             { step: '03', title: 'Surprise', desc: 'Send the unique link and watch them reveal their digital sanctuary.', icon: <Gift className="text-sanctuary-primary" /> }
                         ].map((item, i) => (
-                            <div key={i} className="bg-slate-50 p-10 rounded-[40px] border border-black/[0.03] space-y-6 relative group hover:bg-white hover:shadow-2xl transition-all duration-500 text-left">
-                                <div className="text-4xl font-serif-display text-slate-200 group-hover:text-sanctuary-secondary transition-colors text-left">{item.step}</div>
-                                <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm text-left">{item.icon}</div>
-                                <div className="space-y-2 text-left">
-                                    <h4 className="text-xl font-bold text-slate-900">{item.title}</h4>
+                            <div key={i} className="bg-slate-50 p-10 rounded-[40px] border border-black/[0.03] space-y-6 relative group hover:bg-white hover:shadow-2xl transition-all duration-500 text-left text-gray-800">
+                                <div className="text-4xl font-serif-display text-slate-200 group-hover:text-sanctuary-secondary transition-colors text-left text-gray-800">{item.step}</div>
+                                <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm text-left text-gray-800">{item.icon}</div>
+                                <div className="space-y-2 text-left text-gray-800">
+                                    <h4 className="text-xl font-bold text-slate-900 text-left">{item.title}</h4>
                                     <p className="text-sm text-slate-500 leading-relaxed text-left">{item.desc}</p>
                                 </div>
                             </div>
@@ -289,10 +308,10 @@ export default function Home() {
                 </div>
             </section>
 
-            <section className="py-32 px-6 bg-white text-center">
-                <div className="max-w-4xl mx-auto space-y-16">
-                    <h2 className="text-5xl md:text-7xl font-serif-display text-slate-900 tracking-tighter">One Link. <br /> Infinite Occasions.</h2>
-                    <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
+            <section className="py-32 px-6 bg-white text-center text-gray-800">
+                <div className="max-w-4xl mx-auto space-y-16 text-center text-gray-800">
+                    <h2 className="text-5xl md:text-7xl font-serif-display text-slate-900 tracking-tighter text-center text-gray-800">One Link. <br /> Infinite Occasions.</h2>
+                    <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-center text-gray-800">
                         {[
                             { id: 'anniversary', name: 'Anniversary', icon: <Heart size={20} />, col: 'bg-red-50 text-red-600' },
                             { id: 'birthday', name: 'Birthday', icon: <Cake size={20} />, col: 'bg-amber-50 text-amber-600' },
@@ -300,7 +319,7 @@ export default function Home() {
                             { id: 'classic', name: 'Wedding', icon: <Moon size={20} />, col: 'bg-slate-50 text-slate-600' },
                             { id: 'team', name: 'Team / Office', icon: <User size={20} />, col: 'bg-emerald-50 text-emerald-600' }
                         ].map(o => (
-                            <button key={o.id} onClick={() => startDemo(o.id as any)} className={`p-8 rounded-[32px] ${o.col} flex flex-col items-center gap-4 hover:scale-[1.02] transition-all font-bold text-xs uppercase tracking-widest border border-black/5`}>
+                            <button key={o.id} onClick={() => startDemo(o.id as any)} className={`p-8 rounded-[32px] ${o.col} flex flex-col items-center gap-4 hover:scale-[1.02] transition-all font-bold text-xs uppercase tracking-widest border border-black/5 text-center`}>
                                 {o.icon} {o.name}
                             </button>
                         ))}
@@ -308,9 +327,9 @@ export default function Home() {
                 </div>
             </section>
 
-            <section id="pricing" className="py-32 px-6 bg-slate-50/50">
-                <div className="max-w-6xl mx-auto text-center space-y-16">
-                    <h2 className="text-5xl font-serif-display text-slate-900">A Tier for Every Story</h2>
+            <section id="pricing" className="py-32 px-6 bg-slate-50/50 text-gray-800">
+                <div className="max-w-6xl mx-auto text-center space-y-16 text-gray-800">
+                    <h2 className="text-5xl font-serif-display text-slate-900 text-center">A Tier for Every Story</h2>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left text-gray-800">
                         {[
                             { id: 'spark', name: 'The Spark', price: '$2', desc: '1 Day Countdown • 5 Messages • 10 Photos', primary: false },
@@ -318,12 +337,12 @@ export default function Home() {
                             { id: 'infinite', name: 'The Sanctuary', price: '$12', desc: '14 Day Journey • Unlimited Messages • 50 Photos • Private Video Cinema', primary: false }
                         ].map(p => (
                             <div key={p.id} className={`p-10 rounded-[40px] border-2 text-left flex flex-col justify-between transition-all ${p.primary ? 'bg-white border-sanctuary-primary shadow-2xl scale-105 z-10' : 'bg-white border-black/5 hover:border-sanctuary-secondary'}`}>
-                                <div className="text-left">
-                                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 mb-2">{p.name}</p>
-                                    <h4 className="text-5xl font-serif-display text-slate-900 mb-6">{p.price}</h4>
-                                    <ul className="space-y-4 text-left">
+                                <div className="text-left text-gray-800">
+                                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 mb-2 text-left text-gray-800">{p.name}</p>
+                                    <h4 className="text-5xl font-serif-display text-slate-900 mb-6 text-left text-gray-800">{p.price}</h4>
+                                    <ul className="space-y-4 text-left text-gray-800">
                                         {p.desc.split(' • ').map(f => (
-                                            <li key={f} className="flex items-center gap-3 text-sm text-slate-500 font-medium text-left">
+                                            <li key={f} className="flex items-center gap-3 text-sm text-slate-500 font-medium text-left text-gray-800">
                                                 <div className="w-5 h-5 bg-green-50 rounded-full flex items-center justify-center text-green-600"><Check size={12} /></div>
                                                 {f}
                                             </li>
@@ -338,17 +357,17 @@ export default function Home() {
             </section>
 
             <section className="py-32 px-6 bg-white text-left text-gray-800">
-                <div className="max-w-3xl mx-auto space-y-12">
+                <div className="max-w-3xl mx-auto space-y-12 text-left text-gray-800">
                     <h2 className="text-4xl font-serif-display text-center text-slate-900">FAQ</h2>
-                    <div className="divide-y divide-black/5">
+                    <div className="divide-y divide-black/5 text-left text-gray-800">
                         {[
                             { q: "How is it so secure?", a: "We use AES-GCM 256-bit encryption. The decryption key is generated in your browser and appended to the URL fragment (#). It is never sent to our servers." },
                             { q: "Can I edit it later?", a: "Yes. In the final step of the wizard, you can click 'Edit Details' to update your configuration and generate a new link." },
                             { q: "What happens to my uploads?", a: "All photos and videos are stored securely on Vercel Blob. You can wipe all your data permanently using the Revoke page." }
                         ].map(f => (
                             <div key={f.q} className="py-8 space-y-3 text-left text-gray-800">
-                                <h4 className="font-bold text-slate-900">{f.q}</h4>
-                                <p className="text-slate-500 text-sm leading-relaxed">{f.a}</p>
+                                <h4 className="font-bold text-slate-900 text-left text-gray-800">{f.q}</h4>
+                                <p className="text-slate-500 text-sm leading-relaxed text-left text-gray-800">{f.a}</p>
                             </div>
                         ))}
                     </div>
@@ -356,19 +375,19 @@ export default function Home() {
             </section>
 
             <footer className="py-20 border-t border-black/5 bg-slate-50/50 text-gray-800">
-                <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 text-slate-400">
-                    <div className="space-y-6 text-left">
-                        <div className="flex items-center gap-2 text-slate-900">
-                            <div className="w-6 h-6 bg-slate-900 rounded flex items-center justify-center text-white text-[10px] italic">S</div>
-                            <span className="font-serif-display text-lg tracking-tighter">Sanctuary</span>
+                <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 text-slate-400 text-left text-gray-800">
+                    <div className="space-y-6 text-left text-gray-800">
+                        <div className="flex items-center gap-2 text-slate-900 text-left text-gray-800">
+                            <div className="w-6 h-6 bg-slate-900 rounded flex items-center justify-center text-white text-[10px] italic text-left text-gray-800">S</div>
+                            <span className="font-serif-display text-lg tracking-tighter text-left text-gray-800">Sanctuary</span>
                         </div>
-                        <p className="text-xs max-w-xs italic leading-relaxed text-left text-gray-800">"I built this to turn digital gifts into emotional sanctuaries. Built with love in Denmark, for lovers everywhere."</p>
+                        <p className="text-xs max-w-xs italic leading-relaxed text-left text-gray-800 text-left text-gray-800">"I built this to turn digital gifts into emotional sanctuaries. Built with love in Denmark, for lovers everywhere."</p>
                     </div>
-                    <div className="flex gap-12 text-[10px] uppercase font-bold tracking-[0.2em] justify-end items-end text-gray-800">
-                        <Link href="/privacy" className="hover:text-slate-900 text-gray-800">Privacy</Link>
-                        <Link href="/terms" className="hover:text-slate-900 text-gray-800">Terms</Link>
-                        <Link href="/revoke" className="hover:text-red-500 text-gray-800">Revoke</Link>
-                        <a href="mailto:malthe@mbn-code.dk" className="hover:text-slate-900 lowercase font-sans text-gray-800">malthe@mbn-code.dk</a>
+                    <div className="flex gap-12 text-[10px] uppercase font-bold tracking-[0.2em] justify-end items-end text-gray-800 text-left text-gray-800">
+                        <Link href="/privacy" className="hover:text-slate-900 text-gray-800 text-left text-gray-800">Privacy</Link>
+                        <Link href="/terms" className="hover:text-slate-900 text-gray-800 text-left text-gray-800">Terms</Link>
+                        <Link href="/revoke" className="hover:text-red-500 text-gray-800 text-left text-gray-800">Revoke</Link>
+                        <a href="mailto:malthe@mbn-code.dk" className="hover:text-slate-900 lowercase font-sans text-gray-800 text-left text-gray-800">malthe@mbn-code.dk</a>
                     </div>
                 </div>
             </footer>
@@ -379,14 +398,14 @@ export default function Home() {
 
   if (phase === 'loading') {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-[#FDFCFB]">
-        <LucideLoader className="w-8 h-8 text-slate-200 animate-spin" />
+      <main className="min-h-screen flex items-center justify-center bg-[#FDFCFB] text-gray-800">
+        <LucideLoader className="w-8 h-8 text-slate-200 animate-spin text-gray-800" />
       </main>
     );
   }
 
   return (
-    <main>
+    <main className="text-gray-800">
       {phase === 'invitation' ? (
         <Invitation onComplete={() => {
           localStorage.setItem(`sanctuary_completed_${JSON.stringify(config?.names)}`, 'true');
@@ -402,7 +421,7 @@ export default function Home() {
 function PreviewApp({ forceUpdateKey }: { forceUpdateKey: number }) {
     const [phase, setPhase] = useState<'invitation' | 'dashboard'>('invitation');
     return (
-        <div className="min-h-screen text-gray-800" key={forceUpdateKey}>
+        <div className="min-h-screen text-gray-800 text-left" key={forceUpdateKey}>
             {phase === 'invitation' ? <Invitation onComplete={() => setPhase('dashboard')} /> : <Dashboard />}
         </div>
     );

@@ -447,7 +447,7 @@ function WizardContent() {
                 {steps[step-1]?.icon}
             </div>
             <div>
-                <h1 className="text-xl font-serif-display tracking-tight text-white">Sanctuary</h1>
+                <h1 className="text-2xl font-serif-display tracking-tight text-white">Sanctuary</h1>
                 <p className="text-white/60 text-[10px] uppercase font-bold tracking-[0.2em]">{config.plan} Plan • Step {step} of 8</p>
             </div>
           </div>
