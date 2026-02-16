@@ -19,6 +19,23 @@ export default function Home() {
   const [previewRefreshKey, setPreviewRefreshKey] = useState(0);
   const { config, setPreviewConfig } = useSanctuary();
 
+  const [currentActivity, setCurrentActivity] = useState(0);
+  const activities = [
+    { type: 'Birthday Sanctuary', location: 'Copenhagen', time: 'Just now' },
+    { type: 'Anniversary Gift', location: 'London', time: '2m ago' },
+    { type: 'Wedding Sanctuary', location: 'New York', time: '5m ago' },
+    { type: 'Graduation Gift', location: 'Berlin', time: '8m ago' },
+    { type: 'Digital Sanctuary', location: 'Paris', time: '12m ago' },
+    { type: 'Birthday Sanctuary', location: 'Tokyo', time: '15m ago' },
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentActivity((prev) => (prev + 1) % activities.length);
+    }, 12000);
+    return () => clearInterval(interval);
+  }, [activities.length]);
+
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const hasUrlConfig = searchParams.get('d') && window.location.hash;
@@ -110,11 +127,22 @@ export default function Home() {
             </nav>
 
             <header className="min-h-screen flex flex-col items-center justify-center px-6 pt-20 relative text-center">
-                <div className="absolute top-24 left-1/2 -translate-x-1/2 z-50 pointer-events-none w-full max-w-xs md:max-w-none">
-                    <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: [0, 1, 1, 0], y: [-20, 0, 0, -20] }} transition={{ duration: 4, repeat: Infinity, repeatDelay: 8 }} className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-full shadow-xl border border-black/5 flex items-center gap-3 mx-auto w-fit">
-                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                        <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Someone created a <span className="text-slate-900">Birthday Sanctuary</span></p>
-                    </motion.div>
+                <div className="absolute top-24 left-1/2 -translate-x-1/2 z-50 pointer-events-none w-full max-w-xs md:max-w-none text-center">
+                    <AnimatePresence mode="wait">
+                        <motion.div 
+                            key={currentActivity}
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 20 }}
+                            className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-full shadow-xl border border-black/5 flex items-center gap-3 mx-auto w-fit"
+                        >
+                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">
+                                {activities[currentActivity].type} created in <span className="text-slate-900">{activities[currentActivity].location}</span>
+                                <span className="ml-2 text-slate-400 font-medium normal-case tracking-normal">— {activities[currentActivity].time}</span>
+                            </p>
+                        </motion.div>
+                    </AnimatePresence>
                 </div>
                 <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-sanctuary-secondary/20 rounded-full blur-[120px] -z-10 animate-pulse" />
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-4xl space-y-8 text-gray-800">
@@ -182,7 +210,7 @@ export default function Home() {
                             <h3 className="text-xl font-serif-display text-amber-900 text-left">"The best digital gift I've ever sent."</h3>
                             <p className="text-amber-700/60 text-xs font-bold uppercase tracking-widest mt-4 text-left">— Sarah K.</p>
                         </div>
-                        <div className="text-[10px] font-bold text-amber-800/40 uppercase tracking-[0.2em] mt-8 text-left text-gray-800">Trusted by 2,000+ creators</div>
+                        <div className="text-[10px] font-bold text-amber-800/40 uppercase tracking-[0.2em] mt-8 text-left text-gray-800">The new standard for digital gifts</div>
                     </div>
 
                     <div className="md:col-span-12 lg:col-span-8 bg-[#F5F3FF] p-10 rounded-[40px] shadow-sm border border-black/[0.03] flex flex-col justify-between group overflow-hidden relative">
