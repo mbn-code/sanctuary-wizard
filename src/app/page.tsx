@@ -173,15 +173,16 @@ export default function Home() {
 
             <MySanctuaries />
 
+            {/* Bento Section */}
             <section id="bento" className="py-32 px-6 bg-slate-50/50 relative overflow-hidden">
                 <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-[280px]">
-                    {/* 1. The Journey (Big) */}
+                    {/* Row 1: 8 + 4 */}
                     <div className="md:col-span-12 lg:col-span-8 bg-white p-10 rounded-[40px] shadow-sm border border-black/[0.03] flex flex-col justify-between group overflow-hidden relative">
-                        <div className="relative z-10 space-y-4 text-left">
+                        <div className="relative z-10 space-y-4 text-left text-gray-800">
                             <h3 className="text-4xl font-serif-display text-slate-900">The Journey Matters</h3>
                             <p className="text-slate-500 max-w-md text-sm">Build anticipation with a timed countdown. Every day reveals a new photo, a hidden note, or a curated song.</p>
                         </div>
-                        <div className="flex gap-3 mt-8 relative z-10 text-left">
+                        <div className="flex gap-3 mt-8 relative z-10 text-left text-gray-800">
                             {[7, 6, 5, 4, 3, 2, 1].map(d => (
                                 <div key={d} className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold shadow-sm transition-all border ${d === 1 ? 'bg-sanctuary-primary text-white border-sanctuary-primary scale-110' : 'bg-slate-50 text-slate-400 border-black/5 group-hover:translate-y-[-4px]'}`} style={{ transitionDelay: `${d * 50}ms` }}>{d}</div>
                             ))}
@@ -189,17 +190,16 @@ export default function Home() {
                         <div className="absolute top-[-20%] right-[-10%] w-[400px] h-[400px] bg-sanctuary-secondary/10 rounded-full blur-[80px]" />
                     </div>
 
-                    {/* 2. Private by Design (Small) */}
                     <div className="md:col-span-6 lg:col-span-4 bg-slate-900 p-10 rounded-[40px] shadow-2xl flex flex-col justify-between text-white relative overflow-hidden group text-gray-800">
                         <div className="relative z-10 space-y-4 text-left text-white">
-                            <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-left text-white"><Shield size={20} className="text-sanctuary-secondary text-left" /></div>
+                            <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-left text-white"><Shield size={20} className="text-sanctuary-secondary" /></div>
                             <h3 className="text-3xl font-serif-display text-left">Private by Design</h3>
-                            <p className="text-white/60 text-sm leading-relaxed text-left text-gray-800">No database. Zero tracking. Your memories are encrypted and live only in your unique link.</p>
+                            <p className="text-white/60 text-sm leading-relaxed text-left text-gray-800 text-white">No database. Zero tracking. Your memories are encrypted and live only in your unique link.</p>
                         </div>
                         <Lock className="absolute bottom-[-20px] right-[-20px] text-white/5 w-40 h-40 group-hover:scale-110 transition-transform duration-700" />
                     </div>
 
-                    {/* 3. Tactile Memories (Small) */}
+                    {/* Row 2: 4 + 8 */}
                     <div className="md:col-span-6 lg:col-span-4 bg-white p-10 rounded-[40px] shadow-sm border border-black/[0.03] flex flex-col justify-between overflow-hidden group relative">
                         <div className="space-y-4 text-left text-gray-800">
                             <h3 className="text-3xl font-serif-display text-slate-900">Tactile Memories</h3>
@@ -211,12 +211,6 @@ export default function Home() {
                         </div>
                     </div>
 
-                    {/* 7. Visitor Count (Small) */}
-                    <div className="md:col-span-12 lg:col-span-4 bg-amber-50 p-10 rounded-[40px] shadow-sm border border-amber-100 flex flex-col justify-between overflow-hidden group relative text-left text-gray-800">
-                        <VisitorCounter />
-                    </div>
-
-                    {/* 4. Premium Cinema (Big) */}
                     <div className="md:col-span-12 lg:col-span-8 bg-[#F5F3FF] p-10 rounded-[40px] shadow-sm border border-black/[0.03] flex flex-col justify-between group overflow-hidden relative">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center h-full text-left">
                             <div className="space-y-4 text-left">
@@ -236,7 +230,11 @@ export default function Home() {
                         </div>
                     </div>
 
-                    {/* 5. Atmospheric Audio (Small) */}
+                    {/* Row 3: 4 + 4 + 4 */}
+                    <div className="md:col-span-12 lg:col-span-4 bg-amber-50 p-10 rounded-[40px] shadow-sm border border-amber-100 flex flex-col justify-between overflow-hidden group relative text-left">
+                        <VisitorCounter />
+                    </div>
+
                     <div className="md:col-span-6 lg:col-span-4 bg-white p-10 rounded-[40px] shadow-sm border border-black/[0.03] flex flex-col justify-between overflow-hidden group relative text-left">
                         <div className="space-y-4 text-left">
                             <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-left"><Music className="text-sanctuary-primary" size={20} /></div>
@@ -249,7 +247,6 @@ export default function Home() {
                         </div>
                     </div>
 
-                    {/* 6. Social Media Pack (Small) */}
                     <div className="md:col-span-6 lg:col-span-4 bg-indigo-50 p-10 rounded-[40px] shadow-sm border border-indigo-100 flex flex-col justify-between overflow-hidden group relative text-left">
                         <div className="space-y-4 text-left">
                             <div className="w-10 h-10 bg-white/50 rounded-xl flex items-center justify-center text-left"><Camera className="text-indigo-600" size={20} /></div>
@@ -260,6 +257,7 @@ export default function Home() {
                     </div>
                 </div>
             </section>
+
 
             <section className="py-32 px-6 bg-white">
                 <div className="max-w-6xl mx-auto space-y-20">
