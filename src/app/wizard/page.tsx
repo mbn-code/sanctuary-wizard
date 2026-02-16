@@ -167,9 +167,17 @@ function WizardContent() {
   };
 
   const uploadFile = async (file: File) => {
+    const res = await fetch('/api/upload/challenge');
+    const challenge = await res.json();
+    
+    if (challenge.error) {
+        throw new Error(challenge.error);
+    }
+
     const newBlob = await upload(file.name, file, {
       access: 'public',
       handleUploadUrl: '/api/upload',
+      clientPayload: JSON.stringify(challenge),
     });
     return newBlob.url;
   };
