@@ -27,7 +27,8 @@
     "react-dom": "^19.0.0",
     "resend": "^6.9.2",
     "stripe": "^20.3.1",
-    "tailwind-merge": "^2.3.0"
+    "tailwind-merge": "^2.3.0",
+    "vercel": "^50.17.1"
   },
   "devDependencies": {
     "@types/canvas-confetti": "^1.6.4",
