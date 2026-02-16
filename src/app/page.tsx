@@ -167,12 +167,14 @@ export default function Home() {
 
             <MySanctuaries />
 
+            {/* Bento Section */}
             <section id="bento" className="py-32 px-6 bg-slate-50/50 relative overflow-hidden">
-                <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-[240px]">
+                <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-[280px]">
+                    {/* 1. The Journey (Big) */}
                     <div className="md:col-span-12 lg:col-span-8 bg-white p-10 rounded-[40px] shadow-sm border border-black/[0.03] flex flex-col justify-between group overflow-hidden relative">
                         <div className="relative z-10 space-y-4 text-left">
                             <h3 className="text-4xl font-serif-display text-slate-900">The Journey Matters</h3>
-                            <p className="text-slate-500 max-w-md">Build anticipation with a timed countdown. Every day reveals a new photo, a hidden note, or a curated song.</p>
+                            <p className="text-slate-500 max-w-md text-sm">Build anticipation with a timed countdown. Every day reveals a new photo, a hidden note, or a curated song.</p>
                         </div>
                         <div className="flex gap-3 mt-8 relative z-10 text-left">
                             {[7, 6, 5, 4, 3, 2, 1].map(d => (
@@ -182,15 +184,17 @@ export default function Home() {
                         <div className="absolute top-[-20%] right-[-10%] w-[400px] h-[400px] bg-sanctuary-secondary/10 rounded-full blur-[80px]" />
                     </div>
 
+                    {/* 2. Private by Design (Small) */}
                     <div className="md:col-span-6 lg:col-span-4 bg-slate-900 p-10 rounded-[40px] shadow-2xl flex flex-col justify-between text-white relative overflow-hidden group">
                         <div className="relative z-10 space-y-4 text-left text-white">
-                            <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-left"><Shield size={20} className="text-sanctuary-secondary text-left" /></div>
+                            <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-left text-white"><Shield size={20} className="text-sanctuary-secondary" /></div>
                             <h3 className="text-3xl font-serif-display text-left">Private by Design</h3>
                             <p className="text-white/60 text-sm leading-relaxed text-left">No database. Zero tracking. Your memories are encrypted and live only in your unique link.</p>
                         </div>
                         <Lock className="absolute bottom-[-20px] right-[-20px] text-white/5 w-40 h-40 group-hover:scale-110 transition-transform duration-700" />
                     </div>
 
+                    {/* 3. Tactile Memories (Small) */}
                     <div className="md:col-span-6 lg:col-span-4 bg-white p-10 rounded-[40px] shadow-sm border border-black/[0.03] flex flex-col justify-between overflow-hidden group relative">
                         <div className="space-y-4 text-left text-gray-800">
                             <h3 className="text-3xl font-serif-display text-slate-900">Tactile Memories</h3>
@@ -202,23 +206,12 @@ export default function Home() {
                         </div>
                     </div>
 
-                    <div className="md:col-span-6 lg:col-span-4 bg-amber-50 p-10 rounded-[40px] shadow-sm border border-amber-100 flex flex-col justify-between overflow-hidden group relative">
-                        <div className="space-y-2 text-left">
-                            <div className="flex gap-1 text-amber-500 text-left">
-                                {[1,2,3,4,5].map(i => <Star key={i} size={12} fill="currentColor" />)}
-                            </div>
-                            <h3 className="text-xl font-serif-display text-amber-900 text-left">"The best digital gift I've ever sent."</h3>
-                            <p className="text-amber-700/60 text-xs font-bold uppercase tracking-widest mt-4 text-left">— Sarah K.</p>
-                        </div>
-                        <div className="text-[10px] font-bold text-amber-800/40 uppercase tracking-[0.2em] mt-8 text-left text-gray-800">The new standard for digital gifts</div>
-                    </div>
-
+                    {/* 4. Premium Cinema (Big) */}
                     <div className="md:col-span-12 lg:col-span-8 bg-[#F5F3FF] p-10 rounded-[40px] shadow-sm border border-black/[0.03] flex flex-col justify-between group overflow-hidden relative">
-
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center h-full text-left">
                             <div className="space-y-4 text-left">
                                 <h3 className="text-3xl font-serif-display text-slate-900">Premium Cinema</h3>
-                                <p className="text-slate-500 text-sm">The ultimate finale. A private theater for your personal video montage, locked behind a custom passcode.</p>
+                                <p className="text-slate-500 text-sm leading-relaxed">The ultimate finale. A private theater for your personal video montage, locked behind a custom passcode.</p>
                                 <div className="flex gap-2 text-left">
                                     {[1, 2, 3, 4].map(i => <div key={i} className="w-8 h-10 bg-white rounded-lg border border-black/5 shadow-sm text-left" />)}
                                 </div>
@@ -231,6 +224,41 @@ export default function Home() {
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    {/* 5. Atmospheric Audio (Small) */}
+                    <div className="md:col-span-6 lg:col-span-4 bg-white p-10 rounded-[40px] shadow-sm border border-black/[0.03] flex flex-col justify-between overflow-hidden group relative text-left">
+                        <div className="space-y-4 text-left">
+                            <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-left"><Music className="text-sanctuary-primary" size={20} /></div>
+                            <h3 className="text-2xl font-serif-display text-slate-900">Atmospheric Audio</h3>
+                            <p className="text-slate-500 text-xs leading-relaxed">Curate the perfect mood with integrated Spotify tracks for every stage of the journey.</p>
+                        </div>
+                        <div className="w-full h-12 bg-slate-50 rounded-xl border border-black/[0.03] flex items-center px-4 gap-3 mt-4">
+                            <div className="w-6 h-6 bg-slate-200 rounded-full animate-pulse" />
+                            <div className="h-2 w-24 bg-slate-100 rounded-full" />
+                        </div>
+                    </div>
+
+                    {/* 6. Social Media Pack (Small) */}
+                    <div className="md:col-span-6 lg:col-span-4 bg-indigo-50 p-10 rounded-[40px] shadow-sm border border-indigo-100 flex flex-col justify-between overflow-hidden group relative text-left">
+                        <div className="space-y-4 text-left">
+                            <div className="w-10 h-10 bg-white/50 rounded-xl flex items-center justify-center text-left"><Camera className="text-indigo-600" size={20} /></div>
+                            <h3 className="text-2xl font-serif-display text-slate-900">Story Ready</h3>
+                            <p className="text-slate-500 text-xs leading-relaxed">Download high-res aesthetic story cards to announce your gift on TikTok or Instagram.</p>
+                        </div>
+                        <div className="w-16 h-20 bg-white rounded-lg shadow-lg border border-indigo-100 mx-auto rotate-6 group-hover:rotate-0 transition-all duration-500 mt-4" />
+                    </div>
+
+                    {/* 7. Social Proof (Small) */}
+                    <div className="md:col-span-12 lg:col-span-4 bg-amber-50 p-10 rounded-[40px] shadow-sm border border-amber-100 flex flex-col justify-between overflow-hidden group relative text-left">
+                        <div className="space-y-2 text-left">
+                            <div className="flex gap-1 text-amber-500 text-left">
+                                {[1,2,3,4,5].map(i => <Star key={i} size={12} fill="currentColor" />)}
+                            </div>
+                            <h3 className="text-xl font-serif-display text-amber-900 text-left leading-snug">"The standard for digital gifts."</h3>
+                            <p className="text-amber-700/60 text-[10px] font-bold uppercase tracking-widest mt-4 text-left">— Verified Creator</p>
+                        </div>
+                        <div className="text-[10px] font-bold text-amber-800/40 uppercase tracking-[0.2em] mt-8 text-left text-gray-800">Highly Trusted Experience</div>
                     </div>
                 </div>
             </section>

@@ -24,20 +24,20 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://magicgift.vercel.app"),
-  title: "Magic Gift | The Digital Sanctuary Wizard",
-  description: "Create a personalized interactive sanctuary for any life event. Birthdays, Anniversaries, Weddings, and more. The ultimate digital surprise.",
+  metadataBase: new URL("https://sanctuary-gift.vercel.app"),
+  title: "Sanctuary | Create Your Digital Sanctuary",
+  description: "The ultimate digital sanctuary for all of life's special moments. Birthdays, anniversaries, weddings, and more.",
   openGraph: {
-    title: "Magic Gift | Digital Sanctuary Wizard",
-    description: "Build a timed countdown of memories, music, and secret messages for your loved ones.",
-    url: "https://magicgift.vercel.app",
-    siteName: "Magic Gift",
+    title: "Sanctuary",
+    description: "The ultimate digital gift for your loved ones.",
+    url: "https://sanctuary-gift.vercel.app",
+    siteName: "Sanctuary",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Magic Gift Sanctuary Preview",
+        alt: "Sanctuary Preview",
       },
     ],
     locale: "en_US",
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Magic Gift ✨",
+    title: "Sanctuary ✨",
     description: "Create a digital sanctuary for your loved ones. Photos, music, and secret notes.",
     images: ["/og-image.png"],
   },

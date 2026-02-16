@@ -129,7 +129,7 @@ const Invitation = ({ onComplete }: InvitationProps) => {
             className="text-center space-y-12"
           >
             <h2 className="text-4xl md:text-5xl font-bold text-sanctuary-primary leading-tight font-serif-display text-gray-800">
-              {config?.customQuestion || `${config?.names.recipient}, will you be my Valentine?`}
+              {config?.customQuestion || (config?.occasion === 'birthday' ? `Happy Birthday, ${config?.names.recipient}!` : `${config?.names.recipient}, will you be mine?`)}
             </h2>
             
             <div className="flex flex-col md:flex-row items-center justify-center gap-6">

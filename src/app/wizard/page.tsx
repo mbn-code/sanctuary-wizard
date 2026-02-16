@@ -137,15 +137,33 @@ function WizardContent() {
   const currentLimits = PLAN_LIMITS[config.plan];
 
   const updateConfig = (path: string, value: any) => {
-    const newConfig = { ...config };
-    const parts = path.split('.');
-    let current: any = newConfig;
-    for (let i = 0; i < parts.length - 1; i++) {
-      if (current[parts[i]] === undefined) current[parts[i]] = {};
-      current = current[parts[i]];
-    }
-    current[parts[parts.length - 1]] = value;
-    setConfig(newConfig);
+    setConfig(prev => {
+      const newConfig = { ...prev };
+      const parts = path.split('.');
+      let current: any = newConfig;
+      for (let i = 0; i < parts.length - 1; i++) {
+        current[parts[i]] = { ...current[parts[i]] };
+        current = current[parts[i]];
+      }
+      current[parts[parts.length - 1]] = value;
+      return newConfig;
+    });
+  };
+
+  const batchUpdateConfig = (updates: Record<string, any>) => {
+    setConfig(prev => {
+        const newConfig = { ...prev };
+        Object.entries(updates).forEach(([path, value]) => {
+            const parts = path.split('.');
+            let current: any = newConfig;
+            for (let i = 0; i < parts.length - 1; i++) {
+                current[parts[i]] = { ...current[parts[i]] };
+                current = current[parts[i]];
+            }
+            current[parts[parts.length - 1]] = value;
+        });
+        return newConfig;
+    });
   };
 
   const uploadFile = async (file: File) => {
@@ -348,12 +366,30 @@ function WizardContent() {
     setIsDownloading(true);
     try {
         const dataUrl = await toPng(cardRef.current, { quality: 0.95, pixelRatio: 2 });
+        
+        // Try to use Web Share API for direct mobile sharing (TikTok/IG)
+        if (navigator.share && navigator.canShare) {
+            const blob = await fetch(dataUrl).then(res => res.blob());
+            const file = new File([blob], 'gift-announcement.png', { type: 'image/png' });
+            
+            if (navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                    files: [file],
+                    title: 'Gift Sanctuary',
+                    text: 'I just created a digital sanctuary! ✨'
+                });
+                setIsDownloading(false);
+                return;
+            }
+        }
+
+        // Fallback to download for desktop
         const link = document.createElement('a');
         link.download = `gift-for-${config.names.recipient.toLowerCase()}.png`;
         link.href = dataUrl;
         link.click();
     } catch (err) {
-        console.error("Failed to generate share card", err);
+        console.error("Failed to share/download card", err);
     } finally {
         setIsDownloading(false);
     }
@@ -480,11 +516,13 @@ function WizardContent() {
                             <button
                                 key={o.id}
                                 onClick={() => {
-                                    updateConfig('occasion', o.id);
-                                    updateConfig('theme', o.theme);
-                                    updateConfig('customQuestion', o.question);
+                                    batchUpdateConfig({
+                                        'occasion': o.id,
+                                        'theme': o.theme,
+                                        'customQuestion': o.question
+                                    });
                                 }}
-                                className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-3 text-[10px] font-bold uppercase tracking-tight ${config.occasion === o.id ? 'border-sanctuary-primary bg-sanctuary-primary/5 text-sanctuary-primary' : 'border-black/[0.03] bg-white hover:border-sanctuary-secondary text-slate-500'}`}
+                                className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-3 text-[10px] font-bold uppercase tracking-tight ${config.occasion === o.id ? 'border-sanctuary-primary bg-sanctuary-primary/5 text-sanctuary-primary shadow-inner' : 'border-black/[0.03] bg-white hover:border-sanctuary-secondary text-slate-500'}`}
                             >
                                 {o.icon}
                                 <span className="text-center line-clamp-1">{o.name}</span>
