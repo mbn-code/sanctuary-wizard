@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Lock, Play, Film, X, Music } from 'lucide-react';
 import { useSanctuary } from '@/utils/SanctuaryContext';
 
-const DEFAULT_VIDEO = "https://assets.mixkit.io/videos/preview/mixkit-heart-shaped-balloons-floating-in-the-sky-4288-large.mp4";
+const DEFAULT_VIDEO = "/videos/hero-sanctuary.mp4";
 
 const SecretCinema = () => {
   const { config, isLocked } = useSanctuary();
@@ -85,6 +85,7 @@ const SecretCinema = () => {
           <div className="h-[70vh] aspect-[9/16] bg-black rounded-3xl overflow-hidden shadow-2xl border-4 border-zinc-800 relative">
             <video 
               src={(config.plan === 'infinite' && config.videoUrl) ? config.videoUrl : DEFAULT_VIDEO} 
+              poster={(!config.videoUrl || config.videoUrl === DEFAULT_VIDEO) ? "/videos/hero-poster.jpg" : undefined}
               controls 
               autoPlay 
               muted

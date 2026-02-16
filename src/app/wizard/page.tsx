@@ -472,7 +472,7 @@ function WizardContent() {
           ))}
         </div>
 
-        <div className="flex-grow p-10 overflow-y-auto custom-scrollbar bg-sanctuary-bg/50 text-gray-800">
+        <div className="flex-grow p-6 sm:p-10 overflow-y-auto custom-scrollbar bg-sanctuary-bg/50 text-gray-800">
           <AnimatePresence mode="wait">
             <motion.div key={step} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-8 text-left">
               {step === 1 && (
@@ -612,9 +612,9 @@ function WizardContent() {
                   </div>
                   <div className="max-h-[350px] overflow-y-auto pr-2 custom-scrollbar space-y-4 text-left">
                     {getDaysArray().map((offset) => (
-                        <div key={offset} className="p-5 bg-white rounded-[32px] border border-black/[0.03] shadow-sm space-y-3 group hover:border-sanctuary-secondary transition-all text-left">
+                        <div key={offset} className="p-4 sm:p-5 bg-white rounded-[32px] border border-black/[0.03] shadow-sm space-y-3 group hover:border-sanctuary-secondary transition-all text-left">
                             <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] text-left">{offset === 0 ? "The Big Reveal" : `${offset} Days Before`}</label>
-                            <div className="flex gap-3 text-left">
+                            <div className="flex gap-2 sm:gap-3 text-left">
                                 <div className="w-12 h-12 bg-sanctuary-bg rounded-xl flex items-center justify-center text-sanctuary-primary shrink-0 group-hover:scale-110 transition-transform"><Music size={20} /></div>
                                 <input type="text" value={config.spotifyTracks[`day${offset}`] || ""} onChange={(e) => updateConfig(`spotifyTracks.day${offset}`, e.target.value.split('/').pop()?.split('?')[0])} placeholder="Paste Spotify Link or ID" className="flex-grow p-3 rounded-xl border-2 border-black/[0.03] focus:border-sanctuary-primary outline-none transition-colors text-sm bg-slate-50/50 text-gray-800 text-left" />
                             </div>
@@ -635,7 +635,7 @@ function WizardContent() {
                           const dayKey = `day${offset}`;
                           const images = config.galleryImages?.[dayKey] || [];
                           return (
-                            <div key={offset} className="p-6 bg-white rounded-[32px] border border-black/[0.03] shadow-sm space-y-4 text-left text-gray-800">
+                            <div key={offset} className="p-4 sm:p-6 bg-white rounded-[32px] border border-black/[0.03] shadow-sm space-y-4 text-left text-gray-800">
                               <div className="flex justify-between items-center text-left text-gray-800">
                                 <label className="block text-[10px] font-bold text-sanctuary-primary uppercase tracking-[0.2em] text-left">{offset === 0 ? "Grand Finale" : `${offset} Days Left`}</label>
                                 <span className="text-[10px] bg-slate-50 px-2 py-1 rounded-full font-bold text-slate-400 text-left">{images.length} / {currentLimits.gallery}</span>
@@ -672,7 +672,7 @@ function WizardContent() {
                   </div>
                   <div className="flex flex-col gap-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar text-left text-gray-800">
                     {config.notes.map((note, idx) => (
-                        <div key={note.id} className="p-5 bg-white rounded-[32px] border border-black/[0.03] shadow-sm space-y-3 group hover:border-sanctuary-secondary transition-all text-left text-gray-800">
+                        <div key={note.id} className="p-4 sm:p-5 bg-white rounded-[32px] border border-black/[0.03] shadow-sm space-y-3 group hover:border-sanctuary-secondary transition-all text-left text-gray-800">
                             <div className="flex justify-between items-center text-left text-gray-800 text-left">
                                 <select value={note.day} onChange={(e) => { const newNotes = [...config.notes]; newNotes[idx].day = parseInt(e.target.value); updateConfig('notes', newNotes); }} className="p-2 rounded-lg border border-black/[0.05] bg-slate-50 text-[10px] font-bold uppercase tracking-widest text-slate-500 outline-none focus:border-sanctuary-primary text-gray-800">{getDaysArray().map(offset => ( <option key={offset} value={offset}>{offset === 0 ? "The Big Day" : `${offset} Days Left`}</option> ))}</select>
                                 {config.notes.length > 1 && ( <button onClick={() => { const newNotes = config.notes.filter((_, i) => i !== idx); updateConfig('notes', newNotes); }} className="text-red-200 hover:text-red-500 transition-colors text-left"><X size={14} /></button> )}
@@ -688,7 +688,7 @@ function WizardContent() {
               {step === 6 && (
                 <div className="space-y-6 text-left text-gray-800">
                   {!currentLimits.video ? (
-                    <div className="p-12 text-center bg-sanctuary-primary/5 rounded-[40px] border-2 border-dashed border-sanctuary-secondary/30 text-center">
+                    <div className="p-6 sm:p-12 text-center bg-sanctuary-primary/5 rounded-[40px] border-2 border-dashed border-sanctuary-secondary/30 text-center">
                         <ImageIcon size={48} className="mx-auto text-sanctuary-secondary mb-4 opacity-50 text-center" />
                         <h3 className="text-2xl font-serif-display text-slate-900 mb-2 text-center">Secret Cinema</h3>
                         <p className="text-sm text-slate-500 mb-8 font-playfair italic text-center">The ultimate finale. Upgrade to <b>The Sanctuary</b> plan to upload your own video.</p>
@@ -700,7 +700,7 @@ function WizardContent() {
                         <h3 className="text-2xl font-serif-display text-slate-900 text-left">Secret Cinema</h3>
                         <p className="text-sm text-slate-500 font-playfair italic text-left text-gray-800">Your personal video finale, locked until the very end.</p>
                       </div>
-                      <div className={`relative rounded-[40px] border-2 border-dashed p-10 transition-all border-black/[0.05] bg-white hover:border-sanctuary-primary text-left`}>
+                      <div className={`relative rounded-[40px] border-2 border-dashed p-6 sm:p-10 transition-all border-black/[0.05] bg-white hover:border-sanctuary-primary text-left`}>
                         {config.videoUrl ? (
                             <div className="space-y-4 text-left text-gray-800"><div className="aspect-video w-full rounded-3xl overflow-hidden border border-black/[0.05] bg-black shadow-2xl text-left"><video src={config.videoUrl} className="w-full h-full object-cover" controls /></div><div className="flex justify-between items-center text-left"><p className="text-[10px] font-bold text-sanctuary-primary uppercase tracking-[0.2em] text-left">Video Secured</p><button onClick={() => { const url = config.videoUrl; updateConfig('videoUrl', ''); if (url) deleteAsset(url); }} className="text-[10px] text-slate-400 underline uppercase font-bold hover:text-red-500 text-left">Remove</button></div></div>
                         ) : (
@@ -737,13 +737,13 @@ function WizardContent() {
                   <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce shadow-xl shadow-green-100 text-center text-center"><Check size={40} /></div>
                   <h2 className="text-5xl font-serif-display text-slate-900 tracking-tight text-center">Sanctuary Ready</h2>
                   <div className="space-y-6 text-left text-gray-800">
-                    <div className="p-6 bg-slate-50 rounded-[32px] border border-black/[0.03] break-all text-xs font-mono shadow-inner text-slate-500 text-center text-center">{generatedLink}</div>
+                    <div className="p-4 sm:p-6 bg-slate-50 rounded-[32px] border border-black/[0.03] break-all text-xs font-mono shadow-inner text-slate-500 text-center text-center">{generatedLink}</div>
                     <div className="flex flex-col gap-4 text-left text-gray-800 text-left">
                       <button onClick={copyToClipboard} className="w-full flex items-center justify-center gap-3 py-5 bg-slate-900 text-white rounded-2xl font-bold shadow-2xl hover:scale-[1.02] transition-all text-center">
                         {copied ? <Check size={20} /> : <Copy size={20} />} {copied ? 'Copied!' : 'Copy Sanctuary Link'}
                       </button>
                       
-                      <div className="p-8 bg-sanctuary-bg rounded-[40px] border border-black/[0.03] space-y-6 relative overflow-hidden text-left text-gray-800 text-left">
+                      <div className="p-6 sm:p-8 bg-sanctuary-bg rounded-[40px] border border-black/[0.03] space-y-6 relative overflow-hidden text-left text-gray-800 text-left">
                         <div className="relative z-10 space-y-4 text-left text-gray-800 text-left">
                             <div className="flex items-center gap-2 text-indigo-600 font-bold uppercase tracking-[0.2em] text-[10px] text-left text-left"><Sparkles size={16} /> Social Media Pack</div>
                             <p className="text-sm text-slate-600 font-playfair italic leading-relaxed text-left text-left">Announce your gift with an aesthetic story card for TikTok or Instagram.</p>
@@ -754,7 +754,7 @@ function WizardContent() {
                         <ThemeIcon className="absolute bottom-[-30px] right-[-30px] text-indigo-600/5 w-48 h-48 text-left" />
                       </div>
 
-                      <div className="p-8 bg-slate-50 rounded-[40px] border border-black/[0.03] space-y-6 relative overflow-hidden text-left text-gray-800 text-left">
+                      <div className="p-6 sm:p-8 bg-slate-50 rounded-[40px] border border-black/[0.03] space-y-6 relative overflow-hidden text-left text-gray-800 text-left">
                         <div className="relative z-10 space-y-4 text-left text-gray-800 text-left">
                             <div className="flex items-center gap-2 text-slate-900 font-bold uppercase tracking-[0.2em] text-[10px] text-left text-left"><Plus size={16} /> Delivery Options</div>
                             {!emailSent ? (
@@ -805,7 +805,7 @@ function WizardContent() {
 
         {/* Footer */}
         {step < 8 && (
-          <div className="p-8 bg-slate-50/50 border-t border-black/[0.03] flex justify-between items-center text-gray-800 text-center text-gray-800">
+          <div className="p-6 sm:p-8 bg-slate-50/50 border-t border-black/[0.03] flex justify-between items-center text-gray-800 text-center text-gray-800">
             <button onClick={() => setStep(Math.max(1, step - 1))} disabled={step === 1 || !!uploading} className={`flex items-center gap-2 font-bold text-[10px] uppercase tracking-widest transition-all ${step === 1 || !!uploading ? 'text-slate-200' : 'text-slate-400 hover:text-slate-900'} text-center`}><ArrowLeft size={16} /> Prev</button>
             <div className="flex gap-3 text-center text-gray-800 text-center">
                 {step < 7 ? (

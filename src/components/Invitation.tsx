@@ -67,6 +67,114 @@ const Invitation = ({ onComplete }: InvitationProps) => {
     }, 4000);
   };
 
+  const getTeaserContent = () => {
+    const name = config?.names.recipient;
+    const occasion = config?.occasion || 'classic';
+
+    switch (occasion) {
+      case 'valentine':
+      case 'wedding':
+      case 'boyfriend':
+      case 'girlfriend':
+        return {
+          title: "YEES! ✨",
+          message: `I knew you'd say yes, ${name}.`
+        };
+      case 'birthday':
+        return {
+          title: "Hooray! 🎂",
+          message: `Let's celebrate your day, ${name}!`
+        };
+      case 'graduation':
+        return {
+          title: "Success! 🎓",
+          message: `You've worked so hard for this, ${name}!`
+        };
+      case 'christmas':
+        return {
+          title: "Merry Christmas! 🎄",
+          message: `Time for some festive magic, ${name}.`
+        };
+      case 'baby':
+        return {
+          title: "Welcome! 👶",
+          message: "A new adventure begins today."
+        };
+      case 'team':
+        return {
+          title: "Thank You! 🚀",
+          message: `We're so glad to have you on the team, ${name}.`
+        };
+      default:
+        return {
+          title: "Hooray! ✨",
+          message: `Time to reveal your sanctuary, ${name}.`
+        };
+    }
+  };
+
+  const getButtonText = () => {
+    const occasion = config?.occasion || 'classic';
+    switch (occasion) {
+      case 'valentine':
+      case 'wedding':
+      case 'boyfriend':
+      case 'girlfriend':
+        return "Yes";
+      case 'birthday':
+        return "Celebrate!";
+      case 'graduation':
+        return "See Surprise";
+      case 'christmas':
+        return "Open Advent";
+      case 'baby':
+      case 'party':
+        return "Open Gift";
+      case 'team':
+        return "View Message";
+      default:
+        return "Enter";
+    }
+  };
+
+  const teaser = getTeaserContent();
+
+  const getQuestionText = () => {
+    if (config?.customQuestion) return config.customQuestion;
+    
+    const name = config?.names.recipient;
+    const occasion = config?.occasion || 'classic';
+
+    switch (occasion) {
+      case 'birthday':
+        return `Happy Birthday, ${name}!`;
+      case 'graduation':
+        return `Congratulations on your Graduation, ${name}!`;
+      case 'christmas':
+        return `Merry Christmas, ${name}!`;
+      case 'baby':
+        return `A special welcome for a special someone.`;
+      case 'team':
+        return `A token of our appreciation for you, ${name}.`;
+      case 'valentine':
+        return `${name}, will you be my Valentine?`;
+      case 'wedding':
+        return `${name}, to our forever?`;
+      case 'boyfriend':
+      case 'girlfriend':
+        return `Happy National ${occasion === 'boyfriend' ? 'Boyfriend' : 'Girlfriend'} Day, ${name}!`;
+      case 'anniversary':
+        return `Happy Anniversary, ${name}!`;
+      default:
+        return `${name}, I have a surprise for you.`;
+    }
+  };
+
+  const isAskOccasion = () => {
+    const occasion = config?.occasion || 'classic';
+    return ['valentine', 'wedding', 'boyfriend', 'girlfriend'].includes(occasion) || !!config?.customQuestion;
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-sanctuary-bg overflow-hidden relative text-sanctuary-text">
       {config?.backgroundUrl && (
@@ -78,6 +186,27 @@ const Invitation = ({ onComplete }: InvitationProps) => {
           }}
         />
       )}
+      
+      <AnimatePresence>
+        {phase === 'teaser' && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.2 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-0 pointer-events-none"
+          >
+            <video 
+              src="/videos/hero-sanctuary.mp4"
+              poster="/videos/hero-poster.jpg"
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-full h-full object-cover"
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
       <AnimatePresence mode="wait">
         {phase === 'tapping' && (
           <motion.div 
@@ -129,7 +258,7 @@ const Invitation = ({ onComplete }: InvitationProps) => {
             className="text-center space-y-12"
           >
             <h2 className="text-4xl md:text-5xl font-bold text-sanctuary-primary leading-tight font-serif-display text-gray-800">
-              {config?.customQuestion || (config?.occasion === 'birthday' ? `Happy Birthday, ${config?.names.recipient}!` : `${config?.names.recipient}, will you be mine?`)}
+              {getQuestionText()}
             </h2>
             
             <div className="flex flex-col md:flex-row items-center justify-center gap-6">
@@ -139,17 +268,19 @@ const Invitation = ({ onComplete }: InvitationProps) => {
                 onClick={handleYes}
                 className="px-12 py-4 bg-sanctuary-primary text-white rounded-full text-2xl font-bold shadow-lg hover:brightness-110 transition-all"
               >
-                Yes
+                {getButtonText()}
               </motion.button>
 
-              <motion.button
-                animate={{ x: noButtonPos.x, y: noButtonPos.y }}
-                onMouseEnter={moveNoButton}
-                tabIndex={-1}
-                className="px-12 py-4 bg-sanctuary-secondary text-sanctuary-primary rounded-full text-2xl font-bold shadow-md cursor-default"
-              >
-                No
-              </motion.button>
+              {isAskOccasion() && (
+                <motion.button
+                  animate={{ x: noButtonPos.x, y: noButtonPos.y }}
+                  onMouseEnter={moveNoButton}
+                  tabIndex={-1}
+                  className="px-12 py-4 bg-sanctuary-secondary text-sanctuary-primary rounded-full text-2xl font-bold shadow-md cursor-default"
+                >
+                  No
+                </motion.button>
+              )}
             </div>
           </motion.div>
         )}
@@ -161,8 +292,8 @@ const Invitation = ({ onComplete }: InvitationProps) => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center space-y-6"
           >
-            <h2 className="text-5xl font-bold text-sanctuary-primary">YEES! ✨</h2>
-            <p className="text-xl text-sanctuary-soft">I knew you'd say yes, {config?.names.recipient}.</p>
+            <h2 className="text-5xl font-bold text-sanctuary-primary">{teaser.title}</h2>
+            <p className="text-xl text-sanctuary-soft">{teaser.message}</p>
             <div className="py-10">
               <motion.div
                 animate={{ rotate: 360 }}

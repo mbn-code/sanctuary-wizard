@@ -19,6 +19,7 @@ export default function Home() {
   const [isPreviewing, setIsPreviewing] = useState(false);
   const [previewRefreshKey, setPreviewRefreshKey] = useState(0);
   const { config, setPreviewConfig } = useSanctuary();
+  const [isClient, setIsClient] = useState(false);
 
   const [currentActivity, setCurrentActivity] = useState(0);
   const activities = [
@@ -31,6 +32,7 @@ export default function Home() {
   ];
 
   useEffect(() => {
+    setIsClient(true);
     const aTimer = setInterval(() => {
       setCurrentActivity((prev) => (prev + 1) % activities.length);
     }, 12000);
@@ -41,6 +43,8 @@ export default function Home() {
   }, [activities.length]);
 
   useEffect(() => {
+    if (!isClient) return;
+    
     // We only care about the URL-based config here
     const searchParams = new URLSearchParams(window.location.search);
     const hasUrlConfig = searchParams.get('d') && window.location.hash;
@@ -57,11 +61,11 @@ export default function Home() {
     } else {
       setPhase('invitation');
     }
-  }, [config]);
+  }, [config, isClient]);
 
   // Determine if we should show the landing page
-  const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
-  const isRealSanctuary = searchParams?.get('d') && (typeof window !== 'undefined' && window.location.hash);
+  const searchParams = isClient ? new URLSearchParams(window.location.search) : null;
+  const isRealSanctuary = !!(isClient && searchParams?.get('d') && window.location.hash);
 
   const startDemo = (occasion: 'birthday' | 'anniversary' | 'graduation' | 'classic' | 'team') => {
     const configs: Record<string, any> = {
@@ -221,7 +225,16 @@ export default function Home() {
                                 </div>
                             </div>
                             <div className="h-full aspect-video bg-slate-900 rounded-3xl shadow-2xl relative overflow-hidden group-hover:scale-[1.02] transition-transform duration-500">
-                                <div className="absolute inset-0 flex items-center justify-center">
+                                <video 
+                                    src="/videos/hero-sanctuary.mp4" 
+                                    poster="/videos/hero-poster.jpg"
+                                    autoPlay 
+                                    muted 
+                                    loop 
+                                    playsInline
+                                    className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-700"
+                                />
+                                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                                     <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm group-hover:scale-110 transition-all">
                                         <Zap className="text-white fill-white" size={24} />
                                     </div>
