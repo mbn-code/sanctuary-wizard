@@ -177,7 +177,7 @@ const Invitation = ({ onComplete }: InvitationProps) => {
             
             {config?.plan === 'spark' && (
               <div className="pt-12 space-y-2">
-                <p className="text-[10px] text-sanctuary-soft uppercase tracking-[0.2em] font-bold">Powered by Magic Gift</p>
+                <p className="text-[10px] text-sanctuary-soft uppercase tracking-[0.2em] font-bold">Powered by Sanctuary</p>
                 <div className="flex justify-center gap-4 text-[8px] uppercase tracking-widest font-bold text-sanctuary-soft opacity-50">
                   <Link href="/privacy">Privacy</Link>
                   <Link href="/terms">Terms</Link>

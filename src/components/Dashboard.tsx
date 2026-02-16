@@ -337,7 +337,7 @@ const Dashboard = () => {
       {config.plan === 'spark' && (
         <div className="fixed bottom-0 left-0 w-full p-4 bg-white/80 backdrop-blur-md border-t border-sanctuary-secondary/20 text-center z-50">
             <p className="text-[10px] uppercase tracking-[0.2em] text-sanctuary-soft font-bold flex items-center justify-center gap-2">
-                Created with <span className="text-sanctuary-primary">Magic Gift</span>
+                Created with <span className="text-sanctuary-primary">Sanctuary</span>
                 <Link href="/wizard" className="underline hover:text-sanctuary-primary ml-2 text-gray-800">Upgrade yours →</Link>
             </p>
             <div className="flex justify-center gap-4 text-[8px] uppercase tracking-widest font-bold text-sanctuary-soft mt-1 opacity-50">
