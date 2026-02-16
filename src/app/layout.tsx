@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sanctuary ✨",
+    title: "Sanctuary",
     description: "Create a digital sanctuary for your loved ones. Photos, music, and secret notes.",
     images: ["/og-image.png"],
   },

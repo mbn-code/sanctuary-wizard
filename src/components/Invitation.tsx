@@ -77,37 +77,37 @@ const Invitation = ({ onComplete }: InvitationProps) => {
       case 'boyfriend':
       case 'girlfriend':
         return {
-          title: "YEES! ✨",
+          title: "YEES!",
           message: `I knew you'd say yes, ${name}.`
         };
       case 'birthday':
         return {
-          title: "Hooray! 🎂",
+          title: "Hooray!",
           message: `Let's celebrate your day, ${name}!`
         };
       case 'graduation':
         return {
-          title: "Success! 🎓",
+          title: "Success!",
           message: `You've worked so hard for this, ${name}!`
         };
       case 'christmas':
         return {
-          title: "Merry Christmas! 🎄",
+          title: "Merry Christmas!",
           message: `Time for some festive magic, ${name}.`
         };
       case 'baby':
         return {
-          title: "Welcome! 👶",
+          title: "Welcome!",
           message: "A new adventure begins today."
         };
       case 'team':
         return {
-          title: "Thank You! 🚀",
+          title: "Thank You!",
           message: `We're so glad to have you on the team, ${name}.`
         };
       default:
         return {
-          title: "Hooray! ✨",
+          title: "Hooray!",
           message: `Time to reveal your sanctuary, ${name}.`
         };
     }

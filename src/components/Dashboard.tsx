@@ -3,7 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getTimeTogether, isDayUnlocked, getTimeUntilOffset } from '@/utils/date';
-import { Heart, Music, Clock, Lock, Sparkles, Key, Shield, Trash2, ArrowLeft } from 'lucide-react';
+import { 
+  Heart, Music, Clock, Lock, Sparkles, Key, Shield, Trash2, 
+  ArrowLeft, Settings as SettingsIcon, X as CloseIcon, Info 
+} from 'lucide-react';
 import Gallery from './Gallery';
 import SecretCinema from './SecretCinema';
 import Ambiance from './Ambiance';
@@ -87,6 +90,7 @@ const Dashboard = () => {
   const [isVerifying, setIsVerifying] = useState(false);
   const [isPremiumVerified, setIsPremiumVerified] = useState(false);
   const [error, setError] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -186,7 +190,7 @@ const Dashboard = () => {
     .map(([key, id]) => ({
         dayOffset: parseInt(key.replace('day', '')),
         id,
-        title: `Stage: ${key.replace('day', '')}`
+        title: key === 'day0' ? 'The Big Reveal' : `${key.replace('day', '')} Days Before`
     }))
     .sort((a, b) => b.dayOffset - a.dayOffset);
 
@@ -206,7 +210,40 @@ const Dashboard = () => {
       <Ambiance />
       
       <div className="max-w-4xl mx-auto space-y-12 relative z-10">
-        <header className="text-center space-y-2">
+        <header className="text-center space-y-2 relative">
+          <div className="absolute right-0 top-0">
+            <button 
+                onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+                className="w-10 h-10 bg-white/50 backdrop-blur-sm border border-sanctuary-secondary/30 rounded-full flex items-center justify-center text-sanctuary-soft hover:text-sanctuary-primary transition-all shadow-sm"
+            >
+                {isSettingsOpen ? <CloseIcon size={18} /> : <SettingsIcon size={18} />}
+            </button>
+            
+            <AnimatePresence>
+                {isSettingsOpen && (
+                    <motion.div 
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        className="absolute right-0 top-12 w-48 bg-white rounded-2xl shadow-2xl border border-black/5 p-2 z-[100] text-left"
+                    >
+                        <div className="p-3 border-b border-black/5 mb-1">
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 font-sans">Sanctuary Settings</p>
+                        </div>
+                        <Link href="/revoke" className="flex items-center gap-3 w-full p-3 hover:bg-red-50 text-red-600 rounded-xl transition-all text-xs font-bold group font-sans">
+                            <Trash2 size={14} className="group-hover:scale-110 transition-transform" /> Revoke Access
+                        </Link>
+                        <Link href="/privacy" className="flex items-center gap-3 w-full p-3 hover:bg-slate-50 text-slate-600 rounded-xl transition-all text-xs font-bold group font-sans">
+                            <Shield size={14} /> Privacy Policy
+                        </Link>
+                        <Link href="/terms" className="flex items-center gap-3 w-full p-3 hover:bg-slate-50 text-slate-600 rounded-xl transition-all text-xs font-bold group font-sans">
+                            <Info size={14} /> Terms of Service
+                        </Link>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+          </div>
+
           <motion.h1 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -240,8 +277,8 @@ const Dashboard = () => {
                 <div className="grid grid-cols-3 md:grid-cols-6 gap-2 text-center items-center">
                   {Object.entries(time).map(([unit, value]) => (
                     <div key={unit} className="flex flex-col">
-                      <span className="text-2xl md:text-3xl font-bold text-sanctuary-primary">{value}</span>
-                      <span className="text-[10px] uppercase tracking-wider text-sanctuary-soft">{unit}</span>
+                      <span className="text-2xl md:text-3xl font-bold text-sanctuary-primary font-sans">{value}</span>
+                      <span className="text-[10px] uppercase tracking-wider text-sanctuary-soft font-sans">{unit}</span>
                     </div>
                   ))}
                 </div>
@@ -255,7 +292,7 @@ const Dashboard = () => {
                     whileHover={{ scale: 1.02 }}
                     className={`${idx === 0 && spotifyItems.length % 2 !== 0 ? 'md:col-span-2' : 'col-span-1'} bg-white/50 backdrop-blur-sm border-2 border-sanctuary-secondary/20 rounded-3xl p-6 shadow-sm flex flex-col`}
                   >
-                    <h3 className="text-sanctuary-soft text-xs font-bold uppercase tracking-widest mb-4 flex items-center gap-2 text-left">
+                    <h3 className="text-sanctuary-soft text-xs font-bold uppercase tracking-widest mb-4 flex items-center gap-2 text-left font-sans">
                       <Music size={14} />
                       {item.title}
                     </h3>
@@ -273,7 +310,7 @@ const Dashboard = () => {
                       ) : (
                         <div className="flex flex-col items-center justify-center h-full space-y-2 text-sanctuary-soft">
                             <Clock size={40} />
-                            <p className="text-sm font-medium">Unlocks in</p>
+                            <p className="text-sm font-medium font-sans">Unlocks in</p>
                             <LiveCountdown offset={item.dayOffset} />
                         </div>
                       )}
@@ -298,7 +335,7 @@ const Dashboard = () => {
                 whileHover={{ scale: 1.02 }}
                 className="bg-white/50 backdrop-blur-sm border-2 border-sanctuary-secondary/20 rounded-3xl p-6 shadow-sm flex flex-col min-h-[120px]"
               >
-                <h3 className="text-sanctuary-soft text-xs font-bold uppercase tracking-widest mb-4 flex items-center gap-2 text-left">
+                <h3 className="text-sanctuary-soft text-xs font-bold uppercase tracking-widest mb-4 flex items-center gap-2 text-left font-sans">
                   <Heart size={14} className="text-sanctuary-primary" />
                   Message
                 </h3>
@@ -321,30 +358,19 @@ const Dashboard = () => {
                 <Lock size={40} className="mx-auto text-sanctuary-soft mb-4" />
                 <h3 className="text-xl font-bold text-sanctuary-primary mb-2">Unlock the Full Gallery?</h3>
                 <p className="text-sm text-sanctuary-soft mb-6">Upgrade to <b>The Romance</b> plan to share unlimited memories!</p>
-                <Link href="/wizard" className="px-8 py-3 bg-sanctuary-primary text-white rounded-full font-bold shadow-lg inline-block text-sm">View Plans</Link>
+                <Link href="/wizard" className="px-8 py-3 bg-sanctuary-primary text-white rounded-full font-bold shadow-lg inline-block text-sm font-sans uppercase tracking-widest">View Plans</Link>
             </div>
         )}
 
         <SecretCinema />
-
-        <div className="pt-20 pb-10 text-center opacity-30 hover:opacity-100 transition-opacity">
-            <Link href="/revoke" className="text-[10px] uppercase tracking-widest font-bold text-sanctuary-soft hover:text-red-500">
-                Revoke Sanctuary Access
-            </Link>
-        </div>
       </div>
 
       {config.plan === 'spark' && (
         <div className="fixed bottom-0 left-0 w-full p-4 bg-white/80 backdrop-blur-md border-t border-sanctuary-secondary/20 text-center z-50">
-            <p className="text-[10px] uppercase tracking-[0.2em] text-sanctuary-soft font-bold flex items-center justify-center gap-2">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-sanctuary-soft font-bold flex items-center justify-center gap-2 font-sans">
                 Created with <span className="text-sanctuary-primary">Sanctuary</span>
                 <Link href="/wizard" className="underline hover:text-sanctuary-primary ml-2 text-gray-800">Upgrade yours →</Link>
             </p>
-            <div className="flex justify-center gap-4 text-[8px] uppercase tracking-widest font-bold text-sanctuary-soft mt-1 opacity-50">
-              <Link href="/privacy" className="hover:text-sanctuary-primary text-gray-800">Privacy</Link>
-              <Link href="/terms" className="hover:text-sanctuary-primary text-gray-800">Terms</Link>
-              <Link href="/revoke" className="hover:text-red-500 text-gray-800">Revoke</Link>
-            </div>
         </div>
       )}
     </div>

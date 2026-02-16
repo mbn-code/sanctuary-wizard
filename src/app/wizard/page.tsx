@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Heart, Music, ImageIcon, MessageSquare, Lock, Save, Copy, Check, 
   ArrowRight, ArrowLeft, X, Sparkles, Star, Zap, Info, Loader2 as LucideLoader, 
-  Plus, Trash2, FileText, Upload, Shield, Cake, Gift, Bell, GraduationCap, Baby, PartyPopper, CheckCircle2, User, Palette
+  Plus, Trash2, FileText, Upload, Shield, Cake, Gift, Bell, GraduationCap, Baby, PartyPopper, CheckCircle2, User, Palette, Eye, Mail, Clock
 } from 'lucide-react';
 import { SanctuaryConfig, SanctuaryPayload } from '@/utils/config';
 import { generateMasterKey, exportKey, encryptData, deriveKeyFromPasscode, toBase64URL } from '@/utils/crypto';
@@ -368,15 +368,15 @@ function WizardContent() {
         const dataUrl = await toPng(cardRef.current, { quality: 0.95, pixelRatio: 2 });
         
         // Try to use Web Share API for direct mobile sharing (TikTok/IG)
-        if (navigator.share && navigator.canShare) {
+        if (navigator.share && (navigator as any).canShare) {
             const blob = await fetch(dataUrl).then(res => res.blob());
             const file = new File([blob], 'gift-announcement.png', { type: 'image/png' });
             
-            if (navigator.canShare({ files: [file] })) {
+            if ((navigator as any).canShare({ files: [file] })) {
                 await navigator.share({
                     files: [file],
                     title: 'Gift Sanctuary',
-                    text: 'I just created a digital sanctuary! ✨'
+                    text: 'I just created a digital sanctuary!'
                 });
                 setIsDownloading(false);
                 return;
@@ -401,7 +401,7 @@ function WizardContent() {
     { title: "The Music", icon: <Music /> },
     { title: "The Gallery", icon: <ImageIcon /> },
     { title: "The Notes", icon: <MessageSquare /> },
-    { title: "The Video", icon: <ImageIcon /> },
+    { title: "The Video", icon: <Eye /> },
     { title: "The Secret", icon: <Lock /> },
     { title: "Share", icon: <Check /> }
   ];
@@ -463,7 +463,7 @@ function WizardContent() {
           <div className="flex items-center gap-3">
             {step > 1 && step < 8 && (
                 <button 
-                    onClick={() => { setPreviewConfig(config); setIsPreviewing(true); }}
+                    onClick={() => { setPreviewConfig(config); setPreviewRefreshKey(prev => prev + 1); setIsPreviewing(true); }}
                     className="flex items-center gap-2 px-5 py-2.5 bg-white/10 hover:bg-white/20 rounded-xl transition-all text-[10px] text-white font-bold uppercase tracking-widest border border-white/20 shadow-lg"
                 >
                     <Zap size={14} className="fill-current" /> Preview
@@ -487,124 +487,141 @@ function WizardContent() {
               {step === 1 && (
                 <div className="space-y-8 text-center text-gray-800">
                     <div className="space-y-2">
-                        <h2 className="text-4xl font-serif-display text-slate-900">Choose your experience</h2>
-                        <p className="text-slate-500 text-sm italic font-playfair">Pick the tier that fits your story.</p>
+                        <h3 className="text-3xl font-serif-display text-slate-900">Choose a Plan</h3>
+                        <p className="text-slate-500 font-playfair italic">Select the depth of your sanctuary experience.</p>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
+                    <div className="grid grid-cols-1 gap-4 max-w-lg mx-auto">
                         {[
-                            { id: 'spark', name: 'Spark', price: '$2.00', desc: 'The Sweet Teaser' },
-                            { id: 'plus', name: 'Romance', price: '$7.00', desc: 'A Week of Memories' },
-                            { id: 'infinite', name: 'Sanctuary', price: '$12.00', desc: 'The Full Journey' }
+                            { id: 'spark', name: 'The Spark', price: '2', icon: <Zap size={24} />, features: ['1 Day Journey', '5 Messages', '10 Photos'], missing: ['No Custom Background', 'With Branding', 'No Secret Cinema'] },
+                            { id: 'plus', name: 'The Romance', price: '7', icon: <Heart size={24} />, features: ['7 Day Journey', '25 Messages', '30 Photos', 'Custom Background', 'No Watermark'], missing: ['No Secret Cinema'], popular: true },
+                            { id: 'infinite', name: 'The Sanctuary', price: '12', icon: <Star size={24} />, features: ['14 Day Journey', 'Unlimited Messages', '50 Photos', 'Private Video Cinema', 'No Watermark'], missing: [] }
                         ].map((p) => (
-                            <div key={p.id} onClick={() => updateConfig('plan', p.id)} className={`p-6 rounded-[32px] border-4 cursor-pointer transition-all flex flex-col text-center shadow-sm ${config.plan === p.id ? 'border-sanctuary-primary bg-white shadow-xl scale-[1.02]' : 'border-black/[0.03] bg-white hover:border-sanctuary-secondary/50'}`}>
-                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-2">{p.name}</p>
-                                <p className="text-3xl font-serif-display text-sanctuary-primary">{p.price}</p>
-                                <p className="text-[10px] text-slate-500 mt-3 font-medium">{p.desc}</p>
-                            </div>
+                            <button 
+                                key={p.id}
+                                onClick={() => batchUpdateConfig({ plan: p.id, totalDays: PLAN_LIMITS[p.id as keyof typeof PLAN_LIMITS].days })}
+                                className={`p-6 rounded-[32px] border-2 transition-all flex items-center justify-between group text-left ${config.plan === p.id ? 'bg-white border-sanctuary-primary shadow-xl ring-4 ring-sanctuary-primary/5' : 'bg-white/50 border-black/[0.03] hover:border-sanctuary-secondary'}`}
+                            >
+                                <div className="flex items-center gap-5">
+                                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-colors ${config.plan === p.id ? 'bg-sanctuary-primary text-white' : 'bg-slate-100 text-slate-400 group-hover:bg-sanctuary-secondary group-hover:text-sanctuary-primary'}`}>
+                                        {p.icon}
+                                    </div>
+                                    <div>
+                                        <div className="flex items-center gap-2">
+                                            <span className={`text-sm font-bold uppercase tracking-widest ${config.plan === p.id ? 'text-sanctuary-primary' : 'text-slate-400'}`}>{p.name}</span>
+                                            {p.popular && <span className="text-[8px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter">Most Popular</span>}
+                                        </div>
+                                        <div className="flex items-baseline gap-1 mt-1">
+                                            <span className="text-xs font-bold text-slate-400">$</span>
+                                            <span className="text-3xl font-serif-display text-slate-900 leading-none">{p.price}</span>
+                                            <span className="text-[10px] text-slate-400 font-medium ml-1">one-time</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="hidden md:block">
+                                    <div className="flex flex-col items-end gap-1">
+                                        {p.features.slice(0, 2).map(f => <span key={f} className="text-[9px] text-slate-500 font-medium flex items-center gap-1"><Check size={8} className="text-green-500" /> {f}</span>)}
+                                        {p.missing.length > 0 && <span className="text-[9px] text-slate-300 font-medium flex items-center gap-1 opacity-50"><X size={8} /> {p.missing[0]}</span>}
+                                    </div>
+                                </div>
+                            </button>
                         ))}
                     </div>
-                    <div className="bg-white p-6 rounded-[32px] border border-black/[0.03] shadow-sm text-left space-y-4">
-                        <ul className="grid grid-cols-1 gap-3">
-                            <li className="flex items-center gap-3 text-xs text-slate-600 font-medium text-left"><div className="w-5 h-5 bg-green-50 rounded-full flex items-center justify-center text-green-600"><Check size={12} /></div> {config.plan === 'spark' ? '5 Messages' : config.plan === 'plus' ? '25 Messages' : '500 Messages'}</li>
-                            <li className="flex items-center gap-3 text-xs text-slate-600 font-medium text-left"><div className="w-5 h-5 bg-green-50 rounded-full flex items-center justify-center text-green-600"><Check size={12} /></div> {config.plan === 'spark' ? '1 Day Countdown' : config.plan === 'plus' ? '7 Day Countdown' : '14 Day Journey'}</li>
-                            <li className="flex items-center gap-3 text-xs text-slate-600 font-medium text-left"><div className="w-5 h-5 bg-green-50 rounded-full flex items-center justify-center text-green-600"><Check size={12} /></div> {config.plan === 'spark' ? '10 Photos' : config.plan === 'plus' ? '30 Photos' : '50 Photos'}</li>
-                        </ul>
-                    </div>
-                    <button onClick={() => { setPreviewConfig(config); setIsPreviewing(true); }} className="w-full py-4 glass text-sanctuary-primary rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-white transition-all flex items-center justify-center gap-2 border border-black/[0.05] shadow-sm">
-                        <Zap size={14} className="fill-current" /> Preview Experience
-                    </button>
                 </div>
               )}
 
               {step === 2 && (
-                <div className="space-y-8 text-left text-gray-800">
-                  <div className="space-y-4 text-left">
-                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-[0.2em] text-left">Select Occasion</label>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 text-left">
-                        {OCCASIONS.map(o => (
-                            <button
+                <div className="space-y-10 text-left text-gray-800">
+                  <div className="space-y-6">
+                    <div className="space-y-2">
+                        <h3 className="text-2xl font-serif-display text-slate-900">The Occasion</h3>
+                        <p className="text-sm text-slate-500 font-playfair italic">What are we celebrating today?</p>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        {OCCASIONS.map((o) => (
+                            <button 
                                 key={o.id}
-                                onClick={() => {
-                                    batchUpdateConfig({
-                                        'occasion': o.id,
-                                        'theme': o.theme,
-                                        'customQuestion': o.question
-                                    });
-                                }}
-                                className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-3 text-[10px] font-bold uppercase tracking-tight ${config.occasion === o.id ? 'border-sanctuary-primary bg-sanctuary-primary/5 text-sanctuary-primary shadow-inner' : 'border-black/[0.03] bg-white hover:border-sanctuary-secondary text-slate-500'}`}
+                                onClick={() => batchUpdateConfig({ occasion: o.id, theme: o.theme, customQuestion: o.question })}
+                                className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-3 ${config.occasion === o.id ? 'bg-white border-sanctuary-primary shadow-lg ring-4 ring-sanctuary-primary/5' : 'bg-white/50 border-black/[0.03] hover:border-sanctuary-secondary hover:bg-white'}`}
                             >
-                                {o.icon}
-                                <span className="text-center line-clamp-1">{o.name}</span>
+                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${config.occasion === o.id ? 'bg-sanctuary-primary text-white' : 'bg-slate-50 text-slate-400'}`}>{o.icon}</div>
+                                <span className="text-[10px] font-bold uppercase tracking-widest text-center">{o.name}</span>
                             </button>
                         ))}
                     </div>
                   </div>
 
-                  <div className="space-y-4 pt-4 border-t border-black/[0.03] text-left">
-                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-[0.2em]">Select Theme</label>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-left">
-                        {Object.values(THEMES).map(t => (
-                            <button
-                                key={t.id}
-                                onClick={() => updateConfig('theme', t.id)}
-                                className={`p-3 rounded-xl border-2 transition-all flex items-center gap-2 text-[10px] font-bold uppercase tracking-tight ${config.theme === t.id ? 'border-sanctuary-primary bg-sanctuary-primary/5 text-sanctuary-primary' : 'border-black/[0.03] bg-white hover:border-sanctuary-secondary text-slate-500'}`}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-4">
+                        <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Partners</label>
+                        <div className="flex flex-col gap-3">
+                            <div className="relative group">
+                                <div className="absolute inset-y-0 left-4 flex items-center text-slate-300 group-focus-within:text-sanctuary-primary transition-colors"><User size={16} /></div>
+                                <input type="text" value={config.names.sender} onChange={(e) => updateConfig('names.sender', e.target.value)} placeholder="Your Name" className="w-full pl-12 pr-4 py-4 bg-white rounded-2xl border-2 border-black/[0.03] focus:border-sanctuary-primary outline-none transition-all text-sm font-medium" />
+                            </div>
+                            <div className="relative group">
+                                <div className="absolute inset-y-0 left-4 flex items-center text-slate-300 group-focus-within:text-sanctuary-primary transition-colors"><Heart size={16} /></div>
+                                <input type="text" value={config.names.recipient} onChange={(e) => updateConfig('names.recipient', e.target.value)} placeholder="Recipient's Name" className="w-full pl-12 pr-4 py-4 bg-white rounded-2xl border-2 border-black/[0.03] focus:border-sanctuary-primary outline-none transition-all text-sm font-medium" />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="space-y-4">
+                        <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Key Dates</label>
+                        <div className="flex flex-col gap-3">
+                            <div className="relative group">
+                                <div className="absolute inset-y-0 left-4 flex items-center text-slate-300 group-focus-within:text-sanctuary-primary transition-colors"><Star size={16} /></div>
+                                <input type="date" value={config.targetDate} onChange={(e) => updateConfig('targetDate', e.target.value)} className="w-full pl-12 pr-4 py-4 bg-white rounded-2xl border-2 border-black/[0.03] focus:border-sanctuary-primary outline-none transition-all text-sm font-medium" />
+                                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[8px] font-bold text-slate-300 uppercase">The Big Day</span>
+                            </div>
+                            <div className="relative group">
+                                <div className="absolute inset-y-0 left-4 flex items-center text-slate-300 group-focus-within:text-sanctuary-primary transition-colors"><Clock size={16} /></div>
+                                <input type="date" value={config.anniversaryDate} onChange={(e) => updateConfig('anniversaryDate', e.target.value)} className="w-full pl-12 pr-4 py-4 bg-white rounded-2xl border-2 border-black/[0.03] focus:border-sanctuary-primary outline-none transition-all text-sm font-medium" />
+                                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[8px] font-bold text-slate-300 uppercase tracking-tighter text-right">Relationship<br/>Start</span>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Atmosphere</label>
+                    <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
+                        {Object.keys(THEMES).map(t => (
+                            <button 
+                                key={t} 
+                                onClick={() => updateConfig('theme', t)}
+                                className={`h-12 rounded-xl border-2 transition-all flex items-center justify-center gap-2 overflow-hidden relative ${config.theme === t ? 'border-sanctuary-primary ring-4 ring-sanctuary-primary/5' : 'border-black/[0.03] hover:border-sanctuary-secondary'}`}
+                                style={{ backgroundColor: THEMES[t].colors.bg }}
                             >
-                                <div className="w-3 h-3 rounded-full shadow-inner" style={{ backgroundColor: t.colors.primary }} />
-                                {t.name}
+                                <div className="w-3 h-3 rounded-full shadow-sm" style={{ backgroundColor: THEMES[t].colors.primary }} />
+                                <div className="w-3 h-3 rounded-full shadow-sm" style={{ backgroundColor: THEMES[t].colors.secondary }} />
+                                {config.theme === t && <div className="absolute inset-0 bg-sanctuary-primary/5" />}
                             </button>
                         ))}
                     </div>
                   </div>
 
-                  <div className="space-y-4 pt-4 border-t border-black/[0.03] text-left text-gray-800">
-                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-[0.2em]">Personal Details</label>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-                        <div className="space-y-2">
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-left">From</p>
-                            <input type="text" value={config.names.sender} onChange={(e) => updateConfig('names.sender', e.target.value)} placeholder="Alex" className="w-full p-4 rounded-2xl border-2 border-black/[0.03] focus:border-sanctuary-primary outline-none transition-colors bg-white shadow-sm text-gray-800 text-left" />
-                        </div>
-                        <div className="space-y-2 text-left">
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-left">To</p>
-                            <input type="text" value={config.names.recipient} onChange={(e) => updateConfig('names.recipient', e.target.value)} placeholder="Sam" className="w-full p-4 rounded-2xl border-2 border-black/[0.03] focus:border-sanctuary-primary outline-none transition-colors bg-white shadow-sm text-gray-800 text-left" />
-                        </div>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                        <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Aesthetic Background</label>
+                        {!currentLimits.background && <span className="text-[8px] bg-slate-100 text-slate-400 px-2 py-0.5 rounded-full font-bold uppercase">Included in Romance</span>}
                     </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 text-left">
-                    <div className="space-y-2 text-left">
-                        <label className="block text-xs font-bold text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2">
-                            Event Date
-                            <span className="group relative">
-                                <Info size={12} className="text-slate-300" />
-                                <span className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-48 p-2 bg-slate-800 text-white text-[10px] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity font-sans normal-case tracking-normal">The day your sanctuary fully unlocks.</span>
-                            </span>
-                        </label>
-                        <input type="date" value={config.targetDate.split('T')[0]} onChange={(e) => updateConfig('targetDate', new Date(e.target.value).toISOString())} className="w-full p-4 rounded-2xl border-2 border-black/[0.03] focus:border-sanctuary-primary outline-none bg-white shadow-sm text-gray-800 text-left" />
-                    </div>
-                    <div className="space-y-2 relative text-left">
-                        <label className="block text-xs font-bold text-slate-400 uppercase tracking-[0.2em]">Duration (Days)</label>
-                        <input type="number" min={1} max={currentLimits.days} value={config.totalDays} onChange={(e) => { const val = parseInt(e.target.value); if (val <= currentLimits.days) { updateConfig('totalDays', val); } }} className="w-full p-4 rounded-xl border-2 border-black/[0.03] focus:border-sanctuary-primary outline-none bg-white shadow-sm text-gray-800 text-left" />
-                        <p className="text-[10px] text-slate-400 mt-1 italic text-left">Plan limit: {currentLimits.days} days</p>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-4 pt-4 border-t border-black/[0.03] text-left">
-                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-[0.2em]">Custom Question</label>
-                    <input type="text" value={config.customQuestion || ""} onChange={(e) => updateConfig('customQuestion', e.target.value)} placeholder="Will you be my Valentine?" className="w-full p-4 rounded-2xl border-2 border-black/[0.03] focus:border-sanctuary-primary outline-none bg-white shadow-sm text-gray-800 text-left" />
-                  </div>
-
-                  <div className="space-y-4 pt-4 border-t border-black/[0.03] text-left">
-                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-[0.2em]">Custom Background</label>
-                    <div className={`relative rounded-xl border-2 border-dashed p-6 transition-all border-black/[0.05] bg-white hover:border-sanctuary-primary cursor-pointer text-left`}>
+                    <div className={`p-6 rounded-[32px] border-2 border-dashed transition-all ${config.backgroundUrl ? 'bg-white border-sanctuary-primary/20' : 'bg-slate-50 border-black/[0.05] hover:border-sanctuary-secondary'}`}>
                         {config.backgroundUrl ? (
-                            <div className="flex items-center gap-4 text-left">
+                            <div className="flex items-center gap-4 group">
                                 <div className="w-16 h-16 rounded-lg overflow-hidden border-2 border-sanctuary-secondary/20 shadow-sm bg-gray-50"><img src={config.backgroundUrl} alt="" className="w-full h-full object-cover" /></div>
-                                <div className="flex-grow"><p className="text-xs font-bold text-sanctuary-primary text-left">Background Set</p><button onClick={() => { const url = config.backgroundUrl; updateConfig('backgroundUrl', ''); if (url) deleteAsset(url); }} className="text-[10px] text-sanctuary-soft underline uppercase font-bold hover:text-sanctuary-primary transition-colors text-left">Remove</button></div>
+                                <div className="flex-grow">
+                                    <p className="text-xs font-bold text-sanctuary-primary uppercase tracking-widest">Background Set</p>
+                                    <button onClick={() => { const url = config.backgroundUrl; updateConfig('backgroundUrl', ''); if (url) deleteAsset(url); }} className="text-[10px] text-slate-400 underline uppercase font-bold hover:text-red-500 transition-colors">Remove Image</button>
+                                </div>
                             </div>
                         ) : (
-                            <label className={`flex flex-col items-center justify-center gap-2 cursor-pointer text-left`}>
-                                {uploading === 'backgroundUrl' ? <LucideLoader className="animate-spin text-sanctuary-primary" size={24} /> : <Upload className="text-sanctuary-secondary" size={24} />}
-                                <span className="text-xs font-bold text-sanctuary-soft uppercase tracking-wider text-center">{uploading === 'backgroundUrl' ? 'Uploading...' : 'Upload Image'}</span>
+                            <label className={`flex flex-col items-center justify-center gap-3 cursor-pointer`}>
+                                <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm text-slate-400 transition-all group-hover:text-sanctuary-primary">
+                                    {uploading === 'backgroundUrl' ? <LucideLoader className="animate-spin text-sanctuary-primary" size={24} /> : <Upload size={24} />}
+                                </div>
+                                <div className="text-center">
+                                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{uploading === 'backgroundUrl' ? 'Uploading...' : 'Upload Atmospheric Photo'}</span>
+                                    <p className="text-[8px] text-slate-300 mt-1 italic">High-res vertical photos look best</p>
+                                </div>
                                 <input type="file" accept="image/*" className="hidden" disabled={!!uploading} onChange={(e) => handleFileUpload(e, 'backgroundUrl')} />
                             </label>
                         )}
@@ -616,16 +633,16 @@ function WizardContent() {
               {step === 3 && (
                 <div className="space-y-6 text-left text-gray-800">
                   <div className="space-y-2">
-                    <h3 className="text-2xl font-serif-display text-slate-900 text-left">Atmospheric Audio</h3>
-                    <p className="text-sm text-slate-500 font-playfair italic text-left">Curate the perfect mood for every stage of their journey.</p>
+                    <h3 className="text-2xl font-serif-display text-slate-900">Atmospheric Audio</h3>
+                    <p className="text-sm text-slate-500 font-playfair italic">Curate the perfect mood for every stage of their journey.</p>
                   </div>
-                  <div className="max-h-[350px] overflow-y-auto pr-2 custom-scrollbar space-y-4 text-left">
+                  <div className="max-h-[350px] overflow-y-auto pr-2 custom-scrollbar space-y-4">
                     {getDaysArray().map((offset) => (
-                        <div key={offset} className="p-4 sm:p-5 bg-white rounded-[32px] border border-black/[0.03] shadow-sm space-y-3 group hover:border-sanctuary-secondary transition-all text-left">
-                            <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] text-left">{offset === 0 ? "The Big Reveal" : `${offset} Days Before`}</label>
-                            <div className="flex gap-2 sm:gap-3 text-left">
+                        <div key={offset} className="p-5 bg-white rounded-[32px] border border-black/[0.03] shadow-sm space-y-3 group hover:border-sanctuary-secondary transition-all">
+                            <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">{offset === 0 ? "The Big Reveal" : `${offset} Days Before`}</label>
+                            <div className="flex gap-3">
                                 <div className="w-12 h-12 bg-sanctuary-bg rounded-xl flex items-center justify-center text-sanctuary-primary shrink-0 group-hover:scale-110 transition-transform"><Music size={20} /></div>
-                                <input type="text" value={config.spotifyTracks[`day${offset}`] || ""} onChange={(e) => updateConfig(`spotifyTracks.day${offset}`, e.target.value.split('/').pop()?.split('?')[0])} placeholder="Paste Spotify Link or ID" className="flex-grow p-3 rounded-xl border-2 border-black/[0.03] focus:border-sanctuary-primary outline-none transition-colors text-sm bg-slate-50/50 text-gray-800 text-left" />
+                                <input type="text" value={config.spotifyTracks[`day${offset}`] || ""} onChange={(e) => updateConfig(`spotifyTracks.day${offset}`, e.target.value.split('/').pop()?.split('?')[0])} placeholder="Paste Spotify Link or ID" className="flex-grow p-3 rounded-xl border-2 border-black/[0.03] focus:border-sanctuary-primary outline-none transition-colors text-sm bg-slate-50/50 text-gray-800" />
                             </div>
                         </div>
                     ))}
@@ -635,32 +652,36 @@ function WizardContent() {
 
               {step === 4 && (
                 <div className="space-y-6 text-left text-gray-800">
-                    <div className="space-y-2 text-left text-gray-800">
-                        <h3 className="text-2xl font-serif-display text-slate-900 text-left">Shared Memories</h3>
-                        <p className="text-sm text-slate-500 font-playfair italic text-left">Upload photos that tell your story together.</p>
+                    <div className="space-y-2">
+                        <h3 className="text-2xl font-serif-display text-slate-900">Shared Memories</h3>
+                        <p className="text-sm text-slate-500 font-playfair italic">Upload photos that tell your story together.</p>
                     </div>
-                    <div className="max-h-[450px] overflow-y-auto pr-2 custom-scrollbar space-y-8 text-left text-gray-800">
+                    <div className="max-h-[450px] overflow-y-auto pr-2 custom-scrollbar space-y-8">
                         {getDaysArray().map((offset) => {
                           const dayKey = `day${offset}`;
                           const images = config.galleryImages?.[dayKey] || [];
                           return (
-                            <div key={offset} className="p-4 sm:p-6 bg-white rounded-[32px] border border-black/[0.03] shadow-sm space-y-4 text-left text-gray-800">
-                              <div className="flex justify-between items-center text-left text-gray-800">
-                                <label className="block text-[10px] font-bold text-sanctuary-primary uppercase tracking-[0.2em] text-left">{offset === 0 ? "Grand Finale" : `${offset} Days Left`}</label>
-                                <span className="text-[10px] bg-slate-50 px-2 py-1 rounded-full font-bold text-slate-400 text-left">{images.length} / {currentLimits.gallery}</span>
+                            <div key={offset} className="p-6 bg-white rounded-[32px] border border-black/[0.03] shadow-sm space-y-4">
+                              <div className="flex justify-between items-center">
+                                <label className="block text-[10px] font-bold text-sanctuary-primary uppercase tracking-[0.2em]">{offset === 0 ? "Grand Finale" : `${offset} Days Left`}</label>
+                                <span className="text-[10px] bg-slate-50 px-2 py-1 rounded-full font-bold text-slate-400">{images.length} / {currentLimits.gallery}</span>
                               </div>
-                              <div className="space-y-4 text-left text-gray-800">
-                                <label className={`flex flex-col items-center justify-center gap-2 border-2 border-dashed border-black/[0.05] rounded-2xl p-8 transition-all hover:border-sanctuary-primary cursor-pointer bg-slate-50 group ${uploading ? 'pointer-events-none' : ''} text-left text-gray-800`}>
-                                    {uploading === `gallery_${dayKey}` ? <LucideLoader className="animate-spin text-sanctuary-primary" size={24} /> : <Plus className="text-sanctuary-secondary group-hover:scale-110 transition-transform" size={24} />}
-                                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">{uploading === `gallery_${dayKey}` ? 'Uploading...' : 'Add Photos'}</span>
+                              <div className="space-y-4">
+                                <label className={`flex flex-col items-center justify-center gap-3 border-2 border-dashed border-black/[0.05] rounded-2xl p-8 transition-all hover:border-sanctuary-primary cursor-pointer bg-slate-50 group ${uploading ? 'pointer-events-none' : ''}`}>
+                                    <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm text-slate-300 transition-all group-hover:text-sanctuary-primary">
+                                        {uploading === `gallery_${dayKey}` ? <LucideLoader className="animate-spin text-sanctuary-primary" size={20} /> : <Plus size={20} />}
+                                    </div>
+                                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{uploading === `gallery_${dayKey}` ? 'Uploading...' : 'Add Photos'}</span>
                                     <input type="file" multiple accept="image/*" className="hidden" onChange={(e) => handleFileUpload(e, `gallery_${dayKey}`, true, dayKey)} />
                                 </label>
                                 {images.length > 0 && (
-                                    <div className="grid grid-cols-3 gap-2 mt-4 text-left text-gray-800">
+                                    <div className="grid grid-cols-3 md:grid-cols-4 gap-2 mt-4">
                                         {images.map((url, idx) => (
-                                            <div key={idx} className="relative group rounded-xl overflow-hidden border border-black/[0.05] aspect-square bg-white shadow-sm text-left text-gray-800">
+                                            <div key={idx} className="relative group rounded-xl overflow-hidden border border-black/[0.05] aspect-square bg-white shadow-sm">
                                                 <img src={url} className="w-full h-full object-cover" alt="" />
-                                                <button onClick={() => { const newImages = images.filter((_, i) => i !== idx); updateConfig(`galleryImages.${dayKey}`, newImages); if (url) deleteAsset(url); }} className="absolute top-1 right-1 bg-black/50 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity text-left"><Trash2 size={10} /></button>
+                                                <button onClick={() => { const newImages = images.filter((_, i) => i !== idx); updateConfig(`galleryImages.${dayKey}`, newImages); if (url) deleteAsset(url); }} className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
+                                                    <Trash2 size={16} className="text-white" />
+                                                </button>
                                             </div>
                                         ))}
                                     </div>
@@ -675,21 +696,24 @@ function WizardContent() {
 
               {step === 5 && (
                 <div className="space-y-6 text-left text-gray-800">
-                  <div className="space-y-2 text-left">
-                    <h3 className="text-2xl font-serif-display text-slate-900 text-left">Personal Notes</h3>
-                    <p className="text-sm text-slate-500 font-playfair italic text-left text-gray-800">Whisper sweet messages that reveal themselves over time.</p>
+                  <div className="space-y-2">
+                    <h3 className="text-2xl font-serif-display text-slate-900">Personal Notes</h3>
+                    <p className="text-sm text-slate-500 font-playfair italic text-gray-800">Whisper sweet messages that reveal themselves over time.</p>
                   </div>
-                  <div className="flex flex-col gap-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar text-left text-gray-800">
+                  <div className="flex flex-col gap-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
                     {config.notes.map((note, idx) => (
-                        <div key={note.id} className="p-4 sm:p-5 bg-white rounded-[32px] border border-black/[0.03] shadow-sm space-y-3 group hover:border-sanctuary-secondary transition-all text-left text-gray-800">
-                            <div className="flex justify-between items-center text-left text-gray-800 text-left">
-                                <select value={note.day} onChange={(e) => { const newNotes = [...config.notes]; newNotes[idx].day = parseInt(e.target.value); updateConfig('notes', newNotes); }} className="p-2 rounded-lg border border-black/[0.05] bg-slate-50 text-[10px] font-bold uppercase tracking-widest text-slate-500 outline-none focus:border-sanctuary-primary text-gray-800">{getDaysArray().map(offset => ( <option key={offset} value={offset}>{offset === 0 ? "The Big Day" : `${offset} Days Left`}</option> ))}</select>
-                                {config.notes.length > 1 && ( <button onClick={() => { const newNotes = config.notes.filter((_, i) => i !== idx); updateConfig('notes', newNotes); }} className="text-red-200 hover:text-red-500 transition-colors text-left"><X size={14} /></button> )}
+                        <div key={note.id} className="p-5 bg-white rounded-[32px] border border-black/[0.03] shadow-sm space-y-3 group hover:border-sanctuary-secondary transition-all">
+                            <div className="flex justify-between items-center">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-6 h-6 bg-sanctuary-bg rounded-lg flex items-center justify-center text-sanctuary-primary"><MessageSquare size={12} /></div>
+                                    <select value={note.day} onChange={(e) => { const newNotes = [...config.notes]; newNotes[idx].day = parseInt(e.target.value); updateConfig('notes', newNotes); }} className="p-1 rounded-lg border-none bg-transparent text-[10px] font-bold uppercase tracking-widest text-slate-500 outline-none focus:text-sanctuary-primary cursor-pointer transition-colors">{getDaysArray().map(offset => ( <option key={offset} value={offset}>{offset === 0 ? "The Big Day" : `${offset} Days Left`}</option> ))}</select>
+                                </div>
+                                {config.notes.length > 1 && ( <button onClick={() => { const newNotes = config.notes.filter((_, i) => i !== idx); updateConfig('notes', newNotes); }} className="w-8 h-8 rounded-full flex items-center justify-center text-slate-200 hover:bg-red-50 hover:text-red-500 transition-all"><X size={14} /></button> )}
                             </div>
-                            <textarea value={note.content} onChange={(e) => { const newContent = e.target.value; const otherLen = config.notes.reduce((acc, n, i) => i === idx ? acc : acc + (n.content?.length || 0), 0); if (otherLen + newContent.length <= 8000) { const newNotes = [...config.notes]; newNotes[idx].content = newContent; updateConfig('notes', newNotes); } }} placeholder="Write your message here..." className="w-full p-3 bg-slate-50/50 rounded-xl border border-black/[0.03] focus:border-sanctuary-primary outline-none text-sm min-h-[80px] resize-none text-gray-800 text-left" />
+                            <textarea value={note.content} onChange={(e) => { const newContent = e.target.value; const otherLen = config.notes.reduce((acc, n, i) => i === idx ? acc : acc + (n.content?.length || 0), 0); if (otherLen + newContent.length <= 8000) { const newNotes = [...config.notes]; newNotes[idx].content = newContent; updateConfig('notes', newNotes); } }} placeholder="Write your message here..." className="w-full p-4 bg-slate-50/50 rounded-2xl border-2 border-transparent focus:border-sanctuary-primary focus:bg-white outline-none text-sm min-h-[100px] resize-none transition-all" />
                         </div>
                     ))}
-                    <button onClick={() => { const newNotes = [...config.notes, { id: `note${Date.now()}`, day: 0, content: '' }]; updateConfig('notes', newNotes); }} className="w-full py-4 border-2 border-dashed border-black/[0.05] text-slate-400 rounded-[32px] font-bold hover:bg-slate-50 transition-all text-xs uppercase tracking-widest text-center">+ Add Another Message</button>
+                    <button onClick={() => { const newNotes = [...config.notes, { id: `note${Date.now()}`, day: 0, content: '' }]; updateConfig('notes', newNotes); }} className="w-full py-5 border-2 border-dashed border-black/[0.05] text-slate-400 rounded-[32px] font-bold hover:bg-slate-50 hover:border-sanctuary-secondary/20 hover:text-sanctuary-primary transition-all text-[10px] uppercase tracking-widest flex items-center justify-center gap-2"><Plus size={14} /> Add Another Message</button>
                   </div>
                 </div>
               )}
@@ -697,25 +721,38 @@ function WizardContent() {
               {step === 6 && (
                 <div className="space-y-6 text-left text-gray-800">
                   {!currentLimits.video ? (
-                    <div className="p-6 sm:p-12 text-center bg-sanctuary-primary/5 rounded-[40px] border-2 border-dashed border-sanctuary-secondary/30 text-center">
-                        <ImageIcon size={48} className="mx-auto text-sanctuary-secondary mb-4 opacity-50 text-center" />
-                        <h3 className="text-2xl font-serif-display text-slate-900 mb-2 text-center">Secret Cinema</h3>
-                        <p className="text-sm text-slate-500 mb-8 font-playfair italic text-center">The ultimate finale. Upgrade to <b>The Sanctuary</b> plan to upload your own video.</p>
-                        <button onClick={() => setStep(1)} className="px-8 py-3 bg-slate-900 text-white rounded-2xl font-bold shadow-lg block mx-auto hover:scale-105 transition-all text-sm text-center">Upgrade Experience</button>
+                    <div className="p-12 text-center bg-sanctuary-primary/5 rounded-[40px] border-2 border-dashed border-sanctuary-secondary/30">
+                        <div className="w-16 h-16 bg-white rounded-3xl flex items-center justify-center mx-auto shadow-xl mb-6 text-sanctuary-primary"><Eye size={32} /></div>
+                        <h3 className="text-3xl font-serif-display text-slate-900 mb-2">Secret Cinema</h3>
+                        <p className="text-slate-500 max-w-sm mx-auto text-sm leading-relaxed mb-8">The most intimate feature of Sanctuary. A private video theater that only reveals itself on the final day.</p>
+                        <button onClick={() => setStep(1)} className="px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold uppercase text-[10px] tracking-widest hover:scale-105 transition-all">Unlock Premium Cinema</button>
                     </div>
                   ) : (
-                    <div className="space-y-6 text-left text-gray-800">
-                      <div className="space-y-2 text-left">
-                        <h3 className="text-2xl font-serif-display text-slate-900 text-left">Secret Cinema</h3>
-                        <p className="text-sm text-slate-500 font-playfair italic text-left text-gray-800">Your personal video finale, locked until the very end.</p>
+                    <div className="space-y-6">
+                      <div className="space-y-2">
+                        <h3 className="text-2xl font-serif-display text-slate-900">Secret Cinema</h3>
+                        <p className="text-sm text-slate-500 font-playfair italic">Your personal video finale, locked until the very end.</p>
                       </div>
-                      <div className={`relative rounded-[40px] border-2 border-dashed p-6 sm:p-10 transition-all border-black/[0.05] bg-white hover:border-sanctuary-primary text-left`}>
+                      <div className={`relative rounded-[40px] border-2 border-dashed p-10 transition-all border-black/[0.05] bg-white hover:border-sanctuary-primary`}>
                         {config.videoUrl ? (
-                            <div className="space-y-4 text-left text-gray-800"><div className="aspect-video w-full rounded-3xl overflow-hidden border border-black/[0.05] bg-black shadow-2xl text-left"><video src={config.videoUrl} className="w-full h-full object-cover" controls /></div><div className="flex justify-between items-center text-left"><p className="text-[10px] font-bold text-sanctuary-primary uppercase tracking-[0.2em] text-left">Video Secured</p><button onClick={() => { const url = config.videoUrl; updateConfig('videoUrl', ''); if (url) deleteAsset(url); }} className="text-[10px] text-slate-400 underline uppercase font-bold hover:text-red-500 text-left">Remove</button></div></div>
+                            <div className="space-y-4">
+                                <div className="aspect-video w-full rounded-3xl overflow-hidden border border-black/[0.05] bg-black shadow-2xl relative group">
+                                    <video src={config.videoUrl} className="w-full h-full object-cover" controls />
+                                    <button onClick={() => { const url = config.videoUrl; updateConfig('videoUrl', ''); if (url) deleteAsset(url); }} className="absolute top-4 right-4 p-3 bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-xl hover:scale-110"><Trash2 size={18} /></button>
+                                </div>
+                                <div className="flex justify-between items-center px-2">
+                                    <div className="flex items-center gap-2 text-[10px] font-bold text-sanctuary-primary uppercase tracking-[0.2em]"><Shield size={14} /> Video Secured</div>
+                                </div>
+                            </div>
                         ) : (
-                            <label className="flex flex-col items-center justify-center gap-6 cursor-pointer text-left">
-                                {uploading === 'videoUrl' ? <LucideLoader className="animate-spin text-sanctuary-primary" size={32} /> : <div className="p-6 bg-sanctuary-bg rounded-3xl"><Upload className="text-sanctuary-primary" size={32} /></div>}
-                                <div className="text-center space-y-2 text-left"><p className="text-sm font-bold text-slate-900 uppercase tracking-widest text-center">Select Video File</p><p className="text-[10px] text-slate-400 italic text-center">MP4 or MOV • Under 50MB recommended</p></div>
+                            <label className="flex flex-col items-center justify-center gap-6 cursor-pointer">
+                                <div className="w-20 h-20 bg-sanctuary-bg rounded-3xl flex items-center justify-center text-sanctuary-primary shadow-sm group-hover:scale-110 transition-all">
+                                    {uploading === 'videoUrl' ? <LucideLoader className="animate-spin" size={32} /> : <Upload size={32} />}
+                                </div>
+                                <div className="text-center space-y-2">
+                                    <p className="text-sm font-bold text-slate-900 uppercase tracking-widest">Select Video File</p>
+                                    <p className="text-[10px] text-slate-400 italic font-medium">MP4 or MOV • Under 50MB recommended</p>
+                                </div>
                                 <input type="file" accept="video/*" className="hidden" disabled={!!uploading} onChange={(e) => handleFileUpload(e, 'videoUrl')} />
                             </label>
                         )}
@@ -726,82 +763,94 @@ function WizardContent() {
               )}
 
               {step === 7 && (
-                <div className="space-y-8 text-center text-gray-800 text-center">
-                   <div className="space-y-6 text-center text-center">
-                    <div className="w-16 h-16 bg-slate-900 rounded-2xl flex items-center justify-center text-white mx-auto shadow-xl text-center"><Lock size={32} /></div>
-                    <div className="space-y-2 text-center text-gray-800 text-center">
-                        <h3 className="text-3xl font-serif-display text-slate-900 text-center">Set Your Passcode</h3>
-                        <p className="text-sm text-slate-500 font-playfair italic text-center">A 4-digit key to unlock the most private parts of your sanctuary.</p>
+                <div className="space-y-12 text-center text-gray-800">
+                   <div className="space-y-8 py-10">
+                    <div className="w-20 h-20 bg-slate-900 rounded-[28px] flex items-center justify-center text-white mx-auto shadow-2xl transform rotate-3"><Lock size={40} /></div>
+                    <div className="space-y-3">
+                        <h3 className="text-4xl font-serif-display text-slate-900">Final Security Step</h3>
+                        <p className="text-slate-500 font-playfair italic max-w-sm mx-auto leading-relaxed">Choose a 4-digit key. This will be the only way to unlock the most private parts of your sanctuary.</p>
                     </div>
-                    <div className="max-w-[280px] mx-auto space-y-4 text-center text-center">
-                        <input type="text" maxLength={4} value={config.passcode} onChange={(e) => updateConfig('passcode', e.target.value.replace(/\D/g, ''))} className={`w-full p-6 text-center text-5xl tracking-[0.5em] font-serif-display rounded-[32px] border-2 transition-all outline-none border-black/[0.03] focus:border-sanctuary-primary focus:bg-white bg-slate-50 shadow-inner text-gray-800 text-center`} />
-                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest text-center">Choose 4 numbers</p>
+                    <div className="max-w-[320px] mx-auto space-y-6">
+                        <input type="text" maxLength={4} value={config.passcode} onChange={(e) => updateConfig('passcode', e.target.value.replace(/\D/g, ''))} className={`w-full p-8 text-center text-6xl tracking-[0.5em] font-serif-display rounded-[40px] border-4 transition-all outline-none border-black/[0.03] focus:border-sanctuary-primary focus:bg-white bg-slate-50 shadow-inner text-gray-800`} />
+                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] animate-pulse">Encryption sequence ready</p>
                     </div>
                   </div>
                 </div>
               )}
 
               {step === 8 && (
-                <div className="space-y-8 text-center py-10 text-gray-800 text-center">
-                  <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce shadow-xl shadow-green-100 text-center text-center"><Check size={40} /></div>
-                  <h2 className="text-5xl font-serif-display text-slate-900 tracking-tight text-center">Sanctuary Ready</h2>
-                  <div className="space-y-6 text-left text-gray-800">
-                    <div className="p-4 sm:p-6 bg-slate-50 rounded-[32px] border border-black/[0.03] break-all text-xs font-mono shadow-inner text-slate-500 text-center text-center">{generatedLink}</div>
-                    <div className="flex flex-col gap-4 text-left text-gray-800 text-left">
-                      <button onClick={copyToClipboard} className="w-full flex items-center justify-center gap-3 py-5 bg-slate-900 text-white rounded-2xl font-bold shadow-2xl hover:scale-[1.02] transition-all text-center">
-                        {copied ? <Check size={20} /> : <Copy size={20} />} {copied ? 'Copied!' : 'Copy Sanctuary Link'}
+                <div className="space-y-10 text-center py-10 text-gray-800">
+                  <div className="relative inline-block">
+                    <div className="w-24 h-24 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-2 shadow-2xl shadow-green-100/50 animate-in zoom-in duration-500"><CheckCircle2 size={48} /></div>
+                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center border-2 border-white shadow-lg animate-bounce delay-700"><Sparkles className="text-amber-600" size={14} /></div>
+                  </div>
+                  <h2 className="text-6xl font-serif-display text-slate-900 tracking-tight leading-none">Sanctuary Built</h2>
+                  
+                  <div className="max-w-md mx-auto space-y-6">
+                    <div className="p-6 bg-slate-50 rounded-[32px] border-2 border-black/[0.03] break-all text-[10px] font-mono shadow-inner text-slate-500 text-center leading-relaxed relative group overflow-hidden">
+                        {generatedLink}
+                        <div className="absolute inset-0 bg-white/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <button onClick={copyToClipboard} className="px-6 py-2 bg-slate-900 text-white rounded-full font-bold text-[10px] uppercase tracking-widest flex items-center gap-2"><Copy size={12} /> {copied ? 'Copied!' : 'Copy Link'}</button>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-4">
+                      <button onClick={copyToClipboard} className="w-full flex items-center justify-center gap-3 py-5 bg-slate-900 text-white rounded-2xl font-bold shadow-2xl hover:scale-[1.02] transition-all text-sm uppercase tracking-widest">
+                        {copied ? <CheckCircle2 size={20} /> : <Copy size={20} />} {copied ? 'Link Copied to Clipboard' : 'Copy Sanctuary Link'}
                       </button>
                       
-                      <div className="p-6 sm:p-8 bg-sanctuary-bg rounded-[40px] border border-black/[0.03] space-y-6 relative overflow-hidden text-left text-gray-800 text-left">
-                        <div className="relative z-10 space-y-4 text-left text-gray-800 text-left">
-                            <div className="flex items-center gap-2 text-indigo-600 font-bold uppercase tracking-[0.2em] text-[10px] text-left text-left"><Sparkles size={16} /> Social Media Pack</div>
-                            <p className="text-sm text-slate-600 font-playfair italic leading-relaxed text-left text-left">Announce your gift with an aesthetic story card for TikTok or Instagram.</p>
-                            <button onClick={downloadShareCard} disabled={isDownloading} className="w-full py-4 bg-white border border-black/[0.05] text-slate-900 rounded-2xl font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-slate-50 transition-all shadow-sm disabled:opacity-50 text-left text-left">
+                      <div className="p-8 bg-sanctuary-bg rounded-[48px] border-2 border-black/[0.03] space-y-6 relative overflow-hidden group">
+                        <div className="relative z-10 space-y-4">
+                            <div className="flex items-center gap-3 text-indigo-600 font-bold uppercase tracking-[0.2em] text-[10px]"><Sparkles size={18} /> Social Media Pack</div>
+                            <p className="text-sm text-slate-600 font-playfair italic leading-relaxed">Announce your gift with an aesthetic story card for TikTok or Instagram.</p>
+                            <button onClick={downloadShareCard} disabled={isDownloading} className="w-full py-4 bg-white border-2 border-black/[0.05] text-slate-900 rounded-2xl font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-slate-50 transition-all shadow-sm disabled:opacity-50">
                                 {isDownloading ? <LucideLoader className="animate-spin text-indigo-600" size={16} /> : <ImageIcon size={16} className="text-indigo-600" />} {isDownloading ? 'Generating...' : 'Download Story Card'}
                             </button>
                         </div>
-                        <ThemeIcon className="absolute bottom-[-30px] right-[-30px] text-indigo-600/5 w-48 h-48 text-left" />
+                        <ThemeIcon className="absolute bottom-[-40px] right-[-40px] text-indigo-600/5 w-64 h-64 group-hover:scale-110 transition-transform duration-1000" />
                       </div>
 
-                      <div className="p-6 sm:p-8 bg-slate-50 rounded-[40px] border border-black/[0.03] space-y-6 relative overflow-hidden text-left text-gray-800 text-left">
-                        <div className="relative z-10 space-y-4 text-left text-gray-800 text-left">
-                            <div className="flex items-center gap-2 text-slate-900 font-bold uppercase tracking-[0.2em] text-[10px] text-left text-left"><Plus size={16} /> Delivery Options</div>
+                      <div className="p-8 bg-slate-50 rounded-[48px] border-2 border-black/[0.03] space-y-6 relative overflow-hidden">
+                        <div className="relative z-10 space-y-4">
+                            <div className="flex items-center gap-3 text-slate-900 font-bold uppercase tracking-[0.2em] text-[10px]"><Mail size={18} /> Delivery Options</div>
                             {!emailSent ? (
-                                <div className="space-y-3 text-left text-gray-800 text-left">
-                                    <p className="text-[11px] text-slate-500 italic text-left text-left">Never lose your link. Send a backup to your email.</p>
-                                    <div className="flex gap-2 text-left text-left text-left">
-                                        <input type="email" value={userEmail} onChange={(e) => setUserEmail(e.target.value)} placeholder="your@email.com" className="flex-grow p-3 rounded-xl border border-black/[0.05] text-xs focus:border-sanctuary-primary outline-none bg-white text-gray-800 text-left text-left text-left" />
-                                        <button onClick={sendEmail} disabled={isSendingEmail || !userEmail} className="px-4 py-2 bg-slate-900 text-white rounded-xl font-bold text-[10px] uppercase tracking-widest disabled:opacity-50 text-center text-center text-center">{isSendingEmail ? <LucideLoader className="animate-spin" size={14} /> : 'Send'}</button>
+                                <div className="space-y-4">
+                                    <p className="text-[11px] text-slate-500 italic leading-relaxed">Never lose your link. Send a secure backup to your email.</p>
+                                    <div className="flex gap-2">
+                                        <input type="email" value={userEmail} onChange={(e) => setUserEmail(e.target.value)} placeholder="your@email.com" className="flex-grow p-4 rounded-xl border-2 border-black/[0.05] text-xs focus:border-sanctuary-primary outline-none bg-white transition-all" />
+                                        <button onClick={sendEmail} disabled={isSendingEmail || !userEmail} className="px-6 bg-slate-900 text-white rounded-xl font-bold text-[10px] uppercase tracking-widest disabled:opacity-50 transition-all hover:bg-slate-800">{isSendingEmail ? <LucideLoader className="animate-spin" size={14} /> : 'Send'}</button>
                                     </div>
                                 </div>
                             ) : (
-                                <div className="flex items-center gap-2 text-green-600 bg-green-50 p-3 rounded-xl border border-green-100 text-left text-gray-800 text-left"><CheckCircle2 size={16} /><span className="text-[10px] font-bold uppercase text-left text-left">Sent to Inbox</span></div>
+                                <div className="flex items-center gap-3 text-green-600 bg-green-50 p-4 rounded-2xl border border-green-100"><CheckCircle2 size={20} /><span className="text-xs font-bold uppercase tracking-widest">Securely Sent to Inbox</span></div>
                             )}
                         </div>
                       </div>
 
-                      <div className="flex justify-center gap-12 pt-6 text-center text-gray-800 text-center">
-                        <button onClick={() => setStep(2)} className="text-[10px] text-slate-400 uppercase tracking-[0.3em] font-bold hover:text-slate-900 transition-colors text-center text-center">Edit Details</button>
-                        <button onClick={handleDelete} className="text-[10px] text-red-300 uppercase tracking-[0.3em] font-bold hover:text-red-600 transition-colors text-center text-center">Destroy</button>
+                      <div className="flex justify-center gap-12 pt-10">
+                        <button onClick={() => setStep(2)} className="text-[10px] text-slate-400 uppercase tracking-[0.3em] font-bold hover:text-slate-900 transition-colors">Edit Details</button>
+                        <button onClick={handleDelete} className="text-[10px] text-red-300 uppercase tracking-[0.3em] font-bold hover:text-red-600 transition-colors flex items-center gap-2">Destroy <Trash2 size={10} /></button>
                       </div>
                     </div>
                   </div>
+
+                  {/* Hidden Render Target for Share Card */}
                   <div className="fixed left-[-9999px] top-0">
                     <div ref={cardRef} className="w-[1080px] h-[1920px] flex flex-col items-center justify-center p-20 text-center relative overflow-hidden" style={{ backgroundColor: activeTheme.colors.bg }}>
                         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: `radial-gradient(${activeTheme.colors.primary} 2px, transparent 2px)`, backgroundSize: '40px 40px' }} />
-                        <div className="relative z-10 space-y-12 text-center text-gray-800">
-                            <ThemeIcon size={240} fill={activeTheme.colors.primary} stroke={activeTheme.colors.primary} className="mx-auto text-center" />
-                            <h1 className="text-[120px] font-serif-display tracking-tight text-slate-900 leading-tight text-center">A Sanctuary for {config.names.recipient}</h1>
-                            <p className="text-[48px] text-slate-400 font-bold uppercase tracking-[0.3em] text-center italic font-playfair">Hand-crafted by {config.names.sender}</p>
-                            <div className="pt-24 text-center">
-                                <div className="px-16 py-8 bg-slate-900 text-white rounded-[40px] text-[48px] font-bold shadow-2xl text-center flex flex-col gap-2">
-                                    <span>Open the Gift ✨</span>
-                                    <span className="text-[24px] opacity-60 font-normal">sanctuary-wizard.vercel.app</span>
+                        <div className="relative z-10 space-y-12">
+                            <ThemeIcon size={240} fill={activeTheme.colors.primary} stroke={activeTheme.colors.primary} className="mx-auto" />
+                            <h1 className="text-[120px] font-serif-display tracking-tight text-slate-900 leading-tight">A Sanctuary for {config.names.recipient}</h1>
+                            <p className="text-[48px] text-slate-400 font-bold uppercase tracking-[0.3em] italic font-playfair">Hand-crafted by {config.names.sender}</p>
+                            <div className="pt-24">
+                                <div className="px-16 py-8 bg-slate-900 text-white rounded-[40px] text-[48px] font-bold shadow-2xl flex flex-col gap-2">
+                                    <span>Open the Gift</span>
+                                    <span className="text-[24px] opacity-60 font-normal lowercase tracking-widest">sanctuary-wiz.com</span>
                                 </div>
                             </div>
                         </div>
                         <div className="absolute bottom-20 flex flex-col items-center gap-4">
-                            <p className="text-[32px] font-bold text-slate-300 uppercase tracking-[0.4em] text-center">The New Way to Give</p>
+                            <p className="text-[32px] font-bold text-slate-300 uppercase tracking-[0.4em]">The New Way to Give</p>
                             <div className="w-24 h-[1px] bg-slate-200" />
                         </div>
                     </div>
@@ -814,17 +863,17 @@ function WizardContent() {
 
         {/* Footer */}
         {step < 8 && (
-          <div className="p-6 sm:p-8 bg-slate-50/50 border-t border-black/[0.03] flex justify-between items-center text-gray-800 text-center text-gray-800">
-            <button onClick={() => setStep(Math.max(1, step - 1))} disabled={step === 1 || !!uploading} className={`flex items-center gap-2 font-bold text-[10px] uppercase tracking-widest transition-all ${step === 1 || !!uploading ? 'text-slate-200' : 'text-slate-400 hover:text-slate-900'} text-center`}><ArrowLeft size={16} /> Prev</button>
-            <div className="flex gap-3 text-center text-gray-800 text-center">
+          <div className="p-6 sm:p-10 bg-slate-50 border-t border-black/[0.03] flex justify-between items-center">
+            <button onClick={() => setStep(Math.max(1, step - 1))} disabled={step === 1 || !!uploading} className={`flex items-center gap-2 font-bold text-[10px] uppercase tracking-[0.2em] transition-all ${step === 1 || !!uploading ? 'text-slate-200' : 'text-slate-400 hover:text-slate-900'}`}><ArrowLeft size={16} /> Previous</button>
+            <div className="flex gap-3">
                 {step < 7 ? (
-                    <button onClick={() => setStep(step + 1)} disabled={!!uploading} className="bg-slate-900 text-white px-10 py-4 rounded-2xl font-bold shadow-xl hover:scale-105 transition-all text-[10px] uppercase tracking-[0.2em] disabled:opacity-50 text-center text-center">
-                        {uploading ? 'Working...' : 'Continue'} <ArrowRight size={16} className="inline ml-1 text-center" />
+                    <button onClick={() => setStep(step + 1)} disabled={!!uploading} className="bg-slate-900 text-white px-12 py-5 rounded-2xl font-bold shadow-2xl hover:scale-105 transition-all text-[10px] uppercase tracking-[0.3em] flex items-center gap-3">
+                        {uploading ? 'Processing...' : 'Continue'} <ArrowRight size={16} />
                     </button>
                 ) : (
-                    <button onClick={handleGenerate} disabled={isPaying || !!uploading} className="bg-sanctuary-primary text-white px-10 py-4 rounded-2xl font-bold shadow-xl hover:scale-105 transition-all text-[10px] uppercase tracking-[0.2em] disabled:opacity-50 text-center text-center text-white text-center">
-                        {isPaying ? <div className="animate-spin text-white text-center inline-block text-center text-center"><Sparkles size={18} /></div> : success ? <Save size={18} /> : <Lock size={18} />}
-                        {isPaying ? 'Processing' : success ? 'Generate' : `Secure Pay`}
+                    <button onClick={handleGenerate} disabled={isPaying || !!uploading} className="bg-sanctuary-primary text-white px-12 py-5 rounded-2xl font-bold shadow-2xl hover:scale-105 transition-all text-[10px] uppercase tracking-[0.3em] flex items-center gap-3">
+                        {isPaying ? <LucideLoader className="animate-spin" size={18} /> : success ? <Save size={18} /> : <Lock size={18} />}
+                        {isPaying ? 'Securing...' : success ? 'Generate' : `Pay & Secure`}
                     </button>
                 )}
             </div>
@@ -834,12 +883,12 @@ function WizardContent() {
 
       <AnimatePresence>
         {isPreviewing && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[2000] bg-white overflow-y-auto text-center text-gray-800">
-                <div className="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-2xl glass rounded-2xl flex justify-between items-center p-3 z-[3000] shadow-2xl border border-white/40 text-gray-800 text-center">
-                    <div className="flex items-center gap-3 pl-2 text-gray-800 text-center"><Sparkles className="text-sanctuary-primary" size={18} /><span className="text-xs font-bold uppercase tracking-widest text-slate-800 text-left text-left">Live Preview</span></div>
-                    <button onClick={() => { setIsPreviewing(false); setPreviewConfig(null); }} className="px-5 py-2 bg-slate-900 text-white rounded-xl font-bold text-[10px] uppercase tracking-widest hover:bg-slate-800 transition-all flex items-center gap-2 text-center text-white text-center text-center"><ArrowLeft size={12} /> Exit Preview</button>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[2000] bg-white overflow-y-auto">
+                <div className="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-2xl glass rounded-2xl flex justify-between items-center p-3 z-[3000] shadow-2xl border border-white/40 text-gray-800">
+                    <div className="flex items-center gap-3 pl-2"><Sparkles className="text-sanctuary-primary" size={18} /><span className="text-xs font-bold uppercase tracking-widest text-slate-800">Live Preview</span></div>
+                    <button onClick={() => { setIsPreviewing(false); setPreviewConfig(null); }} className="px-5 py-2 bg-slate-900 text-white rounded-xl font-bold text-[10px] uppercase tracking-widest hover:bg-slate-800 transition-all flex items-center gap-2"><ArrowLeft size={12} /> Exit Preview</button>
                 </div>
-                <div className="relative pt-16 text-gray-800 text-left text-left text-left text-left"><PreviewApp forceUpdateKey={previewRefreshKey} /></div>
+                <div className="relative pt-16"><PreviewApp forceUpdateKey={previewRefreshKey} /></div>
             </motion.div>
         )}
       </AnimatePresence>
