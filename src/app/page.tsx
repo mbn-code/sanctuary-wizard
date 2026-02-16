@@ -420,7 +420,30 @@ export default function Home() {
 }
 
 function PreviewApp({ forceUpdateKey }: { forceUpdateKey: number }) {
-    const [phase, setPhase] = useState<'invitation' | 'dashboard'>('invitation');
+    const [phase, setPhase] = useState<'loading' | 'invitation' | 'dashboard'>('loading');
+
+    useEffect(() => {
+        const timer = setTimeout(() => setPhase('invitation'), 1500);
+        return () => clearTimeout(timer);
+    }, [forceUpdateKey]);
+
+    if (phase === 'loading') {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-[#FDFCFB] relative overflow-hidden text-gray-800">
+                <video 
+                    src="/videos/loading-background.mp4"
+                    poster="/videos/loading-poster.jpg"
+                    autoPlay 
+                    muted 
+                    loop 
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover blur-md opacity-20"
+                />
+                <LucideLoader className="w-8 h-8 text-slate-400 animate-spin relative z-10" />
+            </div>
+        );
+    }
+
     return (
         <div className="min-h-screen text-gray-800 text-left" key={forceUpdateKey}>
             {phase === 'invitation' ? <Invitation onComplete={() => setPhase('dashboard')} /> : <Dashboard />}
