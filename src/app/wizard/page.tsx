@@ -436,7 +436,7 @@ function WizardContent() {
           ))}
         </div>
 
-        <div className="flex-grow p-10 overflow-y-auto custom-scrollbar bg-[#FDFCFB]/50 text-gray-800">
+        <div className="flex-grow p-10 overflow-y-auto custom-scrollbar bg-sanctuary-bg/50 text-gray-800">
           <AnimatePresence mode="wait">
             <motion.div key={step} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-8 text-left">
               {step === 1 && (
@@ -740,15 +740,23 @@ function WizardContent() {
                     </div>
                   </div>
                   <div className="fixed left-[-9999px] top-0">
-                    <div ref={cardRef} className="w-[1080px] h-[1920px] bg-white flex flex-col items-center justify-center p-20 text-center relative overflow-hidden text-center" style={{ backgroundColor: activeTheme.colors.bg }}>
+                    <div ref={cardRef} className="w-[1080px] h-[1920px] flex flex-col items-center justify-center p-20 text-center relative overflow-hidden" style={{ backgroundColor: activeTheme.colors.bg }}>
                         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: `radial-gradient(${activeTheme.colors.primary} 2px, transparent 2px)`, backgroundSize: '40px 40px' }} />
-                        <div className="relative z-10 space-y-12 text-center text-gray-800 text-center">
+                        <div className="relative z-10 space-y-12 text-center text-gray-800">
                             <ThemeIcon size={240} fill={activeTheme.colors.primary} stroke={activeTheme.colors.primary} className="mx-auto text-center" />
-                            <h1 className="text-[120px] font-serif-display tracking-tight text-slate-900 leading-tight text-center text-center">For {config.names.recipient}</h1>
-                            <p className="text-[48px] text-slate-400 font-bold uppercase tracking-[0.3em] text-center text-center">Built by {config.names.sender}</p>
-                            <div className="pt-24 text-center text-center text-center"><div className="px-16 py-8 bg-slate-900 text-white rounded-[40px] text-[48px] font-bold shadow-2xl text-center text-center text-center">Sanctuary ✨</div></div>
+                            <h1 className="text-[120px] font-serif-display tracking-tight text-slate-900 leading-tight text-center">A Sanctuary for {config.names.recipient}</h1>
+                            <p className="text-[48px] text-slate-400 font-bold uppercase tracking-[0.3em] text-center italic font-playfair">Hand-crafted by {config.names.sender}</p>
+                            <div className="pt-24 text-center">
+                                <div className="px-16 py-8 bg-slate-900 text-white rounded-[40px] text-[48px] font-bold shadow-2xl text-center flex flex-col gap-2">
+                                    <span>Open the Gift ✨</span>
+                                    <span className="text-[24px] opacity-60 font-normal">sanctuary-wizard.vercel.app</span>
+                                </div>
+                            </div>
                         </div>
-                        <p className="absolute bottom-20 text-[32px] font-bold text-slate-300 uppercase tracking-[0.4em] text-center text-center text-center">Your Personal Sanctuary</p>
+                        <div className="absolute bottom-20 flex flex-col items-center gap-4">
+                            <p className="text-[32px] font-bold text-slate-300 uppercase tracking-[0.4em] text-center">The New Way to Give</p>
+                            <div className="w-24 h-[1px] bg-slate-200" />
+                        </div>
                     </div>
                   </div>
                 </div>
