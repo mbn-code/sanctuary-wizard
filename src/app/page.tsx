@@ -388,8 +388,19 @@ export default function Home() {
 
   if (phase === 'loading') {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-[#FDFCFB] text-gray-800">
-        <LucideLoader className="w-8 h-8 text-slate-200 animate-spin text-gray-800" />
+      <main className="min-h-screen flex items-center justify-center bg-[#FDFCFB] relative overflow-hidden text-gray-800">
+        <video 
+          src="/videos/loading-background.mp4"
+          poster="/videos/loading-poster.jpg"
+          autoPlay 
+          muted 
+          loop 
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover blur-md opacity-20"
+        />
+        <div className="relative z-10">
+          <LucideLoader className="w-8 h-8 text-slate-400 animate-spin" />
+        </div>
       </main>
     );
   }
