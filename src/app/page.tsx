@@ -137,36 +137,19 @@ export default function Home() {
             </nav>
 
             <header className="min-h-screen flex flex-col items-center justify-center px-6 pt-20 relative text-center">
-                <div className="fixed bottom-8 left-8 z-[60] pointer-events-none hidden md:block">
+                <div className="fixed top-24 right-6 md:right-8 z-[60] pointer-events-none">
                     <AnimatePresence mode="wait">
                         <motion.div 
                             key={currentActivity}
-                            initial={{ opacity: 0, x: -20 }}
+                            initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: -20 }}
-                            className="bg-white/90 backdrop-blur-md px-4 py-2.5 rounded-2xl shadow-2xl border border-black/5 flex items-center gap-3 w-fit text-gray-800"
+                            exit={{ opacity: 0, x: 20 }}
+                            className="bg-white/90 backdrop-blur-md px-4 py-2.5 rounded-2xl shadow-2xl border border-black/5 flex items-center gap-3 w-fit text-gray-800 ml-auto"
                         >
                             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                             <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">
                                 {activities[currentActivity].type} created in <span className="text-slate-900">{activities[currentActivity].location}</span>
                                 <span className="ml-2 text-slate-400 font-medium normal-case tracking-normal">— {activities[currentActivity].time}</span>
-                            </p>
-                        </motion.div>
-                    </AnimatePresence>
-                </div>
-                {/* Mobile version - top but less obstructive */}
-                <div className="absolute top-32 left-1/2 -translate-x-1/2 z-50 pointer-events-none w-full max-w-xs md:hidden text-center">
-                    <AnimatePresence mode="wait">
-                        <motion.div 
-                            key={currentActivity}
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.9 }}
-                            className="bg-white/80 backdrop-blur-md px-3 py-1.5 rounded-full shadow-lg border border-black/5 flex items-center gap-2 mx-auto w-fit text-gray-800"
-                        >
-                            <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                            <p className="text-[9px] font-bold uppercase tracking-widest text-slate-600">
-                                Recent: <span className="text-slate-900">{activities[currentActivity].type}</span>
                             </p>
                         </motion.div>
                     </AnimatePresence>
