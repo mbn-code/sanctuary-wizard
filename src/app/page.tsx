@@ -4,6 +4,7 @@ import React, { useState, useEffect, Suspense } from 'react';
 import Invitation from '@/components/Invitation';
 import Dashboard from '@/components/Dashboard';
 import MySanctuaries from '@/components/MySanctuaries';
+import VisitorCounter from '@/components/VisitorCounter';
 import { useSanctuary } from '@/utils/SanctuaryContext';
 import Link from 'next/link';
 import { 
@@ -29,20 +30,12 @@ export default function Home() {
     { type: 'Birthday Sanctuary', location: 'Tokyo', time: '15m ago' },
   ];
 
-  const [visitorCount, setVisitorCount] = useState(4821);
-
   useEffect(() => {
-    // Simulate live visitor growth
-    const vTimer = setInterval(() => {
-      setVisitorCount(prev => prev + Math.floor(Math.random() * 2));
-    }, 15000);
-    
     const aTimer = setInterval(() => {
       setCurrentActivity((prev) => (prev + 1) % activities.length);
     }, 12000);
 
     return () => {
-      clearInterval(vTimer);
       clearInterval(aTimer);
     };
   }, [activities.length]);
@@ -218,23 +211,9 @@ export default function Home() {
                         </div>
                     </div>
 
-                    {/* 7. Social Proof (Small) */}
+                    {/* 7. Visitor Count (Small) */}
                     <div className="md:col-span-12 lg:col-span-4 bg-amber-50 p-10 rounded-[40px] shadow-sm border border-amber-100 flex flex-col justify-between overflow-hidden group relative text-left text-gray-800">
-                        <div className="space-y-2 text-left">
-                            <div className="flex gap-1 text-amber-500 text-left">
-                                {[1,2,3,4,5].map(i => <Star key={i} size={12} fill="currentColor" />)}
-                            </div>
-                            <h3 className="text-xl font-serif-display text-amber-900 text-left leading-snug">"The standard for digital gifts."</h3>
-                            <div className="flex items-center gap-2 mt-4">
-                                <div className="w-6 h-6 bg-amber-200 rounded-full flex items-center justify-center">
-                                    <Check size={12} className="text-amber-700" />
-                                </div>
-                                <p className="text-amber-700/60 text-[10px] font-bold uppercase tracking-widest text-left">— Verified Creator</p>
-                            </div>
-                        </div>
-                        <div className="text-[10px] font-bold text-amber-800/40 uppercase tracking-[0.2em] mt-8 text-left">
-                            {visitorCount.toLocaleString()} unique visitors & counting
-                        </div>
+                        <VisitorCounter />
                     </div>
 
                     {/* 4. Premium Cinema (Big) */}
