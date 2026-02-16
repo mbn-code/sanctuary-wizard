@@ -34,11 +34,17 @@ export function SanctuaryProvider({ children }: { children: ReactNode }) {
     
     // Apply font family based on theme
     if (theme.font === 'elegant') {
-      root.style.setProperty('--font-current', 'var(--font-dm-serif)');
+      root.style.setProperty('--font-display', 'var(--font-dm-serif)');
+      root.style.setProperty('--font-body', 'var(--font-playfair)');
+      root.style.setProperty('--font-accent', 'var(--font-sacramento)');
     } else if (theme.font === 'modern') {
-      root.style.setProperty('--font-current', 'var(--font-inter)');
+      root.style.setProperty('--font-display', 'var(--font-inter)');
+      root.style.setProperty('--font-body', 'var(--font-inter)');
+      root.style.setProperty('--font-accent', 'var(--font-inter)');
     } else if (theme.font === 'playful') {
-      root.style.setProperty('--font-current', 'var(--font-sacramento)');
+      root.style.setProperty('--font-display', 'var(--font-sacramento)');
+      root.style.setProperty('--font-body', 'var(--font-inter)');
+      root.style.setProperty('--font-accent', 'var(--font-sacramento)');
     }
   };
 

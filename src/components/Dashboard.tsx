@@ -161,7 +161,7 @@ const Dashboard = () => {
             <Lock size={40} />
           </div>
           <div>
-            <h2 className="text-3xl font-bold text-sanctuary-primary font-sacramento text-5xl">Locked Sanctuary</h2>
+            <h2 className="text-3xl font-bold text-sanctuary-primary font-s-accent text-5xl">Locked Sanctuary</h2>
             <p className="text-sanctuary-soft mt-2 italic text-sm text-gray-800">Enter the passcode to unlock the memories.</p>
           </div>
           
@@ -247,7 +247,7 @@ const Dashboard = () => {
           <motion.h1 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-6xl font-bold text-sanctuary-primary select-none font-sacramento flex items-center justify-center gap-3"
+            className="text-4xl md:text-6xl font-bold text-sanctuary-primary select-none font-s-accent flex items-center justify-center gap-3"
           >
             Our Sanctuary
             {isPremiumVerified && (
@@ -324,7 +324,7 @@ const Dashboard = () => {
         <section className="space-y-8">
           <div className="flex items-center gap-4">
             <div className="h-[1px] flex-grow bg-sanctuary-secondary/30" />
-            <h2 className="text-3xl font-bold text-sanctuary-primary font-sacramento text-5xl px-4">Notes</h2>
+            <h2 className="text-3xl font-bold text-sanctuary-primary font-s-accent text-5xl px-4">Notes</h2>
             <div className="h-[1px] flex-grow bg-sanctuary-secondary/30" />
           </div>
           

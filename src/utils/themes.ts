@@ -68,7 +68,7 @@ export const THEMES: Record<string, ThemePreset> = {
       soft: '#065F46'
     },
     icon: 'star',
-    font: 'modern'
+    font: 'elegant'
   },
   lavender: {
     id: 'lavender',

@@ -94,7 +94,7 @@ const SecretCinema = () => {
             />
           </div>
           
-          <h2 className="mt-8 text-4xl font-bold text-sanctuary-primary font-sacramento text-center">
+          <h2 className="mt-8 text-4xl font-bold text-sanctuary-primary font-s-accent text-center">
             {config.plan === 'infinite' ? 'Our Moments' : 'A Special Delivery'}
           </h2>
         </div>
@@ -108,7 +108,7 @@ const SecretCinema = () => {
           <div className="relative inline-flex items-center justify-center w-20 h-20 rounded-full bg-sanctuary-primary text-white shadow-xl">
             <Film size={40} />
           </div>
-          <h2 className="text-3xl font-bold text-sanctuary-primary font-sacramento text-5xl mb-2">Secret Cinema</h2>
+          <h2 className="text-3xl font-bold text-sanctuary-primary font-s-accent text-5xl mb-2">Secret Cinema</h2>
           <p className="text-sanctuary-soft text-sm italic">Memories unlocked and decrypted.</p>
           <button 
             onClick={() => setShowCinema(true)}

@@ -75,7 +75,7 @@ const Gallery = () => {
 
   return (
     <div className="mt-12 space-y-12">
-      <h2 className="text-4xl md:text-5xl font-bold text-sanctuary-primary text-center font-sacramento">Shared Memories</h2>
+      <h2 className="text-4xl md:text-5xl font-bold text-sanctuary-primary text-center font-s-accent">Shared Memories</h2>
       
       {allSections.map((section) => {
         const unlocked = isDayUnlocked(section.offset);

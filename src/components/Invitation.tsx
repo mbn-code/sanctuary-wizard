@@ -217,7 +217,7 @@ const Invitation = ({ onComplete }: InvitationProps) => {
             className="text-center"
           >
             <motion.h1 
-              className="text-3xl md:text-4xl font-bold text-sanctuary-primary mb-8"
+              className="text-3xl md:text-4xl font-bold text-sanctuary-primary mb-8 font-s-display"
               animate={{ y: [0, -5, 0] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
@@ -257,7 +257,7 @@ const Invitation = ({ onComplete }: InvitationProps) => {
             exit={{ opacity: 0, scale: 0.9 }}
             className="text-center space-y-12"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-sanctuary-primary leading-tight font-serif-display text-gray-800">
+            <h2 className="text-4xl md:text-5xl font-bold text-sanctuary-primary leading-tight font-s-display text-gray-800">
               {getQuestionText()}
             </h2>
             
@@ -292,7 +292,7 @@ const Invitation = ({ onComplete }: InvitationProps) => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center space-y-6"
           >
-            <h2 className="text-5xl font-bold text-sanctuary-primary">{teaser.title}</h2>
+            <h2 className="text-5xl font-bold text-sanctuary-primary font-s-display">{teaser.title}</h2>
             <p className="text-xl text-sanctuary-soft">{teaser.message}</p>
             <div className="py-10">
               <motion.div

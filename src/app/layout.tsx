@@ -58,7 +58,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${sacramento.variable} ${dmSerif.variable} ${playfair.variable} font-sans`}>
+      <body className={`${inter.variable} ${sacramento.variable} ${dmSerif.variable} ${playfair.variable} font-s-body`}>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <SanctuaryProvider>
           <MagicCursor />
