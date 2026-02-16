@@ -7,6 +7,7 @@ import MySanctuaries from '@/components/MySanctuaries';
 import VisitorCounter from '@/components/VisitorCounter';
 import { useSanctuary } from '@/utils/SanctuaryContext';
 import Link from 'next/link';
+import HeroVisual from '@/components/HeroVisual';
 import { 
   Heart, Check, Sparkles, Star, Zap, Music, ImageIcon, 
   MessageSquare, X, Shield, Lock, ArrowLeft, Loader2 as LucideLoader, 
@@ -131,7 +132,7 @@ export default function Home() {
             </div>
         </nav>
 
-        <header className="min-h-screen flex flex-col items-center justify-center px-6 pt-20 relative text-center">
+        <header className="min-h-screen flex flex-col items-center justify-center px-6 pt-32 pb-20 relative overflow-hidden">
             <div className="fixed top-24 right-6 md:right-8 z-[60] pointer-events-none">
                 <AnimatePresence mode="wait">
                     <motion.div 
@@ -151,25 +152,45 @@ export default function Home() {
                     </motion.div>
                 </AnimatePresence>
             </div>
+            <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+                <motion.div 
+                    initial={{ opacity: 0, x: -30 }} 
+                    animate={{ opacity: 1, x: 0 }} 
+                    transition={{ duration: 0.8 }}
+                    className="space-y-8 text-center lg:text-left relative z-10"
+                >
+                    <div className="inline-flex items-center gap-2 px-4 py-2 glass rounded-full text-[10px] font-bold uppercase tracking-[0.2em] text-sanctuary-primary mb-4 shadow-sm border-white/60 mx-auto lg:mx-0 font-sans">
+                        <Sparkles size={12} className="animate-pulse" /> A New Way to Give
+                    </div>
+                    <h1 className="text-6xl md:text-8xl xl:text-9xl font-serif-display tracking-tight text-slate-900 leading-[0.9] lg:max-w-2xl">
+                        Don't just give. <br /> 
+                        <span className="text-sanctuary-primary italic pr-4">Build a Sanctuary.</span>
+                    </h1>
+                    <p className="text-xl md:text-2xl text-slate-500 max-w-xl mx-auto lg:mx-0 font-playfair italic leading-relaxed">
+                        The ultimate digital sanctuary for life's biggest moments. <br className="hidden md:block" />
+                        Photos, music, and secret messages that unlock over time.
+                    </p>
+                    <div className="pt-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <Link href="/wizard" className="px-10 py-5 bg-slate-900 text-white rounded-2xl text-lg font-bold shadow-2xl hover:scale-105 transition-all flex items-center gap-3 justify-center group font-sans uppercase tracking-widest">
+                            <Zap className="fill-white group-hover:scale-110 transition-transform" size={20} /> Create Yours
+                        </Link>
+                        <button onClick={() => startDemo('anniversary')} className="px-10 py-5 glass text-slate-900 rounded-2xl text-lg font-bold hover:bg-white/60 transition-all flex items-center gap-3 justify-center border border-black/5 font-sans uppercase tracking-widest">
+                            <Eye size={20} /> See Demo
+                        </button>
+                    </div>
+                </motion.div>
+
+                <motion.div 
+                    initial={{ opacity: 0, scale: 0.9 }} 
+                    animate={{ opacity: 1, scale: 1 }} 
+                    transition={{ duration: 1, delay: 0.2 }}
+                    className="relative flex justify-center items-center lg:justify-end"
+                >
+                    <HeroVisual />
+                </motion.div>
+            </div>
+
             <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-sanctuary-secondary/20 rounded-full blur-[120px] -z-10 animate-pulse" />
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-4xl space-y-8 text-gray-800">
-                <div className="inline-flex items-center gap-2 px-4 py-2 glass rounded-full text-[10px] font-bold uppercase tracking-[0.2em] text-sanctuary-primary mb-4 shadow-sm border-white/60 mx-auto font-sans">
-                    <Sparkles size={12} className="animate-pulse" /> A New Way to Give
-                </div>
-                <h1 className="text-7xl md:text-9xl font-serif-display tracking-tight text-slate-900 leading-[0.9]">Don't just give. <br /> <span className="text-sanctuary-primary italic pr-4">Build a Sanctuary.</span></h1>
-                <p className="text-xl md:text-2xl text-slate-500 max-w-2xl mx-auto font-playfair italic leading-relaxed">
-                    The ultimate digital sanctuary for life's biggest moments. <br className="hidden md:block" />
-                    Photos, music, and secret messages that unlock over time.
-                </p>
-                <div className="pt-8 flex flex-col sm:flex-row gap-4 justify-center">
-                    <Link href="/wizard" className="px-12 py-5 bg-slate-900 text-white rounded-2xl text-xl font-bold shadow-2xl hover:scale-105 transition-all flex items-center gap-3 justify-center group font-sans uppercase tracking-widest">
-                        <Zap className="fill-white group-hover:scale-110 transition-transform" size={24} /> Create Yours
-                    </Link>
-                    <button onClick={() => startDemo('anniversary')} className="px-12 py-5 glass text-slate-900 rounded-2xl text-xl font-bold hover:bg-white/60 transition-all flex items-center gap-3 justify-center border border-black/5 font-sans uppercase tracking-widest">
-                        <Eye size={24} /> See Demo
-                    </button>
-                </div>
-            </motion.div>
         </header>
 
         <MySanctuaries />
