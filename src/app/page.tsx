@@ -128,7 +128,7 @@ export default function Home() {
             <div className="hidden md:flex items-center gap-8 text-[10px] uppercase font-bold tracking-widest text-slate-500 font-sans">
                 <button onClick={() => document.getElementById('bento')?.scrollIntoView({behavior:'smooth'})} className="hover:text-slate-900 transition-colors">Experience</button>
                 <button onClick={() => document.getElementById('pricing')?.scrollIntoView({behavior:'smooth'})} className="hover:text-slate-900 transition-colors">Pricing</button>
-                <Link href="/wizard" className="px-5 py-2 bg-slate-900 text-white rounded-full hover:scale-105 transition-all shadow-xl shadow-slate-900/10">Start Creating</Link>
+                <Link href="/wizard" className="px-5 py-2 bg-slate-900 text-white rounded-full hover:scale-105 transition-all shadow-xl shadow-slate-900/10">Build My Sanctuary</Link>
             </div>
         </nav>
 
@@ -158,13 +158,16 @@ export default function Home() {
                     <Sparkles size={12} className="animate-pulse" /> A New Way to Give
                 </div>
                 <h1 className="text-7xl md:text-9xl font-serif-display tracking-tight text-slate-900 leading-[0.9]">Don't just give. <br /> <span className="text-sanctuary-primary italic pr-4">Build a Sanctuary.</span></h1>
+                <p className="text-lg md:text-xl text-slate-400 font-sans font-bold uppercase tracking-[0.1em] max-w-2xl mx-auto">
+                    For birthdays, anniversaries, long distance, apologies, or just because.
+                </p>
                 <p className="text-xl md:text-2xl text-slate-500 max-w-2xl mx-auto font-playfair italic leading-relaxed">
                     The ultimate digital sanctuary for life's biggest moments. <br className="hidden md:block" />
                     Photos, music, and secret messages that unlock over time.
                 </p>
                 <div className="pt-8 flex flex-col sm:flex-row gap-4 justify-center">
                     <Link href="/wizard" className="px-12 py-5 bg-slate-900 text-white rounded-2xl text-xl font-bold shadow-2xl hover:scale-105 transition-all flex items-center gap-3 justify-center group font-sans uppercase tracking-widest">
-                        <Zap className="fill-white group-hover:scale-110 transition-transform" size={24} /> Create Yours
+                        <Zap className="fill-white group-hover:scale-110 transition-transform" size={24} /> Build My Sanctuary
                     </Link>
                     <button onClick={() => startDemo('anniversary')} className="px-12 py-5 glass text-slate-900 rounded-2xl text-xl font-bold hover:bg-white/60 transition-all flex items-center gap-3 justify-center border border-black/5 font-sans uppercase tracking-widest">
                         <Eye size={24} /> See Demo
@@ -194,6 +197,7 @@ export default function Home() {
                     <div className="relative z-10 space-y-4 text-left text-gray-800">
                         <h3 className="text-4xl font-serif-display text-slate-900">The Journey Matters</h3>
                         <p className="text-slate-500 max-w-md text-sm font-playfair italic">Build anticipation with a timed countdown. Every day reveals a new photo, a hidden note, or a curated song.</p>
+                        <p className="text-sanctuary-primary text-xs font-bold uppercase tracking-wider">Make them wake up excited every day.</p>
                     </div>
                     <div className="flex gap-3 mt-8 relative z-10 text-left text-gray-800">
                         {[7, 6, 5, 4, 3, 2, 1].map(d => (
@@ -208,6 +212,7 @@ export default function Home() {
                         <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-white"><Shield size={20} className="text-sanctuary-secondary" /></div>
                         <h3 className="text-3xl font-serif-display">Private by Design</h3>
                         <p className="text-white/60 text-sm leading-relaxed font-playfair italic">No database. Zero tracking. Your memories are encrypted and live only in your unique link.</p>
+                        <p className="text-sanctuary-secondary text-xs font-bold uppercase tracking-wider">Your most personal moments, truly yours.</p>
                     </div>
                     <div className="absolute bottom-[-20px] right-[-20px] opacity-10 group-hover:opacity-20 transition-opacity">
                         <div className="font-mono text-[8px] leading-tight select-none pointer-events-none">
@@ -224,6 +229,7 @@ export default function Home() {
                     <div className="space-y-4 text-left">
                         <h3 className="text-3xl font-serif-display text-slate-900">Tactile Memories</h3>
                         <p className="text-slate-500 text-sm font-playfair italic">Photos hidden behind interactive scratch-off layers. Reveal the past with your touch.</p>
+                        <p className="text-sanctuary-primary text-xs font-bold uppercase tracking-wider mt-2">Hide a memory they’ll uncover with their own hands.</p>
                     </div>
                     <div className="relative mt-4">
                         <div className="w-32 h-32 bg-slate-100 rounded-3xl border-4 border-white shadow-xl rotate-[-6deg] group-hover:rotate-0 transition-all duration-500 overflow-hidden mx-auto">
@@ -241,6 +247,7 @@ export default function Home() {
                         <div className="space-y-4 text-left">
                             <h3 className="text-3xl font-serif-display text-slate-900">Premium Cinema</h3>
                             <p className="text-slate-500 text-sm leading-relaxed font-playfair italic">The ultimate finale. A private theater for your personal video montage, locked behind a custom passcode.</p>
+                            <p className="text-sanctuary-primary text-xs font-bold uppercase tracking-wider">End the journey with a moment they’ll never forget.</p>
                             <div className="flex gap-2 text-left">
                                 {[1, 2, 3, 4].map(i => <div key={i} className="w-8 h-10 bg-white rounded-lg border border-black/5 shadow-sm text-left flex items-center justify-center"><div className="w-1 h-1 bg-slate-200 rounded-full" /></div>)}
                             </div>
@@ -305,6 +312,7 @@ export default function Home() {
             <div className="max-w-6xl mx-auto text-center space-y-16">
                 <div className="space-y-4">
                     <h2 className="text-5xl md:text-6xl font-serif-display text-slate-900">A Tier for Every Story</h2>
+                    <p className="text-slate-400 text-sm font-bold uppercase tracking-[0.1em]">Less than flowers. Lasts forever.</p>
                     <p className="text-slate-500 font-playfair italic">Choose the depth of your sanctuary experience.</p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
