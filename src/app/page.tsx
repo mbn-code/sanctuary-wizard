@@ -166,13 +166,19 @@ export default function Home() {
                     Photos, music, and secret messages that unlock over time.
                 </p>
                 <div className="pt-8 flex flex-col sm:flex-row gap-4 justify-center">
-                    <Link href="/wizard" className="px-12 py-5 bg-slate-900 text-white rounded-2xl text-xl font-bold shadow-2xl hover:scale-105 transition-all flex items-center gap-3 justify-center group font-sans uppercase tracking-widest">
+                    <Link href="/wizard" className="px-12 py-5 bg-slate-900 text-white rounded-2xl text-xl font-bold shadow-2xl hover:scale-105 transition-all flex items-center gap-3 justify-center group font-sans uppercase tracking-widest relative">
                         <Zap className="fill-white group-hover:scale-110 transition-transform" size={24} /> Build My Sanctuary
+                        <div className="absolute -top-3 -right-3 bg-sanctuary-primary text-white text-[8px] px-2 py-1 rounded-full shadow-lg font-bold border-2 border-white animate-bounce">
+                            NO APP REQUIRED
+                        </div>
                     </Link>
                     <button onClick={() => startDemo('anniversary')} className="px-12 py-5 glass text-slate-900 rounded-2xl text-xl font-bold hover:bg-white/60 transition-all flex items-center gap-3 justify-center border border-black/5 font-sans uppercase tracking-widest">
                         <Eye size={24} /> See Demo
                     </button>
                 </div>
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] mt-6">
+                    Send as a secret link or a <span className="text-slate-900">printable QR code</span>
+                </p>
             </motion.div>
 
             <motion.div 
@@ -308,12 +314,59 @@ export default function Home() {
             </div>
         </section>
 
+        {/* The Impact Section */}
+        <section className="py-32 px-6 bg-white relative overflow-hidden">
+            <div className="max-w-4xl mx-auto text-center space-y-24">
+                <div className="space-y-8">
+                    <h2 className="text-5xl md:text-7xl font-serif-display text-slate-900 leading-tight">
+                        Don’t let your best memories <br /> 
+                        <span className="italic text-sanctuary-primary">die in the camera roll.</span>
+                    </h2>
+                    <p className="text-xl md:text-2xl text-slate-500 max-w-2xl mx-auto font-playfair italic leading-relaxed">
+                        Photos get lost in the cloud. Group chats move on. <br className="hidden md:block" />
+                        A Sanctuary is a permanent home for the moments that define you.
+                    </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+                    <div className="space-y-4">
+                        <div className="text-sanctuary-primary font-serif-display text-4xl italic">01.</div>
+                        <h4 className="font-bold uppercase tracking-widest text-xs text-slate-900">The Notification</h4>
+                        <p className="text-slate-500 text-sm font-playfair italic">They receive a mysterious link or a beautiful QR code. Curiosity peaks.</p>
+                    </div>
+                    <div className="space-y-4">
+                        <div className="text-sanctuary-primary font-serif-display text-4xl italic">02.</div>
+                        <h4 className="font-bold uppercase tracking-widest text-xs text-slate-900">The Discovery</h4>
+                        <p className="text-slate-500 text-sm font-playfair italic">They step into a world built just for them. Every reveal feels like a heartbeat.</p>
+                    </div>
+                    <div className="space-y-4">
+                        <div className="text-sanctuary-primary font-serif-display text-4xl italic">03.</div>
+                        <h4 className="font-bold uppercase tracking-widest text-xs text-slate-900">The Connection</h4>
+                        <p className="text-slate-500 text-sm font-playfair italic">A digital gift that feels more tactile than paper. They'll never forget how you made them feel.</p>
+                    </div>
+                </div>
+
+                <div className="pt-12">
+                    <div className="inline-block p-8 bg-slate-50 rounded-[40px] border border-black/[0.03] relative">
+                        <MessageSquare className="absolute -top-4 -left-4 text-sanctuary-primary fill-sanctuary-primary/10" size={40} />
+                        <p className="text-2xl md:text-3xl font-serif-display text-slate-900 italic">
+                            "I've never felt so seen by a digital gift. It felt like he spent weeks building it, just for me."
+                        </p>
+                        <p className="mt-4 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">— Sarah, Anniversary Recipient</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="pricing" className="py-32 px-6 bg-slate-50/50">
             <div className="max-w-6xl mx-auto text-center space-y-16">
                 <div className="space-y-4">
                     <h2 className="text-5xl md:text-6xl font-serif-display text-slate-900">A Tier for Every Story</h2>
                     <p className="text-slate-400 text-sm font-bold uppercase tracking-[0.1em]">Less than flowers. Lasts forever.</p>
-                    <p className="text-slate-500 font-playfair italic">Choose the depth of your sanctuary experience.</p>
+                    <p className="text-slate-500 font-playfair italic max-w-xl mx-auto">
+                        Cheaper than a card and a coffee. More meaningful than a $200 dinner. <br className="hidden md:block" />
+                        Built by you in minutes, remembered by them for a lifetime.
+                    </p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {[
