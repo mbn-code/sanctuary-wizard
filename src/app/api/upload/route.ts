@@ -13,7 +13,8 @@ export async function POST(request: Request): Promise<NextResponse> {
       ? [
           'https://valentize.vercel.app',
           'https://valentine-wizard.vercel.app',
-          'https://sanctuary-wizard.vercel.app',
+          'https://sanctuary-gift.vercel.app',
+          'https://sanctuary-gift.vercel.app',
           'https://magicgift.vercel.app'
         ]
       : [

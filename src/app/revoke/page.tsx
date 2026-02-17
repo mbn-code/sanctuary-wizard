@@ -101,7 +101,7 @@ export default function RevokePage() {
                 <textarea 
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
-                  placeholder="https://sanctuary-wizard.vercel.app/?d=...#key"
+                  placeholder="https://sanctuary-gift.vercel.app/?d=...#key"
                   className="w-full p-4 rounded-2xl border-2 border-slate-100 focus:border-sanctuary-primary outline-none transition-all text-xs font-mono h-32 resize-none bg-slate-50/50 text-slate-600"
                 />
               </div>

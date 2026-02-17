@@ -965,7 +965,7 @@ function WizardContent() {
                                 <span>Unlock the Magic</span>
                             </div>
                             <div className="flex flex-col items-center gap-4">
-                                <p className="text-[36px] font-bold text-slate-400 uppercase tracking-[0.5em]">sanctuary-wizard.vercel.app</p>
+                                <p className="text-[36px] font-bold text-slate-400 uppercase tracking-[0.5em]">sanctuary-gift.vercel.app</p>
                                 <p className="text-[28px] font-medium text-slate-300 uppercase tracking-[0.2em]">The New Way to Give</p>
                             </div>
                         </div>

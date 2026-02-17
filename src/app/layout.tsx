@@ -24,13 +24,13 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://sanctuary-wizard.vercel.app"),
+  metadataBase: new URL("https://sanctuary-gift.vercel.app"),
   title: "Sanctuary | Create Your Digital Sanctuary",
   description: "The ultimate digital sanctuary for all of life's special moments. Birthdays, anniversaries, weddings, and more.",
   openGraph: {
     title: "Sanctuary",
     description: "The ultimate digital gift for your loved ones.",
-    url: "https://sanctuary-wizard.vercel.app",
+    url: "https://sanctuary-gift.vercel.app",
     siteName: "Sanctuary",
     images: [
       {
