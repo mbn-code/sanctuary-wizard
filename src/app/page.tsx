@@ -370,9 +370,9 @@ export default function Home() {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {[
-                        { id: 'spark', name: 'The Spark', price: '2', icon: <Zap size={24} />, features: ['1 Day Journey', '5 Messages', '10 Photos'], missing: ['No Custom Background', 'With Branding', 'No Secret Cinema'], hasSocial: true },
-                        { id: 'plus', name: 'The Romance', price: '7', icon: <Heart size={24} />, features: ['7 Day Journey', '25 Messages', '30 Photos', 'Custom Background', 'No Watermark'], missing: ['No Secret Cinema'], popular: true },
-                        { id: 'infinite', name: 'The Sanctuary', price: '12', icon: <Star size={24} />, features: ['14 Day Journey', 'Unlimited Messages', '50 Photos', 'Private Video Cinema', 'No Watermark'], missing: [] }
+                        { id: 'spark', name: 'The Spark', price: '1.99', icon: <Zap size={24} />, features: ['1 Day Journey', '5 Messages', '10 Photos'], missing: ['No Custom Background', 'With Branding', 'No Secret Cinema'], hasSocial: true },
+                        { id: 'plus', name: 'The Romance', price: '6.99', icon: <Heart size={24} />, features: ['7 Day Journey', '25 Messages', '30 Photos', 'Custom Background', 'No Watermark'], missing: ['No Secret Cinema'], popular: true },
+                        { id: 'infinite', name: 'The Sanctuary', price: '11.99', icon: <Star size={24} />, features: ['14 Day Journey', 'Unlimited Messages', '50 Photos', 'Private Video Cinema', 'No Watermark'], missing: [] }
                     ].map((p) => (
                         <div 
                             key={p.id}
