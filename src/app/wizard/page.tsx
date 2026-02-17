@@ -841,7 +841,19 @@ function WizardContent() {
                                         placeholder="https://www.tiktok.com/@user/video/..." 
                                         className="w-full p-4 bg-white rounded-xl border-2 border-cyan-100 focus:border-cyan-500 outline-none text-xs transition-all"
                                     />
-                                    {socialError && <p className="text-[10px] text-red-500 font-bold">{socialError}</p>}
+                                    {socialError && (
+                                        <div className="space-y-3">
+                                            <p className="text-[10px] text-red-500 font-bold">{socialError}</p>
+                                            <div className="p-3 bg-white/50 rounded-xl border border-red-100 space-y-2">
+                                                <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400">Troubleshooting Tips:</p>
+                                                <ul className="text-[9px] text-slate-500 space-y-1 list-disc pl-3 italic">
+                                                    <li>Ensure your TikTok account and post are <b>Public</b>.</li>
+                                                    <li>The tag <b>@valentizewiz</b> must be in the <b>caption/description</b>, not comments.</li>
+                                                    <li>TikTok may take a minute to update—try again in 60 seconds.</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    )}
                                 </motion.div>
                             )}
                         </div>
