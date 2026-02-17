@@ -844,7 +844,7 @@ function WizardContent() {
                                                 {isDownloading ? <LucideLoader className="animate-spin" size={12} /> : <ImageIcon size={12} />} 
                                                 Download Post Card
                                             </button>
-                                            <button onClick={() => { navigator.clipboard.writeText(`This is your sign to build a sanctuary for your person 🤍 @valentizewiz #sanctuary #giftideas #relationship`); alert("Viral caption copied!"); }} className="flex-1 py-3 bg-white border border-cyan-200 text-cyan-600 rounded-xl font-bold text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-cyan-100/50 transition-all">
+                                            <button onClick={() => { navigator.clipboard.writeText(`This is your sign to build a sanctuary for your person 🤍 @valentizewiz #sanctuary #giftideas #relationship #boyfriend #girlfriend #couplegoals`); alert("Viral caption copied!"); }} className="flex-1 py-3 bg-white border border-cyan-200 text-cyan-600 rounded-xl font-bold text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-cyan-100/50 transition-all">
                                                 <Copy size={12} /> Copy Viral Caption
                                             </button>
                                         </div>
