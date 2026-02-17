@@ -542,17 +542,17 @@ function WizardContent() {
                             <button 
                                 key={p.id}
                                 onClick={() => batchUpdateConfig({ plan: p.id, totalDays: PLAN_LIMITS[p.id as keyof typeof PLAN_LIMITS].days })}
-                                className={`p-6 rounded-[32px] border-2 transition-all flex items-center justify-between group text-left ${config.plan === p.id ? 'bg-white border-sanctuary-primary shadow-xl ring-4 ring-sanctuary-primary/5' : 'bg-white/50 border-black/[0.03] hover:border-sanctuary-secondary'}`}
+                                className={`p-6 rounded-[32px] border-2 transition-all flex items-center justify-between group text-left ${config.plan === p.id ? 'bg-white border-sanctuary-primary shadow-xl ring-4 ring-sanctuary-primary/5' : p.hasSocial ? 'bg-white border-cyan-400/50 shadow-sm border-dashed' : 'bg-white/50 border-black/[0.03] hover:border-sanctuary-secondary'}`}
                             >
                                 <div className="flex items-center gap-5">
-                                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-colors ${config.plan === p.id ? 'bg-sanctuary-primary text-white' : 'bg-slate-100 text-slate-400 group-hover:bg-sanctuary-secondary group-hover:text-sanctuary-primary'}`}>
+                                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-colors ${config.plan === p.id ? 'bg-sanctuary-primary text-white' : p.hasSocial ? 'bg-cyan-500 text-white shadow-lg shadow-cyan-500/20' : 'bg-slate-100 text-slate-400 group-hover:bg-sanctuary-secondary group-hover:text-sanctuary-primary'}`}>
                                         {p.icon}
                                     </div>
                                     <div>
                                         <div className="flex items-center gap-2">
                                             <span className={`text-sm font-bold uppercase tracking-widest ${config.plan === p.id ? 'text-sanctuary-primary' : 'text-slate-400'}`}>{p.name}</span>
                                             {p.popular && <span className="text-[8px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter">Most Popular</span>}
-                                            {p.hasSocial && <span className="text-[8px] bg-cyan-100 text-cyan-700 px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter animate-pulse">Free with TikTok</span>}
+                                            {p.hasSocial && <span className="text-[8px] bg-cyan-500 text-white px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter animate-bounce">DEAL</span>}
                                         </div>
                                         <div className="flex items-baseline gap-1 mt-1">
                                             <span className="text-xs font-bold text-slate-400">$</span>
@@ -563,7 +563,7 @@ function WizardContent() {
                                 </div>
                                 <div className="hidden md:block">
                                     <div className="flex flex-col items-end gap-1">
-                                        {p.features.slice(0, 2).map(f => <span key={f} className="text-[9px] text-slate-500 font-medium flex items-center gap-1"><Check size={8} className="text-green-500" /> {f}</span>)}
+                                        {p.features.slice(0, 2).map(f => <span key={f} className="text-[9px] text-slate-500 font-medium flex items-center gap-1"><Check size={8} className={p.hasSocial && f.includes('TikTok') ? 'text-cyan-500' : 'text-green-500'} /> {f}</span>)}
                                         {p.missing.length > 0 && <span className="text-[9px] text-slate-300 font-medium flex items-center gap-1 opacity-50"><X size={8} /> {p.missing[0]}</span>}
                                     </div>
                                 </div>

@@ -384,7 +384,7 @@ export default function Home() {
                                         {p.icon}
                                     </div>
                                     {p.popular && <span className="text-[10px] bg-amber-100 text-amber-700 px-3 py-1 rounded-full font-bold uppercase tracking-widest">Most Popular</span>}
-                                    {p.hasSocial && <span className="text-[10px] bg-cyan-100 text-cyan-700 px-3 py-1 rounded-full font-bold uppercase tracking-widest animate-pulse">Free with TikTok</span>}
+                                    {p.hasSocial && <span className="text-[10px] bg-cyan-500 text-white px-3 py-1 rounded-full font-bold uppercase tracking-widest animate-bounce shadow-lg shadow-cyan-500/20">SPECIAL DEAL</span>}
                                 </div>
                                 <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 mb-2">{p.name}</p>
                                 <div className="flex items-baseline gap-1 mb-2">
@@ -393,7 +393,9 @@ export default function Home() {
                                     <span className="text-xs text-slate-400 font-medium ml-2 font-sans uppercase tracking-widest">one-time</span>
                                 </div>
                                 {p.hasSocial && (
-                                    <p className="text-[10px] font-bold text-cyan-600 uppercase tracking-widest mb-8">— or FREE when you post on TikTok</p>
+                                    <p className="text-[10px] font-bold text-cyan-500 uppercase tracking-widest mb-8 flex items-center gap-2">
+                                        <Smartphone size={12} className="animate-pulse" /> FREE with a TikTok tag
+                                    </p>
                                 )}
                                 <ul className="space-y-4 mb-12">
                                     {p.features.map(f => (
