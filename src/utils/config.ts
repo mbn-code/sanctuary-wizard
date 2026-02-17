@@ -3,7 +3,7 @@
  * This is what gets encrypted and stored in the URL.
  */
 export interface SanctuaryConfig {
-  plan: 'spark' | 'plus' | 'infinite';
+  plan: 'spark' | 'plus' | 'infinite' | 'viral';
   theme: string; // ID of the selected theme
   occasion: string; // 'birthday', 'anniversary', etc.
   customQuestion?: string; // Custom "Big Ask" question

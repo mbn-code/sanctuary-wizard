@@ -370,7 +370,7 @@ export default function Home() {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {[
-                        { id: 'spark', name: 'The Spark', price: '2', icon: <Zap size={24} />, features: ['1 Day Journey', '5 Messages', '10 Photos'], missing: ['No Custom Background', 'With Branding', 'No Secret Cinema'] },
+                        { id: 'spark', name: 'The Spark', price: '2', icon: <Zap size={24} />, features: ['1 Day Journey', '5 Messages', '10 Photos'], missing: ['No Custom Background', 'With Branding', 'No Secret Cinema'], hasSocial: true },
                         { id: 'plus', name: 'The Romance', price: '7', icon: <Heart size={24} />, features: ['7 Day Journey', '25 Messages', '30 Photos', 'Custom Background', 'No Watermark'], missing: ['No Secret Cinema'], popular: true },
                         { id: 'infinite', name: 'The Sanctuary', price: '12', icon: <Star size={24} />, features: ['14 Day Journey', 'Unlimited Messages', '50 Photos', 'Private Video Cinema', 'No Watermark'], missing: [] }
                     ].map((p) => (
@@ -384,17 +384,21 @@ export default function Home() {
                                         {p.icon}
                                     </div>
                                     {p.popular && <span className="text-[10px] bg-amber-100 text-amber-700 px-3 py-1 rounded-full font-bold uppercase tracking-widest">Most Popular</span>}
+                                    {p.hasSocial && <span className="text-[10px] bg-cyan-100 text-cyan-700 px-3 py-1 rounded-full font-bold uppercase tracking-widest animate-pulse">Free with TikTok</span>}
                                 </div>
                                 <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 mb-2">{p.name}</p>
-                                <div className="flex items-baseline gap-1 mb-8">
+                                <div className="flex items-baseline gap-1 mb-2">
                                     <span className="text-xl font-bold text-slate-400">$</span>
                                     <span className="text-6xl font-serif-display text-slate-900 leading-none">{p.price}</span>
                                     <span className="text-xs text-slate-400 font-medium ml-2 font-sans uppercase tracking-widest">one-time</span>
                                 </div>
+                                {p.hasSocial && (
+                                    <p className="text-[10px] font-bold text-cyan-600 uppercase tracking-widest mb-8">— or FREE when you post on TikTok</p>
+                                )}
                                 <ul className="space-y-4 mb-12">
                                     {p.features.map(f => (
                                         <li key={f} className="flex items-center gap-3 text-sm text-slate-600 font-medium">
-                                            <div className="w-5 h-5 bg-green-50 rounded-full flex items-center justify-center text-green-600"><Check size={12} strokeWidth={3} /></div>
+                                            <div className="w-5 h-5 bg-green-50 text-green-600 rounded-full flex items-center justify-center"><Check size={12} strokeWidth={3} /></div>
                                             {f}
                                         </li>
                                     ))}

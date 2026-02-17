@@ -306,10 +306,13 @@ const Invitation = ({ onComplete }: InvitationProps) => {
               {isTargetMet() ? "Entering your sanctuary..." : "Your sanctuary is being prepared..."}
             </p>
             
-            {config?.plan === 'spark' && (
+            {(config?.plan === 'spark' || config?.plan === 'viral') && (
               <div className="pt-12 space-y-2">
-                <p className="text-[10px] text-sanctuary-soft uppercase tracking-[0.2em] font-bold">Powered by Sanctuary</p>
+                <p className="text-[10px] text-sanctuary-soft uppercase tracking-[0.2em] font-bold">
+                  Powered by <span className="text-sanctuary-primary">Sanctuary</span>
+                </p>
                 <div className="flex justify-center gap-4 text-[8px] uppercase tracking-widest font-bold text-sanctuary-soft opacity-50">
+                  <Link href="/">Build Yours</Link>
                   <Link href="/privacy">Privacy</Link>
                   <Link href="/terms">Terms</Link>
                 </div>

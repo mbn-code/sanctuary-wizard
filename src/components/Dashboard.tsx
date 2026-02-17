@@ -351,7 +351,7 @@ const Dashboard = () => {
           </div>
         </section>
 
-        {config.plan !== 'spark' ? (
+        {config.plan !== 'spark' && config.plan !== 'viral' ? (
             <Gallery />
         ) : (
             <div className="mt-20 p-8 text-center bg-white/30 backdrop-blur-sm rounded-3xl border-2 border-dashed border-sanctuary-secondary/30">
@@ -365,14 +365,16 @@ const Dashboard = () => {
         <SecretCinema />
       </div>
 
-      {config.plan === 'spark' && (
+      {config.plan === 'spark' || config.plan === 'viral' ? (
         <div className="fixed bottom-0 left-0 w-full p-4 bg-white/80 backdrop-blur-md border-t border-sanctuary-secondary/20 text-center z-50">
             <p className="text-[10px] uppercase tracking-[0.2em] text-sanctuary-soft font-bold flex items-center justify-center gap-2 font-sans">
                 Created with <span className="text-sanctuary-primary">Sanctuary</span>
-                <Link href="/wizard" className="underline hover:text-sanctuary-primary ml-2 text-gray-800">Upgrade yours →</Link>
+                <Link href="/wizard" className="underline hover:text-sanctuary-primary ml-2 text-gray-800">
+                    {config.plan === 'viral' ? 'Build Your Own →' : 'Upgrade yours →'}
+                </Link>
             </p>
         </div>
-      )}
+      ) : null}
     </div>
   );
 };

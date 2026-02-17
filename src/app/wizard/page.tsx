@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Heart, Music, ImageIcon, MessageSquare, Lock, Save, Copy, Check, 
   ArrowRight, ArrowLeft, X, Sparkles, Star, Zap, Info, Loader2 as LucideLoader, 
-  Plus, Trash2, FileText, Upload, Shield, Cake, Gift, Bell, GraduationCap, Baby, PartyPopper, CheckCircle2, User, Palette, Eye, Mail, Clock
+  Plus, Trash2, FileText, Upload, Shield, Cake, Gift, Bell, GraduationCap, Baby, PartyPopper, CheckCircle2, User, Palette, Eye, Mail, Clock, Smartphone
 } from 'lucide-react';
 import { SanctuaryConfig, SanctuaryPayload } from '@/utils/config';
 import { generateMasterKey, exportKey, encryptData, deriveKeyFromPasscode, toBase64URL } from '@/utils/crypto';
@@ -43,6 +43,10 @@ function WizardContent() {
 
   const [step, setStep] = useState(success ? 8 : 1);
   const [isPaying, setIsPaying] = useState(false);
+  const [isSocialVerifying, setIsSocialVerifying] = useState(false);
+  const [socialUnlock, setSocialUnlock] = useState(false);
+  const [tiktokUrl, setTiktokUrl] = useState('');
+  const [socialError, setSocialError] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
   const [isPreviewing, setIsPreviewing] = useState(false);
   const [isVerifying, setIsVerifying] = useState(success && !!sessionId);
@@ -129,6 +133,7 @@ function WizardContent() {
   }, [success, sessionId]);
 
   const PLAN_LIMITS = {
+    viral: { days: 1, notes: 5, gallery: 10, video: false, branding: true, background: true },
     spark: { days: 1, notes: 5, gallery: 10, video: false, branding: true, background: true },
     plus: { days: 7, notes: 25, gallery: 30, video: false, branding: false, background: true },
     infinite: { days: 14, notes: 500, gallery: 50, video: true, branding: false, background: true }
@@ -276,6 +281,36 @@ function WizardContent() {
   };
 
   const handleGenerate = async () => {
+    if (config.plan === 'spark' && socialUnlock && !success) {
+        if (!tiktokUrl) {
+            alert("Please provide your TikTok post URL.");
+            return;
+        }
+        
+        setIsSocialVerifying(true);
+        setSocialError('');
+        try {
+            const res = await fetch('/api/verify-social', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tiktokUrl, partnerNames: `${config.names.sender}:${config.names.recipient}` })
+            });
+            const data = await res.json();
+            if (data.success) {
+                const updatedConfig = { ...config, plan: data.plan, signature: data.signature };
+                setConfig(updatedConfig);
+                await finalizeSanctuary(updatedConfig);
+            } else {
+                setSocialError(data.error || "Verification failed. Make sure you tagged @valentizewiz");
+            }
+        } catch (e) {
+            setSocialError("Network error. Please try again.");
+        } finally {
+            setIsSocialVerifying(false);
+        }
+        return;
+    }
+
     if (!success) {
         setIsPaying(true);
         localStorage.setItem('pending_sanctuary_config', JSON.stringify(config));
@@ -500,7 +535,7 @@ function WizardContent() {
                     </div>
                     <div className="grid grid-cols-1 gap-4 max-w-lg mx-auto">
                         {[
-                            { id: 'spark', name: 'The Spark', price: '2', icon: <Zap size={24} />, features: ['1 Day Journey', '5 Messages', '10 Photos'], missing: ['No Custom Background', 'With Branding', 'No Secret Cinema'] },
+                            { id: 'spark', name: 'The Spark', price: '2', icon: <Zap size={24} />, features: ['1 Day Journey', '5 Messages', '10 Photos'], missing: ['No Custom Background', 'With Branding', 'No Secret Cinema'], hasSocial: true },
                             { id: 'plus', name: 'The Romance', price: '7', icon: <Heart size={24} />, features: ['7 Day Journey', '25 Messages', '30 Photos', 'Custom Background', 'No Watermark'], missing: ['No Secret Cinema'], popular: true },
                             { id: 'infinite', name: 'The Sanctuary', price: '12', icon: <Star size={24} />, features: ['14 Day Journey', 'Unlimited Messages', '50 Photos', 'Private Video Cinema', 'No Watermark'], missing: [] }
                         ].map((p) => (
@@ -517,6 +552,7 @@ function WizardContent() {
                                         <div className="flex items-center gap-2">
                                             <span className={`text-sm font-bold uppercase tracking-widest ${config.plan === p.id ? 'text-sanctuary-primary' : 'text-slate-400'}`}>{p.name}</span>
                                             {p.popular && <span className="text-[8px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter">Most Popular</span>}
+                                            {p.hasSocial && <span className="text-[8px] bg-cyan-100 text-cyan-700 px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter animate-pulse">Free with TikTok</span>}
                                         </div>
                                         <div className="flex items-baseline gap-1 mt-1">
                                             <span className="text-xs font-bold text-slate-400">$</span>
@@ -782,6 +818,34 @@ function WizardContent() {
                         <input type="text" maxLength={4} value={config.passcode} onChange={(e) => updateConfig('passcode', e.target.value.replace(/\D/g, ''))} className={`w-full p-8 text-center text-6xl tracking-[0.5em] font-serif-display rounded-[40px] border-4 transition-all outline-none border-black/[0.03] focus:border-sanctuary-primary focus:bg-white bg-slate-50 shadow-inner text-gray-800`} />
                         <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] animate-pulse">Encryption sequence ready</p>
                     </div>
+
+                    {config.plan === 'spark' && !success && (
+                        <div className="max-w-md mx-auto space-y-4">
+                            <div className="flex gap-2 p-1 bg-slate-100 rounded-2xl">
+                                <button onClick={() => setSocialUnlock(false)} className={`flex-1 py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest transition-all ${!socialUnlock ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400'}`}>Pay $2</button>
+                                <button onClick={() => setSocialUnlock(true)} className={`flex-1 py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest transition-all ${socialUnlock ? 'bg-white text-cyan-600 shadow-sm' : 'text-slate-400'}`}>TikTok Post (Free)</button>
+                            </div>
+
+                            {socialUnlock && (
+                                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="p-6 bg-cyan-50 rounded-[32px] border-2 border-cyan-100 space-y-4">
+                                    <div className="flex items-center gap-3 text-cyan-600 font-bold uppercase tracking-widest text-xs">
+                                        <Smartphone size={18} /> TikTok Verification
+                                    </div>
+                                    <p className="text-[11px] text-slate-500 italic leading-relaxed">
+                                        Paste your TikTok post URL below. Make sure you tagged <span className="text-cyan-600 font-bold">@valentizewiz</span> in the description!
+                                    </p>
+                                    <input 
+                                        type="text" 
+                                        value={tiktokUrl} 
+                                        onChange={(e) => setTiktokUrl(e.target.value)} 
+                                        placeholder="https://www.tiktok.com/@user/video/..." 
+                                        className="w-full p-4 bg-white rounded-xl border-2 border-cyan-100 focus:border-cyan-500 outline-none text-xs transition-all"
+                                    />
+                                    {socialError && <p className="text-[10px] text-red-500 font-bold">{socialError}</p>}
+                                </motion.div>
+                            )}
+                        </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -879,9 +943,9 @@ function WizardContent() {
                         {uploading ? 'Processing...' : 'Continue'} <ArrowRight size={16} />
                     </button>
                 ) : (
-                    <button onClick={handleGenerate} disabled={isPaying || !!uploading} className="bg-sanctuary-primary text-white px-12 py-5 rounded-2xl font-bold shadow-2xl hover:scale-105 transition-all text-[10px] uppercase tracking-[0.3em] flex items-center gap-3">
-                        {isPaying ? <LucideLoader className="animate-spin" size={18} /> : success ? <Save size={18} /> : <Lock size={18} />}
-                        {isPaying ? 'Securing...' : success ? 'Generate' : `Pay & Secure`}
+                    <button onClick={handleGenerate} disabled={isPaying || isSocialVerifying || !!uploading} className={`${config.plan === 'spark' && socialUnlock && !success ? 'bg-cyan-500 hover:bg-cyan-600' : 'bg-sanctuary-primary'} text-white px-12 py-5 rounded-2xl font-bold shadow-2xl hover:scale-105 transition-all text-[10px] uppercase tracking-[0.3em] flex items-center gap-3`}>
+                        {isPaying || isSocialVerifying ? <LucideLoader className="animate-spin" size={18} /> : success ? <Save size={18} /> : (config.plan === 'spark' && socialUnlock) ? <Smartphone size={18} /> : <Lock size={18} />}
+                        {isPaying || isSocialVerifying ? 'Securing...' : success ? 'Generate' : (config.plan === 'spark' && socialUnlock) ? 'Verify & Secure' : `Pay & Secure`}
                     </button>
                 )}
             </div>
