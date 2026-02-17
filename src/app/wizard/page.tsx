@@ -827,13 +827,29 @@ function WizardContent() {
                             </div>
 
                             {socialUnlock && (
-                                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="p-6 bg-cyan-50 rounded-[32px] border-2 border-cyan-100 space-y-4">
+                                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="p-6 bg-cyan-50 rounded-[32px] border-2 border-cyan-100 space-y-6">
                                     <div className="flex items-center gap-3 text-cyan-600 font-bold uppercase tracking-widest text-xs">
                                         <Smartphone size={18} /> TikTok Verification
                                     </div>
-                                    <p className="text-[11px] text-slate-500 italic leading-relaxed">
-                                        Paste your TikTok post URL below. Make sure you tagged <span className="text-cyan-600 font-bold">@valentizewiz</span> in the description!
-                                    </p>
+                                    
+                                    <div className="space-y-4">
+                                        <p className="text-[11px] text-slate-500 italic leading-relaxed">
+                                            1. Download your aesthetic <b>Post Card</b> below.<br />
+                                            2. Post it on TikTok & tag <span className="text-cyan-600 font-bold">@valentizewiz</span> in the caption.<br />
+                                            3. Paste your video link here to unlock:
+                                        </p>
+                                        
+                                        <div className="flex flex-col sm:flex-row gap-2">
+                                            <button onClick={downloadShareCard} disabled={isDownloading} className="flex-1 py-3 bg-white border border-cyan-200 text-cyan-600 rounded-xl font-bold text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-cyan-100/50 transition-all">
+                                                {isDownloading ? <LucideLoader className="animate-spin" size={12} /> : <ImageIcon size={12} />} 
+                                                Download Post Card
+                                            </button>
+                                            <button onClick={() => { navigator.clipboard.writeText(`This is your sign to build a sanctuary for your person 🤍 @valentizewiz #sanctuary #giftideas #relationship`); alert("Viral caption copied!"); }} className="flex-1 py-3 bg-white border border-cyan-200 text-cyan-600 rounded-xl font-bold text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-cyan-100/50 transition-all">
+                                                <Copy size={12} /> Copy Viral Caption
+                                            </button>
+                                        </div>
+                                    </div>
+
                                     <input 
                                         type="text" 
                                         value={tiktokUrl} 
@@ -920,22 +936,38 @@ function WizardContent() {
 
                   {/* Hidden Render Target for Share Card */}
                   <div className="fixed left-[-9999px] top-0">
-                    <div ref={cardRef} className="w-[1080px] h-[1920px] flex flex-col items-center justify-center p-20 text-center relative overflow-hidden" style={{ backgroundColor: activeTheme.colors.bg }}>
-                        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: `radial-gradient(${activeTheme.colors.primary} 2px, transparent 2px)`, backgroundSize: '40px 40px' }} />
-                        <div className="relative z-10 space-y-12">
-                            <ThemeIcon size={240} fill={activeTheme.colors.primary} stroke={activeTheme.colors.primary} className="mx-auto" />
-                            <h1 className="text-[120px] font-serif-display tracking-tight text-slate-900 leading-tight">A Sanctuary for {config.names.recipient}</h1>
-                            <p className="text-[48px] text-slate-400 font-bold uppercase tracking-[0.3em] italic font-playfair">Hand-crafted by {config.names.sender}</p>
-                            <div className="pt-24">
-                                <div className="px-16 py-8 bg-slate-900 text-white rounded-[40px] text-[48px] font-bold shadow-2xl flex flex-col gap-2">
-                                    <span>Open the Gift</span>
-                                    <span className="text-[24px] opacity-60 font-normal lowercase tracking-widest">sanctuary-wizard.vercel.app</span>
-                                </div>
+                    <div ref={cardRef} className="w-[1080px] h-[1920px] flex flex-col items-center justify-between p-32 text-center relative overflow-hidden" style={{ backgroundColor: activeTheme.colors.bg }}>
+                        {/* Modern Aesthetic Elements */}
+                        <div className="absolute top-0 left-0 w-full h-full opacity-[0.03]" style={{ backgroundImage: `linear-gradient(45deg, ${activeTheme.colors.primary} 25%, transparent 25%, transparent 75%, ${activeTheme.colors.primary} 75%, ${activeTheme.colors.primary}), linear-gradient(45deg, ${activeTheme.colors.primary} 25%, transparent 25%, transparent 75%, ${activeTheme.colors.primary} 75%, ${activeTheme.colors.primary})`, backgroundSize: '100px 100px', backgroundPosition: '0 0, 50px 50px' }} />
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] rounded-full opacity-20 blur-[120px]" style={{ background: `radial-gradient(circle, ${activeTheme.colors.primary}, transparent)` }} />
+                        
+                        <div className="relative z-10 flex flex-col items-center justify-center flex-grow space-y-16">
+                            <div className="p-12 bg-white rounded-[60px] shadow-2xl border border-black/[0.03]">
+                                <ThemeIcon size={280} fill={activeTheme.colors.primary} stroke={activeTheme.colors.primary} className="mx-auto" />
                             </div>
+                            
+                            <div className="space-y-6">
+                                <p className="text-[40px] font-bold text-sanctuary-primary uppercase tracking-[0.4em]">A Private Gift</p>
+                                <h1 className="text-[140px] font-serif-display tracking-tight text-slate-900 leading-[0.9]">
+                                    {config.names.recipient}<span className="text-sanctuary-primary italic">’s</span> <br /> Sanctuary
+                                </h1>
+                                <div className="h-2 w-48 bg-slate-900 mx-auto rounded-full mt-8" />
+                            </div>
+
+                            <p className="text-[56px] text-slate-500 font-playfair italic leading-relaxed max-w-2xl mx-auto">
+                                Hand-crafted with memories, music, <br /> and secret messages by {config.names.sender}
+                            </p>
                         </div>
-                        <div className="absolute bottom-20 flex flex-col items-center gap-4">
-                            <p className="text-[32px] font-bold text-slate-300 uppercase tracking-[0.4em]">The New Way to Give</p>
-                            <div className="w-24 h-[1px] bg-slate-200" />
+
+                        <div className="relative z-10 w-full space-y-12">
+                            <div className="px-20 py-12 bg-slate-900 text-white rounded-[50px] text-[56px] font-bold shadow-[0_40px_80px_-20px_rgba(0,0,0,0.4)] flex items-center justify-center gap-6 group">
+                                <Sparkles size={60} className="text-amber-400" />
+                                <span>Unlock the Magic</span>
+                            </div>
+                            <div className="flex flex-col items-center gap-4">
+                                <p className="text-[36px] font-bold text-slate-400 uppercase tracking-[0.5em]">sanctuary-wizard.vercel.app</p>
+                                <p className="text-[28px] font-medium text-slate-300 uppercase tracking-[0.2em]">The New Way to Give</p>
+                            </div>
                         </div>
                     </div>
                   </div>
